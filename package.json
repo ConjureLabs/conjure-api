@@ -14,5 +14,17 @@
   "bugs": {
     "url": "https://github.com/WiskeyTango/voyant-api/issues"
   },
-  "homepage": "https://github.com/WiskeyTango/voyant-api#readme"
+  "homepage": "https://github.com/WiskeyTango/voyant-api#readme",
+  "dependencies": {
+    "async": "^2.3.0",
+    "body-parser": "1.15.2",
+    "compression": "1.6.2",
+    "cookie-parser": "1.4.3",
+    "cookie-session": "2.0.0-alpha.2",
+    "debug": "2.6.0",
+    "express": "4.15.2",
+    "morgan": "1.7.0",
+    "request": "^2.81.0",
+    "voyant-core": "git+ssh://git@github.com:WiskeyTango/voyant-core.git"
+  }
 }
