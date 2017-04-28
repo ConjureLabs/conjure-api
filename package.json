@@ -1,0 +1,18 @@
+{
+  "name": "voyant-api",
+  "version": "0.0.0",
+  "description": "Voyant API client",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WiskeyTango/voyant-api.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/WiskeyTango/voyant-api/issues"
+  },
+  "homepage": "https://github.com/WiskeyTango/voyant-api#readme"
+}
