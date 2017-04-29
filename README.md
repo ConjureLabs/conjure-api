@@ -1,3 +1,3 @@
-# Voyant API
+# Conjure API
 
-Voyant API client
+Conjure API client

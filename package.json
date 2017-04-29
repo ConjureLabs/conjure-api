@@ -1,7 +1,7 @@
 {
   "name": "conjure-api",
   "version": "0.0.0",
-  "description": "Voyant API client",
+  "description": "Conjure API client",
   "private": true,
   "main": "./server",
   "scripts": {
