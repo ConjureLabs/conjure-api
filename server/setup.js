@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const log = require('voyant-core/modules/log')();
+const log = require('conjure-core/modules/log')();
 
 log.info('beginning setup');
 log.timeStart('finished setup');

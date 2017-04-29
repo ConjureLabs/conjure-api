@@ -1,5 +1,5 @@
 {
-  "name": "voyant-api",
+  "name": "conjure-api",
   "version": "0.0.0",
   "description": "Voyant API client",
   "private": true,
@@ -10,13 +10,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WiskeyTango/voyant-api.git"
+    "url": "git+https://github.com/WiskeyTango/conjure-api.git"
   },
   "author": "",
   "bugs": {
-    "url": "https://github.com/WiskeyTango/voyant-api/issues"
+    "url": "https://github.com/WiskeyTango/conjure-api/issues"
   },
-  "homepage": "https://github.com/WiskeyTango/voyant-api#readme",
+  "homepage": "https://github.com/WiskeyTango/conjure-api#readme",
   "dependencies": {
     "async": "^2.3.0",
     "body-parser": "1.15.2",
@@ -27,6 +27,6 @@
     "express": "4.15.2",
     "morgan": "1.7.0",
     "request": "^2.81.0",
-    "voyant-core": "git+ssh://git@github.com:WiskeyTango/voyant-core.git"
+    "conjure-core": "git+ssh://git@github.com:WiskeyTango/conjure-core.git"
   }
 }
