@@ -6,7 +6,7 @@ BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
 set -e; # die on any error
 
-export VOYANT_WORKER_DIR=$WORKER_DIR;
+export CONJURE_WORKER_DIR=$WORKER_DIR;
 export NODE_PATH=$(cd $APP_DIR; cd server; pwd);
 export PORT=2999;
 source $APP_DIR/.profile;
