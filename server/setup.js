@@ -1,5 +1,3 @@
-'use strict';
-
 // allowing sync methods in this file only
 // ... allowing sync in this file since it will only be run at startup, not during the lifetime of the app
 /*eslint no-sync: 0*/
@@ -12,10 +10,8 @@ log.info('beginning setup');
 log.timeStart('finished setup');
 
 // crawling routes
-// const apiRoutesDir = path.resolve(__dirname, 'routes', 'api');
-// const hookRoutesDir = path.resolve(__dirname, 'routes', 'hook');
-// const viewsRoutesDir = path.resolve(__dirname, 'routes', 'views');
-// const containerRoutesDir = path.resolve(__dirname, 'routes', 'c');
+const apiRoutesDir = path.resolve(__dirname, 'routes', 'api');
+const hookRoutesDir = path.resolve(__dirname, 'routes', 'hook');
 const jsFileExt = /\.js$/;
 const startingDollarSign = /^\$/;
 const validVerbs = ['all', 'get', 'post', 'put', 'patch', 'delete'];
@@ -39,10 +35,8 @@ function crawlRoutesDir(ignoreCurrentDir, dirpath, uriPathTokens) {
   const routes = [];
   const files = [];
 
-  list.sort((a, b) => {
-    // see http://stackoverflow.com/questions/8996963/how-to-perform-case-insensitive-sorting-in-javascript
-    return a.toLowerCase().localeCompare(b.toLowerCase());
-  });
+  const sortInsensitive = require('conjure-core/modules/utils/Array/sort-insensitive');
+  sortInsensitive(list);
 
   for (let i = 0; i < list.length; i++) {
     const stat = fs.statSync(path.resolve(dirpath, list[i]));
@@ -79,9 +73,7 @@ log.timeEnd('finished setup');
 
 module.exports = {
   routes: {
-    // api: crawlRoutesDir(false, apiRoutesDir),
-    // hook: crawlRoutesDir(false, hookRoutesDir),
-    // views: crawlRoutesDir(true, viewsRoutesDir),
-    // c: crawlRoutesDir(false, containerRoutesDir)
+    api: crawlRoutesDir(false, apiRoutesDir),
+    hook: crawlRoutesDir(false, hookRoutesDir)
   }
 };
