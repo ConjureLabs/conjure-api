@@ -7,8 +7,8 @@ const route = new Route();
   Auth callback
  */
 route.push(passport.authenticate('github', {
-  failureRedirect: '/', // todo: /login ?
-  successRedirect: '/'
+  failureRedirect: config.app.web.url,
+  successRedirect: config.app.web.url
 }));
 
 module.exports = route;
