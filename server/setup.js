@@ -11,6 +11,7 @@ log.timeStart('finished setup');
 
 // crawling routes
 const apiRoutesDir = path.resolve(__dirname, 'routes', 'api');
+const debugRoutesDir = path.resolve(__dirname, 'routes', 'debug');
 const hookRoutesDir = path.resolve(__dirname, 'routes', 'hook');
 const jsFileExt = /\.js$/;
 const startingDollarSign = /^\$/;
@@ -74,6 +75,7 @@ log.timeEnd('finished setup');
 module.exports = {
   routes: {
     api: crawlRoutesDir(false, apiRoutesDir),
+    debug: crawlRoutesDir(false, debugRoutesDir),
     hook: crawlRoutesDir(false, hookRoutesDir)
   }
 };
