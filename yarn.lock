@@ -130,7 +130,7 @@ compression@1.6.2:
 
 "conjure-core@git+ssh://git@github.com:WiskeyTango/conjure-core.git":
   version "0.0.0"
-  resolved "git+ssh://git@github.com:WiskeyTango/conjure-core.git#9cb636290f8530782b048a2a0a209b6ea1e04371"
+  resolved "git+ssh://git@github.com:WiskeyTango/conjure-core.git#31fc7c8fcbcbe472752b34a439a4791d73f0253a"
   dependencies:
     app-root-path "^2.0.1"
     stripe "^4.19.0"
