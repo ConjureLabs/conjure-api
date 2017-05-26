@@ -48,6 +48,7 @@ server.use(morgan('combined'));
 server.use(cookieSession({
   cookieName: 'conjure',
   secret: config.session.secret,
+  signed: true,
   duration: config.session.duration,
   cookie: {
     httpOnly: true,
@@ -65,9 +66,11 @@ server.use(cookieParser());
 
 passport.serializeUser((user, done) => {
   const DatabaseRow = require('conjure-core/classes/DatabaseRow');
+  console.log('serializeUser', user);
   done(null, new DatabaseRow('account', user));
 });
 passport.deserializeUser((user, done) => {
+  console.log('deserializeUser', user);
   done(null, user);
 });
 
