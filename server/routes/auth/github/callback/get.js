@@ -1,3 +1,4 @@
+const config = require('conjure-core/modules/config');
 const Route = require('conjure-core/classes/Route');
 const passport = require('passport');
 
