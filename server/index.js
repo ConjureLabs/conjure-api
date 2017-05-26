@@ -45,16 +45,10 @@ server.use(compression());
 server.set('port', port);
 server.use(morgan('combined'));
 
-// todo: keep this in a util module?
-const second = 1000;
-const minute = 60 * second;
-const hour = 60 * minute;
-const day = 24 * hour;
-
 server.use(cookieSession({
   cookieName: 'conjure',
-  secret: 'LYU.yxn^E0T$TvklkLzxdg$$#q!vI1sJAoSgI<rl<LZumyX*@@@!blJ<4wYzNXOl',
-  duration: 8 * day, // 8 days = 1 week + 1 day, enough that a 5day worker will not get kicked
+  secret: config.session.secret,
+  duration: config.session.duration,
   cookie: {
     httpOnly: true,
     secure: config.app.api.protocol === 'https'
