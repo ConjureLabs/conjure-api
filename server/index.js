@@ -57,7 +57,7 @@ server.use(cookieSession({
   duration: 8 * day, // 8 days = 1 week + 1 day, enough that a 5day worker will not get kicked
   cookie: {
     httpOnly: true,
-    secure: config.app.protocol === 'https'
+    secure: config.app.api.protocol === 'https'
   }
 }));
 
@@ -82,7 +82,7 @@ passport.use(
     {
       clientID: config.services.github.id,
       clientSecret: config.services.github.secret,
-      callbackURL: `${config.app.protocol}://${config.app.host}/auth/github/callback`,
+      callbackURL: `${config.app.api.url}/auth/github/callback`,
       scope: 'repo,admin:public_key,user:email,write:repo_hook,admin:org_hook'
     },
 
