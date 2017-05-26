@@ -285,12 +285,12 @@ server.use((err, req, res, next) => {
 
   if (err instanceof ConjureError) {
     return res
-      .statusCode(err.httpStatusCode)
+      .status(err.httpStatusCode)
       .send(err.friendlyError);
   }
 
   res
-    .statusCode(500)
+    .status(500)
     .send('An error occurred');
 });
 
