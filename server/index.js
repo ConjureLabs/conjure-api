@@ -16,7 +16,7 @@ const ConjureError = require('conjure-core/modules/err').ConjureError;
 const NotFoundError = require('conjure-core/modules/err').NotFoundError;
 const ContentError = require('conjure-core/modules/err').ContentError;
 
-const port = process.env.PORT;
+const port = config.app.api.port;
 const server = express();
 
 if (process.env.NODE_ENV !== 'production') {
