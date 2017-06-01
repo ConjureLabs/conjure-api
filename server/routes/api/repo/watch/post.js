@@ -31,6 +31,8 @@ route.push((req, res, next) => {
 
   // get github client
   waterfall.push(callback => {
+    console.log(req.user);
+
     const accountGithub = new DatabaseTable('account_github');
 
     // todo: assumes account has a github record in our db - we should have more handlers for services like bitbucket

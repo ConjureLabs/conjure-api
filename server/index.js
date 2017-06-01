@@ -46,15 +46,32 @@ server.set('port', port);
 server.use(morgan('combined'));
 
 server.use(cookieSession({
-  cookieName: 'conjure',
-  secret: config.session.secret,
-  signed: true,
-  duration: config.session.duration,
   cookie: {
+    domain: `.${config.app.api.domain}`,
     httpOnly: true,
-    secure: config.app.api.protocol === 'https'
-  }
+    maxAge: config.session.duration,
+    overwrite: true,
+    sameSite: 'lax',
+    secure: config.app.api.protocol === 'https',
+    signed: true
+  },
+  name: 'conjure',
+  secret: config.session.secret
 }));
+
+console.log({
+  cookie: {
+    domain: `.${config.app.api.domain}`,
+    httpOnly: true,
+    maxAge: config.session.duration,
+    overwrite: true,
+    sameSite: 'lax',
+    secure: config.app.api.protocol === 'https',
+    signed: true
+  },
+  name: 'conjure',
+  secret: config.session.secret
+})
 
 server.use(passport.initialize());
 server.use(passport.session());
@@ -226,6 +243,14 @@ function ensureEmailsStored(account, seenEmails) {
     }
   });
 }
+
+server.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+  next();
+});
 
 server.use((req, res, next) => {
   req.state = {}; // used to track anything useful, along the lifetime of a request
