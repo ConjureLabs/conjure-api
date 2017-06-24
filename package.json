@@ -5,6 +5,7 @@
   "private": true,
   "main": "./server",
   "scripts": {
+    "dev": "node ./server/",
     "lint": "bash ./bash/npm/lint.sh",
     "start": "bash ./bash/npm/start.sh"
   },
