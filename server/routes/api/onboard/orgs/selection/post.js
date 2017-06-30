@@ -12,7 +12,7 @@ route.push((req, res, next) => {
     httpOnly: true
   });
 
-  res.send();
+  res.send({});
 });
 
 module.exports = route;
