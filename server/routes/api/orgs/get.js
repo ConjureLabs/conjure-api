@@ -1,11 +1,12 @@
+const Route = require('conjure-core/classes/Route');
 const UnexpectedError = require('conjure-core/modules/err').UnexpectedError;
 
-const handlers = [];
+const route = new Route();
 
 /*
   Repos listing
  */
-handlers.push((req, res, next) => {
+route.push((req, res, next) => {
   const UniqueArray = require('conjure-core/classes/Array/UniqueArray');
   const GitHubRepo = require('conjure-core/classes/Repo/GitHub');
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
@@ -51,4 +52,4 @@ handlers.push((req, res, next) => {
   });
 });
 
-module.exports = handlers;
+module.exports = route;
