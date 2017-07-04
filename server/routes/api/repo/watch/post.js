@@ -3,7 +3,9 @@ const PermissionsError = require('conjure-core/modules/err').PermissionsError;
 const UnexpectedError = require('conjure-core/modules/err').UnexpectedError;
 const ContentError = require('conjure-core/modules/err').ContentError;
 
-const route = new Route();
+const route = new Route({
+  requireAuthentication: true
+});
 
 // todo: set up a module that handles cases like this
 const asyncBreak = {};
