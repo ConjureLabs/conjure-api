@@ -37,6 +37,19 @@ route.push((req, res, next) => {
     const github = require('octonode');
     const githubClient = github.client(githubAccount.access_token);
 
+    /*
+  [{ login: 'ConjureLabs',
+    id: 1783213,
+    url: 'https://api.github.com/orgs/ConjureLabs',
+    repos_url: 'https://api.github.com/orgs/ConjureLabs/repos',
+    events_url: 'https://api.github.com/orgs/ConjureLabs/events',
+    hooks_url: 'https://api.github.com/orgs/ConjureLabs/hooks',
+    issues_url: 'https://api.github.com/orgs/ConjureLabs/issues',
+    members_url: 'https://api.github.com/orgs/ConjureLabs/members{/member}',
+    public_members_url: 'https://api.github.com/orgs/ConjureLabs/public_members{/member}',
+    avatar_url: 'https://avatars2.githubusercontent.com/u/1783213?v=3',
+    description: '' }]
+     */
     githubClient.get('/user/orgs', {}, (err, status, body) => {
       if (err) {
         return next(err);
@@ -44,11 +57,18 @@ route.push((req, res, next) => {
 
       const allOrgs = body;
 
-      allOrgs.push(req.user.username);
-
+      allOrgs.push({
+        id: req.user.github_id,
+        login: req.user.username
+      });
 
       res.send({
-        orgs: allOrgs
+        orgs: allOrgs.map(org => {
+          return {
+            id: org.id,
+            login: org.login
+          };
+        })
       });
     });
   });
