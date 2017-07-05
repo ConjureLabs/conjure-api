@@ -22,7 +22,7 @@
     "async": "^2.3.0",
     "body-parser": "1.15.2",
     "compression": "1.6.2",
-    "conjure-core": "git+ssh://git@github.com:WiskeyTango/conjure-core.git",
+    "conjure-core": "git+ssh://git@github.com:ConjureLabs/conjure-core.git",
     "cookie-parser": "1.4.3",
     "cookie-session": "2.0.0-alpha.2",
     "debug": "2.6.0",
