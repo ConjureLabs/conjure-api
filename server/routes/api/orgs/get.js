@@ -58,8 +58,8 @@ route.push((req, res, next) => {
       const allOrgs = body;
 
       allOrgs.push({
-        id: req.user.github_id,
-        login: req.user.username
+        id: githubAccount.github_id,
+        login: githubAccount.username
       });
 
       res.send({
