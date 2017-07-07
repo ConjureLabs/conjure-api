@@ -26,7 +26,7 @@ route.push((req, res, next) => {
 
     // should not be possible
     if (rows.length > 1) {
-      return next(new UnexpectedError('Expected a signle row for GitHub account record, received multiple'));
+      return next(new UnexpectedError('Expected a single row for GitHub account record, received multiple'));
     }
 
     res.send({
