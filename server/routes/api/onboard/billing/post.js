@@ -1,7 +1,19 @@
 const Route = require('conjure-core/classes/Route');
-const ContentError = require('conjure-core/modules/err').ContentError;
+const UnexpectedError = require('conjure-core/modules/err').UnexpectedError;
+const log = require('conjure-core/modules/log')('onboard billing');
 
 const route = new Route();
+
+/*
+{ card: { number: '42', name: 'asddf', mm: '3', yyyy: 2019, cvc: '42' },
+  address: 
+   { country: 'dz',
+     zip: '42',
+     state: 'AK',
+     city: '42',
+     addr1: 'asdf',
+     addr2: '24' } }
+ */
 
 route.push((req, res, next) => {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
@@ -51,54 +63,21 @@ route.push((req, res, next) => {
       email: account.email,
       name: account.name
     }).save((err, customerRecord) => {
-      callback(err, account, customerRecord);
+      if (err) {
+        return callback(err);
+      }
+
+      // store id for stripe customer record, on account row
+      account.stripe_id = customerRecord.id;
+      account.save(err => {
+        callback(err, account, customerRecord);
+      });
     });
   });
 
   // add credit card
   flow.push((account, customer, callback) => {
     const Card = require('conjure-core/classes/Stripe/Card');
-/*
-if (data.id) {
-      this.id = data.id;
-    }
-
-    this.cvc = data.cvc;
-    this.name = data.name;
-    this.number = data.number;
-
-    const expiration = data.expiration || {};
-    this.expiration = {
-      month: expiration.month,
-      year: expiration.year
-    };
-
-    const address = data.address || {};
-    this.address = {
-      line1: address.line1,
-      line2: address.line2,
-      city: address.city,
-      state: address.state,
-      zip: address.zip,
-      country: address.country
-    };
-
-
-    if (rawData) {
-      this.rawData = rawData;
-    }
-
- */
-/*
-{ card: { number: '42', name: 'asddf', mm: '3', yyyy: 2019, cvc: '42' },
-  address: 
-   { country: 'dz',
-     zip: '42',
-     state: 'AK',
-     city: '42',
-     addr1: 'asdf',
-     addr2: '24' } }
- */
 
     new Card(customer, {
       cvc: cardData.cvc,
@@ -117,8 +96,28 @@ if (data.id) {
         country: addressData.country
       }
     }, req.body).save((err, cardRecord) => {
-      callback(err, )
+      if (err) {
+        return callback(err);
+      }
+
+      const AccountCard = new DatabaseTable('account_cards');
+      new AccountCard({
+        account: account.id,
+        stripe_id: account.stripe_id
+      }).save(err => {
+        callback(err);
+      });
     });
+  });
+
+  const asyncWaterfall = require('conjure-core/modules/async/waterfall');
+  asyncWaterfall(waterfall, err => {
+    if (err) {
+      return next(err);
+    }
+
+    // all good
+    res.send({});
   });
 });
 
