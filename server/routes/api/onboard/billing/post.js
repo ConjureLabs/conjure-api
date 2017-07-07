@@ -3,18 +3,10 @@ const ContentError = require('conjure-core/modules/err').ContentError;
 
 const route = new Route();
 
-/*
-{ card: { number: '42', name: 'asddf', mm: '3', yyyy: 2019, cvc: '42' },
-  address: 
-   { country: 'dz',
-     zip: '42',
-     state: 'AK',
-     city: '42',
-     addr1: 'asdf',
-     addr2: '24' } }
- */
 route.push((req, res, next) => {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+  const cardData = req.body.card;
+  const addressData = req.body.address;
   const flow = [];
 
   // getting full user account record
@@ -97,9 +89,36 @@ if (data.id) {
     }
 
  */
-    new Card(customer, {
+/*
+{ card: { number: '42', name: 'asddf', mm: '3', yyyy: 2019, cvc: '42' },
+  address: 
+   { country: 'dz',
+     zip: '42',
+     state: 'AK',
+     city: '42',
+     addr1: 'asdf',
+     addr2: '24' } }
+ */
 
-    }).save()
+    new Card(customer, {
+      cvc: cardData.cvc,
+      name: cardData.name,
+      number: cardData.number,
+      expiration: {
+        month: cardData.mm,
+        year: cardData.yyyy
+      },
+      address: {
+        line1: addressData.addr1,
+        line2: addressData.addr2,
+        city: addressData.city,
+        state: addressData.state,
+        zip: addressData.zip,
+        country: addressData.country
+      }
+    }, req.body).save((err, cardRecord) => {
+      callback(err, )
+    });
   });
 });
 
