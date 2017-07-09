@@ -57,7 +57,7 @@ route.push((req, res, next) => {
   waterfall.push((repos, callback) => {
     const parallel = repos.map(repo => {
       return cb => {
-        const apiGetRepos = require('../../../repo/watch/post.js').direct;
+        const apiWatchRepo = require('../../../repo/watch/post.js').direct;
         apiWatchRepo(req, {
           service: repo.service.toLowerCase(), // keep lower?
           url: repo.url,
