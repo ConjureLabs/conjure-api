@@ -8,7 +8,7 @@ route.push((req, res, next) => {
     return next(new ContentError('Payload missing or in an unexpected format'));
   }
   res.cookie('conjure-onboard-orgs', req.body, {
-    maxAge: 300000, // ~ 3.5 days
+    maxAge: 259200000, // 3 days
     httpOnly: true
   });
 
