@@ -1,7 +1,9 @@
 const Route = require('conjure-core/classes/Route');
 const ContentError = require('conjure-core/modules/err').ContentError;
 
-const route = new Route();
+const route = new Route({
+  requireAuthentication: true
+});
 
 route.push((req, res, next) => {
   if (!req.body.label || !req.body.value) {

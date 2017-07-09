@@ -2,7 +2,9 @@ const Route = require('conjure-core/classes/Route');
 const UnexpectedError = require('conjure-core/modules/err').UnexpectedError;
 const log = require('conjure-core/modules/log')('onboard billing');
 
-const route = new Route();
+const route = new Route({
+  requireAuthentication: true
+});
 
 /*
 { card: { number: '42', name: 'asddf', mm: '3', yyyy: 2019, cvc: '42' },
