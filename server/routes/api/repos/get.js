@@ -14,7 +14,7 @@ route.push((req, res, next) => {
 
   // todo: assumes account has a github record in our db - we should have more handlers for services like bitbucket
   const apiGetAccountGitHub = require('conjure-api/server/routes/api/account/github/get.js').direct;
-  apiGetAccountGitHub(req, (err, result) => {
+  apiGetAccountGitHub(req, null, (err, result) => {
     if (err) {
       return next(err);
     }
@@ -107,6 +107,7 @@ route.push((req, res, next) => {
         return mapping;
       }, {});
 
+      // todo: stop sending by org all the time - it's an overhead most of the time
       res.send({
         reposByOrg: reposByOrg
       });

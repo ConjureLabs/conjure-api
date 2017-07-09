@@ -33,7 +33,7 @@ route.push((req, res, next) => {
   // get github client
   waterfall.push(callback => {
     const apiGetAccountGitHub = require('conjure-api/server/routes/api/account/github/get.js').direct;
-    apiGetAccountGitHub(req, (err, result) => {
+    apiGetAccountGitHub(req, null, (err, result) => {
       if (err) {
         return next(err);
       }
