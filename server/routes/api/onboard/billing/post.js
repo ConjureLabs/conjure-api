@@ -108,7 +108,7 @@ route.push((req, res, next) => {
 
       DatabaseTable.insert('account_card', {
         account: account.id,
-        stripe_id: cardRecord.stripe_id,
+        stripe_id: cardRecord.id,
         added: new Date()
       }, err => {
         callback(err);
