@@ -6,8 +6,6 @@ const route = new Route({
 });
 
 route.push((req, res, next) => {
-  console.log(req.body);
-
   if (!Array.isArray(req.body)) {
     return next(new ContentError('Payload missing or in an unexpected format'));
   }
@@ -48,8 +46,6 @@ route.push((req, res, next) => {
       }
     }
 
-    console.log("SELECTION", repos);
-
     if (!repos.length) {
       return callback(new ContentError('No repos selected'));
     }
@@ -59,16 +55,27 @@ route.push((req, res, next) => {
 
   // enable watching of each
   waterfall.push((repos, callback) => {
-    console.log(repos);
-
     const parallel = repos.map(repo => {
       return cb => {
         const apiGetRepos = require('../../../repo/watch/post.js').direct;
         apiWatchRepo(req, {
-
+          service: repo.service.toLowerCase(), // keep lower?
+          url: repo.url,
+          name: repo.name,
+          fullName: repo.fullName,
+          orgName: repo.org,
+          repoName: repo.name,
+          githubId: repo.id,
+          isPrivate: repo.private,
+          vm: 'web' // forced to web for now
+        }, err => {
+          cb(err);
         });
       };
     });
+
+    const async = require('async');
+    async.parallelLimit(parallel, 3, callback);
   });
 
   const asyncWaterfall = require('conjure-core/modules/async/waterfall');
@@ -78,21 +85,9 @@ route.push((req, res, next) => {
     }
 
     // all good
-    //res.send({});
+    res.send({});
   });
 });
-
-// const {
-//   service,
-//   url,
-//   name,
-//   fullName,
-//   orgName,
-//   repoName,
-//   githubId,
-//   isPrivate,
-//   vm
-// } = req.body;
 
 module.exports = route;
 
