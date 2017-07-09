@@ -11,7 +11,6 @@ const route = new Route({
 const asyncBreak = {};
 
 route.push((req, res, next) => {
-  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   const config = require('conjure-core/modules/config');
   const async = require('async');
 
@@ -33,30 +32,13 @@ route.push((req, res, next) => {
 
   // get github client
   waterfall.push(callback => {
-    console.log(req.user);
-
-    const accountGithub = new DatabaseTable('account_github');
-
-    // todo: assumes account has a github record in our db - we should have more handlers for services like bitbucket
-    // todo: this is shared logic (also in dashboard render) - should consolidate into one shared resource
-    accountGithub.select({
-      account: req.user.id
-    }, (err, rows) => {
+    const apiGetAccountGitHub = require('conjure-api/server/routes/api/account/github/get.js').direct;
+    apiGetAccountGitHub(req, (err, result) => {
       if (err) {
-        return callback(err);
+        return next(err);
       }
 
-      // should not be possible
-      if (!rows.length) {
-        return callback(new UnexpectedError('Could not find github account record'));
-      }
-
-      // should not be possible
-      if (rows.length > 1) {
-        return callback(new UnexpectedError('Expected a single row for github account record, received multiple'));
-      }
-
-      const githubAccount = rows[0];
+      const githubAccount = result.account;
 
       const github = require('octonode');
       const githubClient = github.client(githubAccount.access_token);

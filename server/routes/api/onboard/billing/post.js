@@ -19,10 +19,10 @@ route.push((req, res, next) => {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   const cardData = req.body.card;
   const addressData = req.body.address;
-  const flow = [];
+  const waterfall = [];
 
   // getting full user account record
-  flow.push(callback => {
+  waterfall.push(callback => {
     const account = new DatabaseTable('account');
 
     account.select({
@@ -47,11 +47,12 @@ route.push((req, res, next) => {
   });
 
   // getting/creating stripe customer record
-  flow.push((account, callback) => {
+  waterfall.push((account, callback) => {
     const Customer = require('conjure-core/classes/Stripe/Customer');
 
     // if account has a stripe customer record, get it and continue
     if (account.stripe_id) {
+      console.log('RETRIEVE', req.user.id, account.stripe_id);
       Customer.retrieve(req.user.id, account.stripe_id, (err, customerRecord) => {
         callback(err, account, customerRecord);
       });
@@ -59,6 +60,11 @@ route.push((req, res, next) => {
     }
 
     // if existing customer record does not exist, then we have to create one
+    
+    console.log('CREATE', req.user.id, {
+      email: account.email,
+      name: account.name
+    });
     new Customer(req.user.id, {
       email: account.email,
       name: account.name
@@ -76,7 +82,7 @@ route.push((req, res, next) => {
   });
 
   // add credit card
-  flow.push((account, customer, callback) => {
+  waterfall.push((account, customer, callback) => {
     const Card = require('conjure-core/classes/Stripe/Card');
 
     new Card(customer, {
@@ -100,11 +106,11 @@ route.push((req, res, next) => {
         return callback(err);
       }
 
-      const AccountCard = new DatabaseTable('account_cards');
-      new AccountCard({
+      DatabaseTable.insert('account_card', {
         account: account.id,
-        stripe_id: account.stripe_id
-      }).save(err => {
+        stripe_id: cardRecord.stripe_id,
+        added: new Date()
+      }, err => {
         callback(err);
       });
     });
