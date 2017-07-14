@@ -131,6 +131,7 @@ function upsertWatchedRepoRecord(req, callback) {
   const {
     service,
     url,
+    orgName,
     name,
     githubId,
     isPrivate,
@@ -142,6 +143,7 @@ function upsertWatchedRepoRecord(req, callback) {
     service,
     service_repo_id: githubId,
     url,
+    org: orgName,
     name,
     vm,
     private: isPrivate,
