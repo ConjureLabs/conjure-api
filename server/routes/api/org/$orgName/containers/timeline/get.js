@@ -44,10 +44,11 @@ route.push((req, res, next) => {
       return {
         id: row.id,
         branch: row.branch,
-        url: `${row.host}:${row.port}`
+        url: `${row.host}:${row.port}`,
         status: row.is_active === true && !row.active_start ? 'Spinning Up' :
           row.is_active === true && row.active_start ? 'Running' :
-          row.is_active === false ? 'Spun Down',
+          row.is_active === false ? 'Spun Down' :
+          'Unknown', // should not happen
         start: row.active_start,
         stop: row.active_stop
       };
