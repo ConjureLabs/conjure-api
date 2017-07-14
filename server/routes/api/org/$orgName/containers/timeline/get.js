@@ -21,6 +21,8 @@ route.push((req, res, next) => {
 
   const orgName = req.param.orgName;
 
+  // todo: verify user has github access to this org
+
   database.query(`
     SELECT * FROM container WHERE repo IN (
       SELECT id FROM watched_repo WHERE org = $1
