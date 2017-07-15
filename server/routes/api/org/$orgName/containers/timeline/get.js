@@ -19,12 +19,18 @@ route.push((req, res, next) => {
 
   const database = require('conjure-core/modules/database');
 
-  const orgName = req.param.orgName;
+  const orgName = req.params.orgName;
 
   // todo: verify user has github access to this org
 
   database.query(`
-    SELECT * FROM container WHERE repo IN (
+    SELECT
+      c.*,
+      wr.name repo_name,
+      wr.private repo_private
+    FROM container c
+    INNER JOIN watched_repo wr ON c.repo = wr.id
+    WHERE c.repo IN (
       SELECT id FROM watched_repo WHERE org = $1
     )
     ORDER BY added DESC
@@ -43,6 +49,8 @@ route.push((req, res, next) => {
     const timeline = result.rows.map(row => {
       return {
         id: row.id,
+        repo: row.repo_name,
+        repo_private: row.repo_private,
         branch: row.branch,
         url: `${row.host}:${row.port}`,
         status: row.is_active === true && !row.active_start ? 'Spinning Up' :
