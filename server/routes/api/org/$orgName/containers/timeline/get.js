@@ -14,7 +14,7 @@ route.push((req, res, next) => {
   const page = parseInt(req.query.page, 10); // required
   let rel = parseInt(req.query.rel, 10); // may be NaN, if page = 1
 
-  const limit = 1; // todo: config this?
+  const limit = 32; // todo: config this?
 
   if (isNaN(page) || page < 0) {
     return next(new ContentError('Missing page number'));
