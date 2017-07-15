@@ -54,7 +54,6 @@ route.push((req, res, next) => {
 
     // if account has a stripe customer record, get it and continue
     if (account.stripe_id) {
-      console.log('RETRIEVE', req.user.id, account.stripe_id);
       Customer.retrieve(req.user.id, account.stripe_id, (err, customerRecord) => {
         callback(err, account, customerRecord);
       });
@@ -62,11 +61,6 @@ route.push((req, res, next) => {
     }
 
     // if existing customer record does not exist, then we have to create one
-    
-    console.log('CREATE', req.user.id, {
-      email: account.email,
-      name: account.name
-    });
     new Customer(req.user.id, {
       email: account.email,
       name: account.name

@@ -171,6 +171,7 @@ passport.use(
         DatabaseTable.insert('account', {
           name: profile.displayName,
           email: profile.emails[0].value,
+          onboarded: false,
           added: DatabaseTable.literal('NOW()')
         }, (err, rows) => {
           const account = rows[0];

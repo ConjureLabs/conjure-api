@@ -29,7 +29,6 @@ route.push((req, res, next) => {
     // filtering down to repos selected
     const repos = [];
     const orgs = Object.keys(reposByOrg);
-    console.log(req.body, typeof req.body);
     const selections = req.body.slice(); // slice to ensure native array
 
     for (let i = 0; i < orgs.length; i++) {
@@ -76,6 +75,20 @@ route.push((req, res, next) => {
 
     const async = require('async');
     async.parallelLimit(parallel, 3, callback);
+  });
+
+  // mark account as onboarded
+  waterfall.push((repos, callback) => {
+    const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+    const account = new DatabaseTable('account');
+
+    account.update({
+      onboarded: true
+    }, {
+      id: req.user.id
+    }, err => {
+      callback(err, repos);
+    });
   });
 
   const asyncWaterfall = require('conjure-core/modules/async/waterfall');
