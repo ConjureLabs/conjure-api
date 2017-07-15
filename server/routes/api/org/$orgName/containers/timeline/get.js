@@ -1,6 +1,7 @@
 const Route = require('conjure-core/classes/Route');
 const ContentError = require('conjure-core/modules/err').ContentError;
 const UnexpectedError = require('conjure-core/modules/err').UnexpectedError;
+const config = require('conjure-core/modules/config');
 
 const route = new Route({
   requireAuthentication: true
@@ -46,13 +47,15 @@ route.push((req, res, next) => {
       return next(new UnexpectedError('No rows returned'));
     }
 
+    const { protocol } = config.app.web;
+
     const timeline = result.rows.map(row => {
       return {
         id: row.id,
         repo: row.repo_name,
         repo_private: row.repo_private,
         branch: row.branch,
-        url: `${row.host}:${row.port}`,
+        url: `${protocol}://${row.host}:${row.port}`,
         status: row.is_active === true && !row.active_start ? 'Spinning Up' :
           row.is_active === true && row.active_start ? 'Running' :
           row.is_active === false ? 'Spun Down' :
