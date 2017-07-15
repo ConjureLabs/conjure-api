@@ -11,11 +11,15 @@ const route = new Route({
   Repos listing
  */
 route.push((req, res, next) => {
-  const page = parseInt(req.query.page, 10);
-  const limit = 20; // todo: config this?
+  const page = parseInt(req.query.page, 10); // required
+  let rel = parseInt(req.query.rel, 10); // may be NaN, if page = 1
+
+  const limit = 1; // todo: config this?
 
   if (isNaN(page) || page < 0) {
     return next(new ContentError('Missing page number'));
+  } else if (page > 1 && isNaN(rel)) {
+    return next(new ContentError('Must pass `rel` if paging'));
   }
 
   const database = require('conjure-core/modules/database');
@@ -23,7 +27,17 @@ route.push((req, res, next) => {
   const orgName = req.params.orgName;
 
   // todo: verify user has github access to this org
+  
+  const sqlArgs = [orgName];
 
+  // if using paging rel (relative row id that marks row 0) then we must page against that row
+  let sqlWhereAddition = '';
+  if (rel) {
+    sqlWhereAddition = `AND c.id <= $2`;
+    sqlArgs.push(rel);
+  }
+
+  // pulling 1 more than needed, to check if there are more results
   database.query(`
     SELECT
       c.*,
@@ -34,10 +48,11 @@ route.push((req, res, next) => {
     WHERE c.repo IN (
       SELECT id FROM watched_repo WHERE org = $1
     )
+    ${sqlWhereAddition}
     ORDER BY added DESC
-    LIMIT ${limit}
+    LIMIT ${limit + 1}
     OFFSET ${page * limit}
-  `, [orgName], (err, result) => {
+  `, sqlArgs, (err, result) => {
     if (err) {
       return next(err);
     }
@@ -48,6 +63,15 @@ route.push((req, res, next) => {
     }
 
     const { protocol } = config.app.web;
+
+    const moreRows = result.rows.length > limit;
+    if (moreRows) {
+      result.rows.pop(); // taking off extra row, which was used as an indicator
+    }
+
+    if (isNaN(rel) && result.rows.length) {
+      rel = result.rows[0].id;
+    }
 
     const timeline = result.rows.map(row => {
       return {
@@ -65,8 +89,21 @@ route.push((req, res, next) => {
       };
     });
 
+    const qs = require('qs');
+
     res.send({
-      timeline
+      timeline,
+      paging: {
+        prev: page === 0 ? null : `${config.app.api.url}/api/org/${orgName}/containers/timeline?${qs.stringify({
+          page: page - 1,
+          rel
+        })}`,
+
+        next: !moreRows ? null : `${config.app.api.url}/api/org/${orgName}/containers/timeline?${qs.stringify({
+          page: page + 1,
+          rel
+        })}`
+      }
     });
   });
 });
