@@ -28,7 +28,7 @@ route.push((req, res, next) => {
 
   const waterfall = [];
 
-  const newHookPath = `${config.app.api.publicDomain}/hook/github/${orgName}/${repoName}`;
+  const newHookPath = `${config.app.api.publicHost}/hook/github/${orgName}/${repoName}`;
 
   // get github client
   waterfall.push(callback => {
