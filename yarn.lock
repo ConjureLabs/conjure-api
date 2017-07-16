@@ -142,7 +142,7 @@ compression@1.6.2:
 
 "conjure-core@git+ssh://git@github.com:ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+ssh://git@github.com:ConjureLabs/conjure-core.git#7f625de20f0a381808c40b81d29bede4b98a4d1f"
+  resolved "git+ssh://git@github.com:ConjureLabs/conjure-core.git#5fb15d79ac0277f8f605df7b4c991359a10a0209"
   dependencies:
     uid "^0.0.2"
     app-root-path "^2.0.1"

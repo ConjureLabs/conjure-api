@@ -154,6 +154,7 @@ passport.use(
             }));
 
             githubAccount.photo = Array.isArray(profile.photos) && profile.photos[0] ? profile.photos[0].value : null;
+            githubAccount.updated = new Date();
             githubAccount.save(err => {
               if (err) {
                 log.error(err);

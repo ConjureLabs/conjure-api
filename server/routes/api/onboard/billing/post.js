@@ -71,6 +71,7 @@ route.push((req, res, next) => {
 
       // store id for stripe customer record, on account row
       account.stripe_id = customerRecord.id;
+      account.updated = new Date();
       account.save(err => {
         callback(err, account, customerRecord);
       });

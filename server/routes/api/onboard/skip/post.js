@@ -29,7 +29,6 @@ route.push((req, res, next) => {
 
     rows[0].onboarded = true;
     rows[0].updated = new Date();
-
     rows[0].save(err => {
       if (err) {
         return next(err);

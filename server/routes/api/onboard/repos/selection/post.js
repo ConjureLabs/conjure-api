@@ -83,7 +83,8 @@ route.push((req, res, next) => {
     const account = new DatabaseTable('account');
 
     account.update({
-      onboarded: true
+      onboarded: true,
+      updated: new Date()
     }, {
       id: req.user.id
     }, err => {
