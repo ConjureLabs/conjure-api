@@ -7,6 +7,12 @@ const route = new Route({
   requireAuthentication: true
 });
 
+const {
+  protocol,
+  domain,
+  host
+} = config.app.web;
+
 /*
   Repos listing
  */
@@ -62,8 +68,6 @@ route.push((req, res, next) => {
       return next(new UnexpectedError('No rows returned'));
     }
 
-    const { protocol } = config.app.web;
-
     const moreRows = result.rows.length > limit;
     if (moreRows) {
       result.rows.pop(); // taking off extra row, which was used as an indicator
@@ -79,7 +83,7 @@ route.push((req, res, next) => {
         repo: row.repo_name,
         repo_private: row.repo_private,
         branch: row.branch,
-        url: `${protocol}://${row.host}:${row.port}`,
+        url: `${protocol}://${domain}/c/${containerUid}/`,
         status: row.is_active === true && !row.active_start ? 'Spinning Up' :
           row.is_active === true && row.active_start ? 'Running' :
           row.is_active === false ? 'Spun Down' :
