@@ -7,11 +7,7 @@ const route = new Route({
   requireAuthentication: true
 });
 
-const {
-  protocol,
-  domain,
-  host
-} = config.app.web;
+const webUrl = config.app.web.url;
 
 /*
   Repos listing
@@ -83,7 +79,7 @@ route.push((req, res, next) => {
         repo: row.repo_name,
         repo_private: row.repo_private,
         branch: row.branch,
-        url: `${protocol}://${domain}/c/${containerUid}/`,
+        url: `${webUrl}/c/${row.url_uid}/`,
         status: row.is_active === true && !row.active_start ? 'Spinning Up' :
           row.is_active === true && row.active_start ? 'Running' :
           row.is_active === false ? 'Spun Down' :
