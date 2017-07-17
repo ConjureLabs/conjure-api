@@ -13,7 +13,7 @@ route.push((req, res, next) => {
   const GitHubRepo = require('conjure-core/classes/Repo/GitHub');
 
   // todo: assumes account has a github record in our db - we should have more handlers for services like bitbucket
-  const apiGetAccountGitHub = require('../account/github/get.js').direct;
+  const apiGetAccountGitHub = require('../account/github/get.js').call;
   apiGetAccountGitHub(req, null, (err, result) => {
     if (err) {
       return next(err);

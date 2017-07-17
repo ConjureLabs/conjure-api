@@ -14,7 +14,7 @@ route.push((req, res, next) => {
 
   // getting all user repos
   waterfall.push(callback => {
-    const apiGetRepos = require('../../../repos/get.js').direct;
+    const apiGetRepos = require('../../../repos/get.js').call;
     apiGetRepos(req, null, (err, result) => {
       if (err) {
         return callback(err);
@@ -56,7 +56,7 @@ route.push((req, res, next) => {
   waterfall.push((repos, callback) => {
     const parallel = repos.map(repo => {
       return cb => {
-        const apiWatchRepo = require('../../../repo/watch/post.js').direct;
+        const apiWatchRepo = require('../../../repo/watch/post.js').call;
         apiWatchRepo(req, {
           service: repo.service.toLowerCase(), // keep lower?
           url: repo.url,
