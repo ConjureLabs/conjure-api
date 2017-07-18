@@ -12,6 +12,10 @@ route.push((req, res, next) => {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   const accountGithub = new DatabaseTable('account_github');
 
+  if (!req.user) {
+    return next(new UnexpectedError('No req.user available'));
+  }
+
   accountGithub.select({
     account: req.user.id
   }, (err, rows) => {

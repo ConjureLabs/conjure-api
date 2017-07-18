@@ -46,32 +46,18 @@ server.set('port', port);
 server.use(morgan('combined'));
 
 server.use(cookieSession({
-  cookie: {
-    domain: `.${config.app.api.domain}`,
-    httpOnly: true,
-    maxAge: config.session.duration,
-    overwrite: true,
-    sameSite: 'lax',
-    secure: config.app.api.protocol === 'https',
-    signed: true
-  },
   name: 'conjure',
-  secret: config.session.secret
-}));
+  secret: config.session.secret,
 
-console.log({
-  cookie: {
-    domain: `.${config.app.api.domain}`,
-    httpOnly: true,
-    maxAge: config.session.duration,
-    overwrite: true,
-    sameSite: 'lax',
-    secure: config.app.api.protocol === 'https',
-    signed: true
-  },
-  name: 'conjure',
-  secret: config.session.secret
-})
+  // cookie options
+  domain: `.${config.app.api.domain}`,
+  httpOnly: true,
+  maxAge: config.session.duration,
+  overwrite: true,
+  sameSite: 'lax',
+  secure: config.app.api.protocol === 'https',
+  signed: true
+}));
 
 server.use(passport.initialize());
 server.use(passport.session());
