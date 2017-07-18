@@ -84,7 +84,7 @@ route.push((req, res, next) => {
           row.is_active === true && row.active_start ? 'Running' :
           row.is_active === false ? 'Spun Down' :
           'Unknown', // should not happen
-        start: row.active_start,
+        start: row.active_start || row.added,
         stop: row.active_stop
       };
     });
