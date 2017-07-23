@@ -10,7 +10,7 @@ const route = new Route({
 const webConfig = config.app.web;
 
 /*
-  Repos listing
+  Container timeline
  */
 route.push((req, res, next) => {
   const page = parseInt(req.query.page, 10); // required
@@ -103,7 +103,10 @@ route.push((req, res, next) => {
           page: page + 1,
           rel
         })}`
-      }
+      },
+      delta: `${config.app.api.url}/api/org/${orgName}/containers/timeline/new/count?${qs.stringify({
+        rel
+      })}`
     });
   });
 });
