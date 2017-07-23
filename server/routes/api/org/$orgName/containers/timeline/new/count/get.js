@@ -15,7 +15,7 @@ const webConfig = config.app.web;
 route.push((req, res, next) => {
   let rel = parseInt(req.query.rel, 10); // required - is most recent row id in existing timeline
 
-  if (isNaN(rel) || rel <= 0) {
+  if (isNaN(rel)) {
     return next(new ContentError('Missing `rel` (number)'));
   }
 
