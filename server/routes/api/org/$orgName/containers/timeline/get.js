@@ -105,7 +105,7 @@ route.push((req, res, next) => {
         })}`
       },
       delta: `${config.app.api.url}/api/org/${orgName}/containers/timeline/new/count?${qs.stringify({
-        rel
+        rel: isNaN(rel) ? 0 : rel
       })}`
     });
   });
