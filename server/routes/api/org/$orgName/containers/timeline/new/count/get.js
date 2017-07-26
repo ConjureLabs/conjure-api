@@ -42,7 +42,7 @@ route.push((req, res, next) => {
     }
 
     res.send({
-      count: result.rows[0].count
+      count: result.rows[0].num
     });
   });
 });
