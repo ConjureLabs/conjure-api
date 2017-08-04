@@ -25,7 +25,7 @@ route.push((req, res, next) => {
 
   if (type === GitHubWebhookPayload.types.branch) {
     // todo: if the commit is ontop of a PR, we will have to update the vm
-    return res.send({});
+    return;
   }
 
   const Container = require('conjure-core/classes/Container/GitHub');
