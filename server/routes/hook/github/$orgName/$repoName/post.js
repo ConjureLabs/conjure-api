@@ -63,8 +63,6 @@ route.push((req, res, next) => {
       });
       break;
   }
-
-  res.send({});
 });
 
 module.exports = route;
