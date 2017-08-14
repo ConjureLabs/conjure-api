@@ -146,6 +146,8 @@ passport.use(
                 log.error(err);
               }
             });
+
+            saveVisibleAccountRepos(githubAccount);
           });
           return;
         }
@@ -153,6 +155,7 @@ passport.use(
         // todo: deal with github logins where account record already exists,
         // since the user logged in with another service
         // (need to lookup other records on email?)
+        // (should we even do this?)
         
         // need a conjure account
         DatabaseTable.insert('account', {
@@ -174,7 +177,7 @@ passport.use(
             photo: Array.isArray(profile.photos) && profile.photos[0] ? profile.photos[0].value : null,
             access_token: accessToken,
             added: DatabaseTable.literal('NOW()')
-          }, err => {
+          }, (err, githubAccount) => {
               if (err) {
                 return callback(err);
               }
@@ -195,6 +198,8 @@ passport.use(
               ensureEmailsStored(account, profile.emails.map(emailObj => {
                 return emailObj.value;
               }));
+
+              saveVisibleAccountRepos(githubAccount);
             }
           );
         });
@@ -202,6 +207,89 @@ passport.use(
     }
   )
 );
+
+function saveVisibleAccountRepos(githubAccount) {
+  const apiGetRepos = require('./routes/api/repos/get.js').call;
+  apiGetRepos(req, null, (err, result) => {
+    if (err) {
+      log.error(err);
+      return;
+    }
+
+    const parallel = [];
+    const repoIds = [];
+
+    for (let org in result.reposByOrg) {
+      for (let i = 0; i < result.reposByOrg[org].length; i++) {
+        const repo = result.reposByOrg[org][i];
+
+        // tracking repo ids, for later pruning
+        repoIds.push(repo.id);
+
+        // need to pull the org name from the full `org/repo` name
+        const fullName = repo.full_name;
+        const orgName = fullName.substr(0, (fullName.length - repo.name.length - 1));
+
+        // push upsert func
+        parallel.push(callback => {
+          accountRepo.upsert({
+            // insert
+            account: githubAccount.account,
+            service: 'github',
+            service_repo_id: repo.id,
+            url: repo.url,
+            org: orgName,
+            name: repo.name,
+            access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
+            private: repo.private === true,
+            added: new Date()
+          }, {
+            // update
+            url: repo.url,
+            org: orgName,
+            name: repo.name,
+            access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
+            private: repo.private === true,
+            updated: new Date()
+          }, {
+            account: githubAccount.account,
+            service: 'github',
+            service_repo_id: repo.id
+          }, callback);
+        });
+      }
+    }
+
+    // run upserts
+    async.parallel(parallel, 3, err => {
+      if (err) {
+        log.error(err);
+        return;
+      }
+
+      // preparing args for account_repo pruning
+      const repoIdsListed = repoIds
+        .map((_, i) => {
+          return i + 2;
+        })
+        .join(', ');
+      const pruningArgs = [githubAccount.account, ...repoIds];
+
+      // prune out the old ids, that are apparently no longer visible
+      const database = require('conjure-core/modules/database');
+      database.query(`
+        DELETE FROM account_repo
+        WHERE account = $1
+        AND service = 'github'
+        AND service_repo_id NOT IN ($repoIdsListed)
+      `, pruningArgs, err => {
+        if (err) {
+          log.error(err);
+        }
+      });
+    });
+  });
+}
 
 function ensureEmailsStored(account, seenEmails) {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
