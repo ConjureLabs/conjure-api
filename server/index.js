@@ -234,8 +234,6 @@ function saveVisibleAccountRepos(githubAccount) {
         // tracking repo ids, for later pruning
         repoIds.push(repo.id);
 
-        console.log(repo);
-
         // push upsert func
         parallel.push(callback => {
           accountRepo.upsert({
