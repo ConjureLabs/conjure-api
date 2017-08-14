@@ -208,6 +208,7 @@ passport.use(
   )
 );
 
+// todo: re-save on a daily cron
 function saveVisibleAccountRepos(githubAccount) {
   const apiGetRepos = require('./routes/api/repos/get.js').call;
   apiGetRepos(req, null, (err, result) => {
