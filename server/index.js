@@ -266,7 +266,7 @@ function saveVisibleAccountRepos(githubAccount) {
 
     // run upserts
     const async = require('async');
-    async.parallel(parallel, 3, err => {
+    async.parallelLimit(parallel, 3, err => {
       if (err) {
         log.error(err);
         return;
@@ -275,7 +275,7 @@ function saveVisibleAccountRepos(githubAccount) {
       // preparing args for account_repo pruning
       const repoIdsListed = repoIds
         .map((_, i) => {
-          return i + 2;
+          return `$${i + 2}`;
         })
         .join(', ');
       const pruningArgs = [githubAccount.account, ...repoIds];
@@ -286,7 +286,7 @@ function saveVisibleAccountRepos(githubAccount) {
         DELETE FROM account_repo
         WHERE account = $1
         AND service = 'github'
-        AND service_repo_id NOT IN ($repoIdsListed)
+        AND service_repo_id NOT IN (${repoIdsListed})
       `, pruningArgs, err => {
         if (err) {
           log.error(err);
