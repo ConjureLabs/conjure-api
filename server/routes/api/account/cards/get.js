@@ -101,7 +101,7 @@ function pullStripeCustomerInstance(req, callback) {
   // getting/creating stripe customer record
   waterfall.push((account, callback) => {
     // if no account stripe_id, then error, since we expect it
-    if (account.stripe_id) {
+    if (typeof account.stripe_id !== 'string' || !account.stripe_id) {
       return callback(new ContentError('Account is not associated to any Stripe records'));
     }
 
