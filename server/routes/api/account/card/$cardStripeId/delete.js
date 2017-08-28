@@ -60,7 +60,7 @@ route.push((req, res, next) => {
 
     // first delete our own reference to it
     series.push(callback => {
-      series.delete(callback);
+      cardMatch.delete(callback);
     });
 
     // now delete the stripe id
