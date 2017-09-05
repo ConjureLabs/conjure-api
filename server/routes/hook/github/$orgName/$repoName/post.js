@@ -28,8 +28,10 @@ route.push((req, res, next) => {
     return;
   }
 
-  const Container = require('conjure-core/classes/Container/GitHub');
-  const container = new Container(payload);
+  // const Container = require('conjure-core/classes/Container/GitHub');
+  // const container = new Container(payload);
+
+  const Queue = require('conjure-core/classes/Queue');
 
   // todo: what to do if a container is still starting and the pr is closed?
 
@@ -37,30 +39,54 @@ route.push((req, res, next) => {
     // spin up vm
     case GitHubWebhookPayload.actions.opened:
     case GitHubWebhookPayload.actions.reopened:
-      container.create(err => {
+      const queue = new Queue('defaultExchange', 'repos', 'container.create');
+      queue.publish({
+        payload
+      }, err => {
         if (err) {
           log.error(err);
         }
       });
+      // container.create(err => {
+      //   if (err) {
+      //     log.error(err);
+      //   }
+      // });
       break;
 
     // spin down vm
     case GitHubWebhookPayload.actions.closed:
     case GitHubWebhookPayload.actions.merged:
-      container.destroy(err => {
+      const queue = new Queue('defaultExchange', 'repos', 'container.destroy');
+      queue.publish({
+        payload
+      }, err => {
         if (err) {
           log.error(err);
         }
       });
+      // container.destroy(err => {
+      //   if (err) {
+      //     log.error(err);
+      //   }
+      // });
       break;
 
     // update running vm
     case GitHubWebhookPayload.actions.updated:
-      container.update(err => {
+      const queue = new Queue('defaultExchange', 'repos', 'container.update');
+      queue.publish({
+        payload
+      }, err => {
         if (err) {
           log.error(err);
         }
       });
+      // container.update(err => {
+      //   if (err) {
+      //     log.error(err);
+      //   }
+      // });
       break;
   }
 });
