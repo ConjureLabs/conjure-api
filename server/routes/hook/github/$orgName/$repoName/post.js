@@ -36,7 +36,7 @@ route.push((req, res, next) => {
     // spin up vm
     case GitHubWebhookPayload.actions.opened:
     case GitHubWebhookPayload.actions.reopened:
-      const queue = new Queue('defaultExchange', 'repos', 'container.create');
+      const queue = new Queue('defaultExchange', 'repos', 'github.container.create');
       queue.publish({
         payload
       }, err => {
@@ -49,7 +49,7 @@ route.push((req, res, next) => {
     // spin down vm
     case GitHubWebhookPayload.actions.closed:
     case GitHubWebhookPayload.actions.merged:
-      const queue = new Queue('defaultExchange', 'repos', 'container.destroy');
+      const queue = new Queue('defaultExchange', 'repos', 'github.container.destroy');
       queue.publish({
         payload
       }, err => {
@@ -61,7 +61,7 @@ route.push((req, res, next) => {
 
     // update running vm
     case GitHubWebhookPayload.actions.updated:
-      const queue = new Queue('defaultExchange', 'repos', 'container.update');
+      const queue = new Queue('defaultExchange', 'repos', 'github.container.update');
       queue.publish({
         payload
       }, err => {
