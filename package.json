@@ -11,13 +11,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WiskeyTango/conjure-api.git"
+    "url": "git+https://github.com/ConjureLabs/conjure-api.git"
   },
   "author": "",
   "bugs": {
-    "url": "https://github.com/WiskeyTango/conjure-api/issues"
+    "url": "https://github.com/ConjureLabs/conjure-api/issues"
   },
-  "homepage": "https://github.com/WiskeyTango/conjure-api#readme",
+  "homepage": "https://github.com/ConjureLabs/conjure-api#readme",
   "dependencies": {
     "async": "^2.3.0",
     "body-parser": "1.15.2",

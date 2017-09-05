@@ -28,9 +28,6 @@ route.push((req, res, next) => {
     return;
   }
 
-  // const Container = require('conjure-core/classes/Container/GitHub');
-  // const container = new Container(payload);
-
   const Queue = require('conjure-core/classes/Queue');
 
   // todo: what to do if a container is still starting and the pr is closed?
@@ -47,11 +44,6 @@ route.push((req, res, next) => {
           log.error(err);
         }
       });
-      // container.create(err => {
-      //   if (err) {
-      //     log.error(err);
-      //   }
-      // });
       break;
 
     // spin down vm
@@ -65,11 +57,6 @@ route.push((req, res, next) => {
           log.error(err);
         }
       });
-      // container.destroy(err => {
-      //   if (err) {
-      //     log.error(err);
-      //   }
-      // });
       break;
 
     // update running vm
@@ -82,11 +69,6 @@ route.push((req, res, next) => {
           log.error(err);
         }
       });
-      // container.update(err => {
-      //   if (err) {
-      //     log.error(err);
-      //   }
-      // });
       break;
   }
 });
