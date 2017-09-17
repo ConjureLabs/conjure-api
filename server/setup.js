@@ -65,10 +65,16 @@ function crawlRoutesDir(ignoreCurrentDir, dirpath, uriPathTokens) {
     }
 
     const individualRoute = require(path.resolve(dirpath, files[i]));
+    console.log(`registering ${padRight(verb.toUpperCase(), 7)} -> /${uriPathTokens.join('/')}`);
     routes.push(individualRoute.expressRouter(verb, '/' + uriPathTokens.join('/')));
   }
   
   return routes;
+}
+
+function padRight(label, len) {
+  return label.length >= len ? label :
+    `${label}${' '.repeat(len - label.length)}`;
 }
 
 log.timeEnd('finished setup');
