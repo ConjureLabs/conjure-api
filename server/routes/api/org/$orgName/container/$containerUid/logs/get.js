@@ -4,7 +4,7 @@ const UnexpectedError = require('conjure-core/modules/err').UnexpectedError;
 const config = require('conjure-core/modules/config');
 
 const route = new Route({
-  requireAuthentication: true
+  requireAuthentication: false
 });
 
 const webConfig = config.app.web;
@@ -38,7 +38,8 @@ route.push((req, res, next) => {
     const request = require('request');
 
     // will stream later, first just testing the req
-    request(`http://${container.domain}/github/container/logs`).pipe(res);
+    console.log(`http://${container.domain.split('.').slice(1).join('.')}:2998/github/container/logs`);
+    request.post(`http://${container.domain.split('.').slice(1).join('.')}:2998/github/container/logs`).pipe(res);
   });
 });
 
