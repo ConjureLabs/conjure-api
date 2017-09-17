@@ -12,8 +12,8 @@ const route = new Route();
 
 route.push((req, res, next) => {
   const { orgName, repoName } = req.params;
-  const GitHubWebhookPayload = require('conjure-core/classes/Repo/GitHub/Webhook/Payload');
 
+  const GitHubWebhookPayload = require('conjure-core/classes/Repo/GitHub/Webhook/Payload');
   const payload = new GitHubWebhookPayload(req.body);
   const { type, action } = payload;
 
@@ -39,7 +39,7 @@ route.push((req, res, next) => {
     case GitHubWebhookPayload.actions.reopened:
       queue = new Queue('defaultExchange', 'repos', 'github.container.create');
       queue.publish({
-        payload
+        content: req.body
       }, err => {
         if (err) {
           log.error(err);
@@ -52,7 +52,7 @@ route.push((req, res, next) => {
     case GitHubWebhookPayload.actions.merged:
       queue = new Queue('defaultExchange', 'repos', 'github.container.destroy');
       queue.publish({
-        payload
+        content: req.body
       }, err => {
         if (err) {
           log.error(err);
@@ -64,7 +64,7 @@ route.push((req, res, next) => {
     case GitHubWebhookPayload.actions.updated:
       queue = new Queue('defaultExchange', 'repos', 'github.container.update');
       queue.publish({
-        payload
+        content: req.body
       }, err => {
         if (err) {
           log.error(err);

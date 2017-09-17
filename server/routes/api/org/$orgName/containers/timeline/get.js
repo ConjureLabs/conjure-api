@@ -79,7 +79,8 @@ route.push((req, res, next) => {
         repo: row.repo_name,
         repo_private: row.repo_private,
         branch: row.branch,
-        url: `${webConfig.protocol}://${row.url_uid}.view.${webConfig.host}`,
+        view: `${webConfig.protocol}://${row.url_uid}.view.${webConfig.host}`,
+        logs: `${webConfig.protocol}://${row.url_uid}.logs.${webConfig.host}`,
         status: row.is_active === true && !row.active_start ? 'Spinning Up' :
           row.is_active === true && row.active_start ? 'Running' :
           row.is_active === false ? 'Spun Down' :
