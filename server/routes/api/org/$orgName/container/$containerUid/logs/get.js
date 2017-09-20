@@ -39,7 +39,15 @@ route.push((req, res, next) => {
 
     // will stream later, first just testing the req
     console.log(`http://${container.domain.split('.').slice(1).join('.')}:2998/github/container/logs`);
-    request.post(`http://${container.domain.split('.').slice(1).join('.')}:2998/github/container/logs`).pipe(res);
+    request({
+      url: `http://${container.domain.split('.').slice(1).join('.')}:2998/github/container/logs`,
+      body: {
+        orgName,
+        containerUid
+      },
+      json: true,
+      method: 'POST'
+    }).pipe(res);
   });
 });
 
