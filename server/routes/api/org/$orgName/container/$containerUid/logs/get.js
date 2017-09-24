@@ -10,7 +10,7 @@ const route = new Route({
 const webConfig = config.app.web;
 
 /*
-  Container logs streaming
+  Container logs, getting the setup needed to connect via sockets
  */
 route.push((req, res, next) => {
   const orgName = req.params.orgName;
@@ -33,21 +33,29 @@ route.push((req, res, next) => {
 
     const container = result.rows[0];
 
-    // now need to pipe the stream of logs back
-
     const request = require('request');
 
-    // will stream later, first just testing the req
-    console.log(`http://${container.domain.split('.').slice(1).join('.')}:2998/github/container/logs`);
+    const workerHost = container.domain.split('.').slice(1).join('.');
     request({
-      url: `http://${container.domain.split('.').slice(1).join('.')}:2998/github/container/logs`,
+      method: 'POST',
+      url: `http://${workerHost}:${config.app.worker.port}/github/container/logs`,
       body: {
         orgName,
         containerUid
       },
-      json: true,
-      method: 'POST'
-    }).pipe(res);
+      json: true
+    }, (logsErr, logsRes, logsBody) => {
+      if (logsErr) {
+        return next(logsErr);
+      }
+
+      console.log(logsRes);
+
+      res.send({
+        sessionKey: logsBody.sessionKey,
+        host: workerHost
+      });
+    });
   });
 });
 
