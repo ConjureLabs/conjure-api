@@ -38,7 +38,7 @@ route.push((req, res, next) => {
     const workerHost = container.domain.split('.').slice(1).join('.');
     request({
       method: 'POST',
-      url: `http://${workerHost}:${config.app.worker.port}/github/container/logs`,
+      url: `${config.app.worker.protocol}://${workerHost}:${config.app.worker.port}/github/container/logs`,
       body: {
         orgName,
         containerUid
