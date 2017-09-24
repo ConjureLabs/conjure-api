@@ -49,8 +49,6 @@ route.push((req, res, next) => {
         return next(logsErr);
       }
 
-      console.log(logsRes);
-
       res.send({
         sessionKey: logsBody.sessionKey,
         host: workerHost
