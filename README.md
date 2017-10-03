@@ -1,3 +1,9 @@
+<p align="center">
+  <strong>c o n j u r e</strong>
+  <kbd>⎔</kbd>
+  <strong>a p i</strong>
+</p>
+
 # Conjure API
 
 Conjure API client
