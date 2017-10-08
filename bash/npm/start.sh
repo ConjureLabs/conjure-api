@@ -8,7 +8,12 @@ set -e; # die on any error
 
 export NODE_PATH=$(cd $APP_DIR; cd server; pwd);
 export PORT=2999;
-source $APP_DIR/.profile;
+
+if [ ! $CONJURE_PROFILE_PATH = "" ]; then
+  source "$CONJURE_PROFILE_PATH";
+else
+  source $APP_DIR/../conjure-core/.profile;
+fi
 
 set +e; # no longer die on any error
 
