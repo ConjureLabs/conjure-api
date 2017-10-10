@@ -160,7 +160,7 @@ compression@1.6.2:
 
 "conjure-core@git+ssh://git@github.com:ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+ssh://git@github.com:ConjureLabs/conjure-core.git#5f25124efaef79dadb0db0d0cc831102aa230737"
+  resolved "git+ssh://git@github.com:ConjureLabs/conjure-core.git#191ffb716f55e522d3e153505aa0f663e10d5acd"
   dependencies:
     amqp "^0.2.6"
     app-root-path "^2.0.1"
