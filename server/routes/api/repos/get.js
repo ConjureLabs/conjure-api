@@ -24,6 +24,16 @@ route.push((req, res, next) => {
     const github = require('octonode');
     const githubClient = github.client(githubAccount.access_token);
 
+    githubClient.limit((err, left, max, reset) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('left', left);
+        console.log('max', max);
+        console.log('reset', reset);
+      }
+    });
+
     const async = require('async');
     const allRepos = new UniqueArray('fullName');
     const pullRepos = [];

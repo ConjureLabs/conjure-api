@@ -31,6 +31,8 @@ route.push((req, res, next) => {
   const Queue = require('conjure-core/classes/Queue');
   let queue;
 
+  console.log(action);
+
   // todo: what to do if a container is still starting and the pr is closed?
 
   switch (action) {
