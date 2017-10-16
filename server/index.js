@@ -93,117 +93,124 @@ passport.use(
         return callback(new ContentError('Github Id was not present in profile json'));
       }
 
-      // check for existing account record
-      DatabaseTable.select('account_github', {
-        github_id: profile.id
-      }, (err, rows) => {
-        if (err) {
+      try {
+        // check for existing account record
+        const githubAccountRows = await DatabaseTable.select('account_github', {
+          github_id: profile.id
+        });
+      } catch(err) {
+        return callback(err);
+      }
+
+      // have logged in using github before...
+      if (githubAccountRows.length) {
+        const githubAccount = githubAccountRows[0];
+
+        try {
+          // finding associated conjure account
+          const accountRows = await DatabaseTable.select('account', {
+            id: githubAccount.account
+          });
+        } catch(err) {
           return callback(err);
         }
 
-        // have logged in using github before...
-        if (rows.length === 1) {
-          const githubAccount = rows[0];
+        // this should not happen, since the conjure account showed the associated id
+        if (!accountRows.length) {
+          return callback(new NotFoundError('Conjure account record not found for associated Github account'));
+        }
 
-          // finding associated conjure account
-          DatabaseTable.select('account', {
-            id: githubAccount.account
-          }, (err, rows) => {
-            if (err) {
-              return callback(err);
-            }
+        const account = accountRows[0];
 
-            // this should not happen, since the conjure account showed the associated id
-            if (!rows.length) {
-              return callback(new NotFoundError('Conjure account record not found for associated Github account'));
-            }
+        callback(null, account);
 
-            const account = rows[0];
-
-            callback(err, account);
-
-            // record the login
-            DatabaseTable.insert('account_login', {
-              account: account.id,
-              service: DatabaseTable.cast('github', 'account_login_service'),
-              added: DatabaseTable.literal('NOW()')
-            }, err => {
-              if (err) {
-                log.error(err);
-              }
-            });
-
-            // making sure some details on the github account table are up-to-date
-
-            ensureEmailsStored(account, profile.emails.map(emailObj => {
-              return emailObj.value;
-            }));
-
-            githubAccount.photo = Array.isArray(profile.photos) && profile.photos[0] ? profile.photos[0].value : null;
-            githubAccount.updated = new Date();
-            githubAccount.save(err => {
-              if (err) {
-                log.error(err);
-              }
-            });
-
-            saveVisibleAccountRepos(githubAccount);
+        // record the login
+        try {
+          await DatabaseTable.insert('account_login', {
+            account: account.id,
+            service: DatabaseTable.cast('github', 'account_login_service'),
+            added: DatabaseTable.literal('NOW()')
           });
+        } catch(err) {
+          log.error(err);
+        }
+
+        // making sure some details on the github account table are up-to-date
+
+        ensureEmailsStored(account, profile.emails.map(emailObj => {
+          return emailObj.value;
+        }));
+
+        githubAccount.photo = Array.isArray(profile.photos) && profile.photos[0] ? profile.photos[0].value : null;
+        githubAccount.updated = new Date();
+        
+        try {
+          await githubAccount.save();
+        } catch(err) {
+          log.error(err);
           return;
         }
 
-        // todo: deal with github logins where account record already exists,
-        // since the user logged in with another service
-        // (need to lookup other records on email?)
-        // (should we even do this?)
-        
-        // need a conjure account
-        DatabaseTable.insert('account', {
+        saveVisibleAccountRepos(githubAccount);
+        return;
+      }
+
+      // todo: deal with github logins where account record already exists,
+      // since the user logged in with another service
+      // (need to lookup other records on email?)
+      // (should we even do this?)
+    
+      // need a conjure account
+      try {
+        const accountRows = await DatabaseTable.insert('account', {
           name: profile.displayName,
           email: profile.emails[0].value,
           onboarded: false,
           added: DatabaseTable.literal('NOW()')
-        }, (err, rows) => {
-          const account = rows[0];
-
-          console.log(profile);
-
-          DatabaseTable.insert('account_github', {
-            github_id: profile.id,
-            account: account.id,
-            username: profile.username,
-            name: profile.displayName,
-            email: profile.emails[0].value,
-            photo: Array.isArray(profile.photos) && profile.photos[0] ? profile.photos[0].value : null,
-            access_token: accessToken,
-            added: DatabaseTable.literal('NOW()')
-          }, (err, githubAccount) => {
-              if (err) {
-                return callback(err);
-              }
-
-              callback(err, account);
-
-              // record the login
-              DatabaseTable.insert('account_login', {
-                account: account.id,
-                service: DatabaseTable.cast('github', 'account_login_service'),
-                added: DatabaseTable.literal('NOW()')
-              }, err => {
-                if (err) {
-                  log.error(err);
-                }
-              });
-
-              ensureEmailsStored(account, profile.emails.map(emailObj => {
-                return emailObj.value;
-              }));
-
-              saveVisibleAccountRepos(githubAccount);
-            }
-          );
         });
-      });
+      } catch(err) {
+        return callback(err);
+      }
+
+      const account = accountRows[0];
+
+      console.log(profile);
+
+      try {
+        const githubAccountRows = await DatabaseTable.insert('account_github', {
+          github_id: profile.id,
+          account: account.id,
+          username: profile.username,
+          name: profile.displayName,
+          email: profile.emails[0].value,
+          photo: Array.isArray(profile.photos) && profile.photos[0] ? profile.photos[0].value : null,
+          access_token: accessToken,
+          added: DatabaseTable.literal('NOW()')
+        });
+      } catch(err) {
+        return callback(err);
+      }
+
+      githubAccount = githubAccountRows[0];
+
+      callback(err, account);
+
+      // record the login
+      try {
+        await DatabaseTable.insert('account_login', {
+          account: account.id,
+          service: DatabaseTable.cast('github', 'account_login_service'),
+          added: DatabaseTable.literal('NOW()')
+        });
+      } catch(err) {
+        log.error(err);
+      }
+
+      ensureEmailsStored(account, profile.emails.map(emailObj => {
+        return emailObj.value;
+      }));
+
+      saveVisibleAccountRepos(githubAccount);
     }
   )
 );
@@ -236,30 +243,35 @@ function saveVisibleAccountRepos(githubAccount) {
 
         // push upsert func
         parallel.push(callback => {
-          accountRepo.upsert({
-            // insert
-            account: githubAccount.account,
-            service: repo.service.toLowerCase(),
-            service_repo_id: repo.id,
-            url: repo.url,
-            org: repo.org,
-            name: repo.name,
-            access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
-            private: repo.private === true,
-            added: new Date()
-          }, {
-            // update
-            url: repo.url,
-            org: repo.org,
-            name: repo.name,
-            access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
-            private: repo.private === true,
-            updated: new Date()
-          }, {
-            account: githubAccount.account,
-            service: repo.service.toLowerCase(),
-            service_repo_id: repo.id
-          }, callback);
+          try {
+            await accountRepo.upsert({
+              // insert
+              account: githubAccount.account,
+              service: repo.service.toLowerCase(),
+              service_repo_id: repo.id,
+              url: repo.url,
+              org: repo.org,
+              name: repo.name,
+              access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
+              private: repo.private === true,
+              added: new Date()
+            }, {
+              // update
+              url: repo.url,
+              org: repo.org,
+              name: repo.name,
+              access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
+              private: repo.private === true,
+              updated: new Date()
+            }, {
+              account: githubAccount.account,
+              service: repo.service.toLowerCase(),
+              service_repo_id: repo.id
+            });
+          } catch(err) {
+            return callback(err);
+          }
+          callback();
         });
       }
     }
@@ -282,16 +294,16 @@ function saveVisibleAccountRepos(githubAccount) {
 
       // prune out the old ids, that are apparently no longer visible
       const database = require('conjure-core/modules/database');
-      database.query(`
-        DELETE FROM account_repo
-        WHERE account = $1
-        AND service = 'github'
-        AND service_repo_id NOT IN (${repoIdsListed})
-      `, pruningArgs, err => {
-        if (err) {
-          log.error(err);
-        }
-      });
+      try {
+        await database.query(`
+          DELETE FROM account_repo
+          WHERE account = $1
+          AND service = 'github'
+          AND service_repo_id NOT IN (${repoIdsListed})
+        `, pruningArgs);
+      } catch (err) {
+        log.error(err);
+      }
     });
   });
 }
@@ -300,29 +312,29 @@ function ensureEmailsStored(account, seenEmails) {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   const accountEmails = new DatabaseTable('account_email');
 
-  accountEmails.select({
-    account: account.id
-  }, (err, rows) => {
-    if (err) {
-      log.error(err);
-      return;
-    }
+  try {
+    const rows = await accountEmails.select({
+      account: account.id
+    });
+  } catch(err) {
+    log.error(err);
+    return;
+  }
 
-    const alreadyHave = rows.map(row => row.email);
-    const pendingEmails = seenEmails.filter(email => !alreadyHave.includes(email));
+  const alreadyHave = rows.map(row => row.email);
+  const pendingEmails = seenEmails.filter(email => !alreadyHave.includes(email));
 
-    for (let i = 0; i < accountEmails.length; i++) {
-      accountEmails.insert({
+  for (let i = 0; i < accountEmails.length; i++) {
+    try {
+      await accountEmails.insert({
         account: account.id,
         email: pendingEmails[i],
         added: new Date()
-      }, err => {
-        if (err) {
-          log.error(err);
-        }
       });
+    } catch(err) {
+      log.error(err);
     }
-  });
+  }
 }
 
 server.use((req, res, next) => {
@@ -354,20 +366,20 @@ server.use((req, res, next) => {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
 
   // check for existing account record
-  DatabaseTable.select('account', {
-    id: req.user.id
-  }, (err, rows) => {
-    if (err) {
-      return next(err);
-    }
+  try {
+    const rows = await DatabaseTable.select('account', {
+      id: req.user.id
+    });
+  } catch(err) {
+    return next(err);
+  }
 
-    if (!rows.length) {
-      log.info('User forced logout -- bad cookie');
-      req.logout();
-    }
+  if (!rows.length) {
+    log.info('User forced logout -- bad cookie');
+    req.logout();
+  }
 
-    next();
-  });
+  next();
 });
 
 server.use(setup.routes.api);
