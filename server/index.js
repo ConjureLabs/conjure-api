@@ -373,7 +373,6 @@ server.use((req, res, next) => {
 server.use(setup.routes.api);
 server.use(setup.routes.auth);
 server.use(setup.routes.debug);
-server.use(setup.routes.hook);
 
 server.use((err, req, res, next) => {
   if (!err) {
