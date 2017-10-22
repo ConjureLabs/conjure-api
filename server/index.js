@@ -86,7 +86,7 @@ passport.use(
       scope: 'repo,admin:public_key,user:email,write:repo_hook,admin:org_hook'
     },
 
-    function(accessToken, refreshToken, profile, callback) {
+    async function(accessToken, refreshToken, profile, callback) {
       const DatabaseTable = require('conjure-core/classes/DatabaseTable');
 
       if (!profile.id || isNaN(parseInt(profile.id, 10))) {
@@ -216,7 +216,7 @@ passport.use(
 );
 
 // todo: re-save on a daily cron
-function saveVisibleAccountRepos(githubAccount) {
+async function saveVisibleAccountRepos(githubAccount) {
   const apiGetRepos = require('./routes/api/repos/get.js').call;
   apiGetRepos({
     user: {
@@ -242,7 +242,7 @@ function saveVisibleAccountRepos(githubAccount) {
         repoIds.push(repo.id);
 
         // push upsert func
-        parallel.push(callback => {
+        parallel.push(async callback => {
           try {
             await accountRepo.upsert({
               // insert
@@ -278,7 +278,7 @@ function saveVisibleAccountRepos(githubAccount) {
 
     // run upserts
     const async = require('async');
-    async.parallelLimit(parallel, 3, err => {
+    async.parallelLimit(parallel, 3, async err => {
       if (err) {
         log.error(err);
         return;
@@ -308,7 +308,7 @@ function saveVisibleAccountRepos(githubAccount) {
   });
 }
 
-function ensureEmailsStored(account, seenEmails) {
+async function ensureEmailsStored(account, seenEmails) {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   const accountEmails = new DatabaseTable('account_email');
 
@@ -353,7 +353,7 @@ server.use((req, res, next) => {
 });
 
 // if user has bad cookie, kick 'um
-server.use((req, res, next) => {
+server.use(async (req, res, next) => {
   if (!req.isAuthenticated()) {
     return next();
   }

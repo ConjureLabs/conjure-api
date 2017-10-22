@@ -8,7 +8,7 @@ const route = new Route({
 /*
   Repos listing
  */
-route.push((req, res, next) => {
+route.push(async (req, res, next) => {
   const stripeCardId = req.params.cardStripeId;
 
   const stripeCustomer = pullStripeCustomerInstance(req, callback);

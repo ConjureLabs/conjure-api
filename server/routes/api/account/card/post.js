@@ -19,7 +19,7 @@ const route = new Route({
 
 // todo: verify card does not already exist in our system
 
-route.push((req, res, next) => {
+route.push(async (req, res, next) => {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   const cardData = req.body.card;
   const addressData = req.body.address;
