@@ -67,6 +67,17 @@ server.use(bodyParser.urlencoded({
 server.use(bodyParser.json());
 server.use(cookieParser());
 
+if (config.app.api.protocol === 'https') {
+  const forcedHttpsRouter = express.Router();
+  forcedHttpsRouter.get('*', (req, res, next) => {
+    if (req.headers && req.headers['x-forwarded-proto'] === 'https') {
+      return next();
+    }
+    res.redirect(`${config.app.api.url}${req.url}`);
+  });
+  server.use(forcedHttpsRouter);
+}
+
 passport.serializeUser((user, done) => {
   const DatabaseRow = require('conjure-core/classes/DatabaseRow');
   console.log('serializeUser', user);
@@ -323,17 +334,6 @@ function ensureEmailsStored(account, seenEmails) {
       });
     }
   });
-}
-
-if (config.app.api.protocol === 'https') {
-  const forcedHttpsRouter = express.Router();
-  forcedHttpsRouter.get('*', (req, res, next) => {
-    if (req.headers && req.headers['x-forwarded-proto'] === 'https') {
-      return next();
-    }
-    res.redirect(`${config.app.api.url}${req.url}`);
-  });
-  server.use(forcedHttpsRouter);
 }
 
 server.use((req, res, next) => {
