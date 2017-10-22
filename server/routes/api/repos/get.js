@@ -92,7 +92,7 @@ route.push(async (req, res) => {
   // run the `pullRepos` parallel logic defined above
   async.parallel(pullRepos, err => {
     if (err) {
-      return throw err;
+      throw err;
     }
 
     // todo: pagination - should pull org names, then drill in via UI with api calls, which pages (in UI too)

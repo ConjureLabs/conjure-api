@@ -26,39 +26,38 @@ route.push(async (req, res, next) => {
     }
   });
 
-    /*
-    [{ login: 'ConjureLabs',
-      id: 1783213,
-      url: 'https://api.github.com/orgs/ConjureLabs',
-      repos_url: 'https://api.github.com/orgs/ConjureLabs/repos',
-      events_url: 'https://api.github.com/orgs/ConjureLabs/events',
-      hooks_url: 'https://api.github.com/orgs/ConjureLabs/hooks',
-      issues_url: 'https://api.github.com/orgs/ConjureLabs/issues',
-      members_url: 'https://api.github.com/orgs/ConjureLabs/members{/member}',
-      public_members_url: 'https://api.github.com/orgs/ConjureLabs/public_members{/member}',
-      avatar_url: 'https://avatars2.githubusercontent.com/u/1783213?v=3',
-      description: '' }]
-     */
-    githubClient.get('/user/orgs', {}, (err, status, body) => {
-      if (err) {
-        throw err;
-      }
+  /*
+  [{ login: 'ConjureLabs',
+    id: 1783213,
+    url: 'https://api.github.com/orgs/ConjureLabs',
+    repos_url: 'https://api.github.com/orgs/ConjureLabs/repos',
+    events_url: 'https://api.github.com/orgs/ConjureLabs/events',
+    hooks_url: 'https://api.github.com/orgs/ConjureLabs/hooks',
+    issues_url: 'https://api.github.com/orgs/ConjureLabs/issues',
+    members_url: 'https://api.github.com/orgs/ConjureLabs/members{/member}',
+    public_members_url: 'https://api.github.com/orgs/ConjureLabs/public_members{/member}',
+    avatar_url: 'https://avatars2.githubusercontent.com/u/1783213?v=3',
+    description: '' }]
+   */
+  githubClient.get('/user/orgs', {}, (err, status, body) => {
+    if (err) {
+      throw err;
+    }
 
-      const allOrgs = body;
+    const allOrgs = body;
 
-      allOrgs.push({
-        id: githubAccount.github_id,
-        login: githubAccount.username
-      });
+    allOrgs.push({
+      id: githubAccount.github_id,
+      login: githubAccount.username
+    });
 
-      res.send({
-        orgs: allOrgs.map(org => {
-          return {
-            id: org.id,
-            login: org.login
-          };
-        })
-      });
+    res.send({
+      orgs: allOrgs.map(org => {
+        return {
+          id: org.id,
+          login: org.login
+        };
+      })
     });
   });
 });

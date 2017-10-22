@@ -41,7 +41,7 @@ route.push(async (req, res) => {
   // batching 3 promises at a time
   const apiWatchRepo = require('../../../repo/watch/post.js').call;
   const batchAll = require('conjure-core/modules/utils/Promie/batch-all');
-  const repos = await batchAll(3, repos, repo => {
+  await batchAll(3, repos, repo => {
     return apiWatchRepo(req, {
       service: repo.service.toLowerCase(), // keep lower?
       url: repo.url,

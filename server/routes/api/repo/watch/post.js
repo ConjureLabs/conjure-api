@@ -48,7 +48,7 @@ route.push(async (req, res) => {
     }
 
     // validate hook is not already set
-    githubClient.org(orgName).repo(repoName).hooks((err, data) => {
+    githubClient.org(orgName).repo(repoName).hooks(async (err, data) => {
       if (err) {
         throw err;
       }
@@ -76,7 +76,7 @@ route.push(async (req, res) => {
           secret: config.services.github.inboundWebhookScret,
           url: newHookPath
         }
-      }, err => {
+      }, async err => {
         if (err) {
           console.log(err.body.errors);
           throw err;

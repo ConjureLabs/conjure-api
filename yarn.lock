@@ -323,8 +323,9 @@ configstore@^3.0.0:
     write-file-atomic "^2.0.0"
     xdg-basedir "^3.0.0"
 
-"conjure-core@file:../conjure-core":
+"conjure-core@git+ssh://git@github.com:ConjureLabs/conjure-core.git#task/node-8":
   version "0.0.0"
+  resolved "git+ssh://git@github.com:ConjureLabs/conjure-core.git#1d1bffa0ace109432cc8f09b7f346a067c14dc55"
   dependencies:
     amqp "^0.2.6"
     app-root-path "^2.0.1"
