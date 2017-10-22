@@ -325,6 +325,17 @@ function ensureEmailsStored(account, seenEmails) {
   });
 }
 
+if (config.app.api.protocol === 'https') {
+  const forcedHttpsRouter = express.Router();
+  forcedHttpsRouter.get('*', (req, res, next) => {
+    if (req.headers && req.headers['x-forwarded-proto'] === 'https') {
+      return next();
+    }
+    res.redirect(`${config.app.api.url}${req.url}`);
+  });
+  server.use(forcedHttpsRouter);
+}
+
 server.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Origin', req.headers.origin);
