@@ -17,11 +17,5 @@ fi
 
 set +e; # no longer die on any error
 
-( cd $APP_DIR && nodemon --legacy-watch ./server/ ) &
-PIDS[1]=$!;
-announce "App available at http://localhost:2999/";
-PIDS[2]=$!;
-# by tracking pids, and using this trap, all tracked processes will be killed after a ^C
-# see http://stackoverflow.com/questions/9023164/in-bash-how-can-i-run-multiple-infinitely-running-commands-and-cancel-them-all
-trap "kill ${PIDS[*]} && wait ${PIDS[*]} 2>/dev/null" SIGINT;
-wait;
+cd $APP_DIR;
+node ./server/;
