@@ -50,12 +50,12 @@ server.use(cookieSession({
   secret: config.session.secret,
 
   // cookie options
-  domain: `.${config.app.api.domain}`,
+  domain: `.${config.app.web.domain}`,
   httpOnly: true,
   maxAge: config.session.duration,
   overwrite: true,
   sameSite: 'lax',
-  secure: config.app.api.protocol === 'https',
+  secure: config.app.web.protocol === 'https',
   signed: true
 }));
 
