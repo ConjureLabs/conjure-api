@@ -19,7 +19,7 @@ const route = new Route({
 
 // todo: verify card does not already exist in our system
 
-route.push(async (req, res, next) => {
+route.push(async (req, res) => {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   const cardData = req.body.card;
   const addressData = req.body.address;
@@ -55,14 +55,12 @@ route.push(async (req, res, next) => {
   // store id for stripe customer record, on account row
   accountRecord.stripe_id = customer.id;
   accountRecord.updated = new Date();
-  accountRecord.save(err => {
-    callback(err, accountRecord, customer);
-  });
+  await accountRecord.save();
 
   // add credit card
   const Card = require('conjure-core/classes/Stripe/Card');
 
-  const creditCard = await new Card(customer, {
+  const creditCard = new Card(customer, {
     cvc: cardData.cvc,
     name: cardData.name,
     number: cardData.number,
@@ -78,7 +76,8 @@ route.push(async (req, res, next) => {
       zip: addressData.zip,
       country: addressData.country
     }
-  }, req.body).save();
+  }, req.body);
+  await creditCard.save();
 
   await DatabaseTable.insert('account_card', {
     account: accountRecord.id,

@@ -8,17 +8,14 @@ const route = new Route({
 /*
   Repos listing
  */
-route.push(async (req, res, next) => {
+route.push(async (req, res) => {
   const stripeCardId = req.params.cardStripeId;
 
-  const stripeCustomer = pullStripeCustomerInstance(req, callback);
+  const Customer = require('conjure-core/classes/Stripe/Customer');
+  const stripeCustomer = Customer.getRecordFromReq(req);
 
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   const accountCard = new DatabaseTable('account_card');
-
-  if (!req.user) {
-    throw new UnexpectedError('No req.user available');
-  }
 
   const accountCards = await accountCard.select({
     account: req.user.id
@@ -52,33 +49,3 @@ route.push(async (req, res, next) => {
 });
 
 module.exports = route;
-
-async function pullStripeCustomerInstance(req) {
-  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
-  const account = new DatabaseTable('account');
-
-  const accountRows = await account.select({
-    id: req.user.id
-  });
-
-  // should not be possible
-  if (!rows.length) {
-    throw new UnexpectedError('Could not find account record');
-  }
-
-  // should not be possible
-  if (rows.length > 1) {
-    throw new UnexpectedError('Expected a single row for account record, received multiple');
-  }
-
-  const account = accountRows[0];
-
-  // if no account stripe_id, then error, since we expect it
-  if (typeof account.stripe_id !== 'string' || !account.stripe_id) {
-    throw new ContentError('Account is not associated to any Stripe records');
-  }
-
-  const Customer = require('conjure-core/classes/Stripe/Customer');
-
-  return await Customer.retrieve(req.user.id, account.stripe_id);
-}
