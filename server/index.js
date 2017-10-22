@@ -50,12 +50,12 @@ server.use(cookieSession({
   secret: config.session.secret,
 
   // cookie options
-  domain: `.${config.app.web.domain}`,
+  domain: '.conjure.sh',
   httpOnly: true,
   maxAge: config.session.duration,
   overwrite: true,
   sameSite: 'lax',
-  secure: config.app.web.protocol === 'https',
+  secure: false,
   signed: true
 }));
 
