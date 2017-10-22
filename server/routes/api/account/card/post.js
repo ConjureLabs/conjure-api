@@ -41,22 +41,22 @@ route.push(async (req, res, next) => {
     throw new UnexpectedError('Expected a single row for account record, received multiple');
   }
 
-  const account = accountRows[0];
+  const accountRecord = accountRows[0];
 
   // getting/creating stripe customer record
   const Customer = require('conjure-core/classes/Stripe/Customer');
 
   // if account has a stripe customer record, get it and continue
-  const customer = account.stripe_id ? await Customer.retrieve(req.user.id, account.stripe_id) : await new Customer(req.user.id, {
+  const customer = accountRecord.stripe_id ? await Customer.retrieve(req.user.id, accountRecord.stripe_id) : await new Customer(req.user.id, {
     email: account.email,
     name: account.name
   }).save();
 
   // store id for stripe customer record, on account row
-  account.stripe_id = customer.id;
-  account.updated = new Date();
-  account.save(err => {
-    callback(err, account, customer);
+  accountRecord.stripe_id = customer.id;
+  accountRecord.updated = new Date();
+  accountRecord.save(err => {
+    callback(err, accountRecord, customer);
   });
 
   // add credit card
@@ -81,7 +81,7 @@ route.push(async (req, res, next) => {
   }, req.body).save();
 
   await DatabaseTable.insert('account_card', {
-    account: account.id,
+    account: accountRecord.id,
     stripe_id: cardRecord.id,
     added: new Date()
   });
