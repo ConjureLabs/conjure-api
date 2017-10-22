@@ -67,6 +67,16 @@ server.use(bodyParser.urlencoded({
 server.use(bodyParser.json());
 server.use(cookieParser());
 
+passport.serializeUser((user, done) => {
+  const DatabaseRow = require('conjure-core/classes/DatabaseRow');
+  console.log('serializeUser', user);
+  done(null, new DatabaseRow('account', user));
+});
+passport.deserializeUser((user, done) => {
+  console.log('deserializeUser', user);
+  done(null, user);
+});
+
 if (config.app.api.protocol === 'https') {
   const forcedHttpsRouter = express.Router();
   forcedHttpsRouter.get('*', (req, res, next) => {
@@ -77,16 +87,6 @@ if (config.app.api.protocol === 'https') {
   });
   server.use(forcedHttpsRouter);
 }
-
-passport.serializeUser((user, done) => {
-  const DatabaseRow = require('conjure-core/classes/DatabaseRow');
-  console.log('serializeUser', user);
-  done(null, new DatabaseRow('account', user));
-});
-passport.deserializeUser((user, done) => {
-  console.log('deserializeUser', user);
-  done(null, user);
-});
 
 passport.use(
   new GitHubStrategy(
@@ -339,7 +339,7 @@ function ensureEmailsStored(account, seenEmails) {
 server.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Methods', 'GET,PATCH,PUT,POST,DELETE,HEAD');
   res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
   next();
 });
