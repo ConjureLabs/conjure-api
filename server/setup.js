@@ -83,6 +83,7 @@ module.exports = {
   routes: {
     api: crawlRoutesDir(false, apiRoutesDir),
     auth: crawlRoutesDir(false, authRoutesDir),
-    debug: crawlRoutesDir(false, debugRoutesDir)
+    debug: crawlRoutesDir(false, debugRoutesDir),
+    aws: crawlRoutesDir(true, debugRoutesDir)
   }
 };
