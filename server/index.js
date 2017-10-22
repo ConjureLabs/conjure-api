@@ -175,9 +175,13 @@ passport.use(
           onboarded: false,
           added: DatabaseTable.literal('NOW()')
         }, (err, rows) => {
+          if (err) {
+            return callback(err);
+          }
+
           const account = rows[0];
 
-          console.log(profile);
+          // console.log(profile);
 
           DatabaseTable.insert('account_github', {
             github_id: profile.id,
@@ -188,10 +192,12 @@ passport.use(
             photo: Array.isArray(profile.photos) && profile.photos[0] ? profile.photos[0].value : null,
             access_token: accessToken,
             added: DatabaseTable.literal('NOW()')
-          }, (err, githubAccount) => {
+          }, (err, rows) => {
               if (err) {
                 return callback(err);
               }
+
+              const githubAccount = rows[0];
 
               callback(err, account);
 
@@ -322,7 +328,7 @@ function ensureEmailsStored(account, seenEmails) {
     const alreadyHave = rows.map(row => row.email);
     const pendingEmails = seenEmails.filter(email => !alreadyHave.includes(email));
 
-    for (let i = 0; i < accountEmails.length; i++) {
+    for (let i = 0; i < pendingEmails.length; i++) {
       accountEmails.insert({
         account: account.id,
         email: pendingEmails[i],
