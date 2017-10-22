@@ -14,6 +14,7 @@ const apiRoutesDir = path.resolve(__dirname, 'routes', 'api');
 const authRoutesDir = path.resolve(__dirname, 'routes', 'auth');
 const debugRoutesDir = path.resolve(__dirname, 'routes', 'debug');
 const hookRoutesDir = path.resolve(__dirname, 'routes', 'hook');
+const awsRoutesDir = path.resolve(__dirname, 'routes', 'aws');
 const jsFileExt = /\.js$/;
 const startingDollarSign = /^\$/;
 const validVerbs = ['all', 'get', 'post', 'put', 'patch', 'delete'];
@@ -84,6 +85,6 @@ module.exports = {
     api: crawlRoutesDir(false, apiRoutesDir),
     auth: crawlRoutesDir(false, authRoutesDir),
     debug: crawlRoutesDir(false, debugRoutesDir),
-    aws: crawlRoutesDir(true, debugRoutesDir)
+    aws: crawlRoutesDir(true, awsRoutesDir)
   }
 };
