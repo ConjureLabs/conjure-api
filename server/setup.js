@@ -74,8 +74,7 @@ function crawlRoutesDir(ignoreCurrentDir, dirpath, uriPathTokens) {
 }
 
 function padRight(label, len) {
-  return label.length >= len ? label :
-    `${label}${' '.repeat(len - label.length)}`;
+  return label.length >= len ? label : `${label}${' '.repeat(len - label.length)}`;
 }
 
 log.timeEnd('finished setup');
