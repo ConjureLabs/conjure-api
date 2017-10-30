@@ -5,9 +5,9 @@
   "private": true,
   "main": "./server",
   "scripts": {
-    "dev": "node ./server/",
-    "lint": "bash ./bash/npm/lint.sh",
-    "start": "bash ./bash/npm/start.sh"
+    "dev": "bash ./bash/yarn/run-dev.sh",
+    "lint": "bash ./bash/yarn/lint.sh",
+    "start": "node ./server/"
   },
   "repository": {
     "type": "git",
@@ -28,9 +28,12 @@
     "debug": "2.6.0",
     "express": "4.15.2",
     "morgan": "1.7.0",
-    "passport": "^0.3.2",
+    "passport": "^0.4.0",
     "passport-github": "^1.1.0",
     "pg": "^6.2.3",
-    "request": "^2.81.0"
+    "request-promise-native": "^1.0.5"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
   }
 }

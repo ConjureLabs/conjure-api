@@ -1,7 +1,5 @@
 const Route = require('conjure-core/classes/Route');
-const PermissionsError = require('conjure-core/modules/err').PermissionsError;
-const UnexpectedError = require('conjure-core/modules/err').UnexpectedError;
-const ContentError = require('conjure-core/modules/err').ContentError;
+const { ContentError, PermissionsError } = require('conjure-core/modules/err');
 
 const route = new Route({
   requireAuthentication: true
@@ -10,9 +8,8 @@ const route = new Route({
 // todo: set up a module that handles cases like this
 const asyncBreak = {};
 
-route.push((req, res, next) => {
+route.push(async (req, res) => {
   const config = require('conjure-core/modules/config');
-  const async = require('async');
 
   const {
     service,
@@ -26,106 +23,77 @@ route.push((req, res, next) => {
     vm
   } = req.body;
 
-  const waterfall = [];
-
   const newHookPath = `${config.app.api.protocol}://${config.app.api.publicDomain}/hook/github/${orgName}/${repoName}`;
 
   // get github client
-  waterfall.push(callback => {
-    const apiGetAccountGitHub = require('../../account/github/get.js').call;
-    apiGetAccountGitHub(req, null, (err, result) => {
-      if (err) {
-        return next(err);
-      }
+  const apiGetAccountGitHub = require('../../account/github/get.js').call;
+  const githubAccount = (await apiGetAccountGitHub(req)).account;
 
-      const githubAccount = result.account;
-
-      const github = require('octonode');
-      const githubClient = github.client(githubAccount.access_token);
-
-      callback(null, githubClient);
-    });
-  });
+  // prepare github api client
+  const github = require('octonode');
+  const githubClient = github.client(githubAccount.access_token);
 
   // validate permissions on repo
-  waterfall.push((githubClient, callback) => {
-    githubClient.repo(`${orgName}/${repoName}`).info((err, info) => { 
+  githubClient.repo(`${orgName}/${repoName}`).info((err, info) => { 
+    if (err) {
+      throw err;
+    }
+
+    if (!info || !info.permissions) {
+      throw new ContentError('Unexpected payload');
+    }
+
+    if (info.permissions.admin !== true) {
+      throw new PermissionsError('Must be admin to enable conjure');
+    }
+
+    // validate hook is not already set
+    githubClient.org(orgName).repo(repoName).hooks(async (err, data) => {
       if (err) {
-        return callback(err);
+        throw err;
       }
 
-      if (!info || !info.permissions) {
-        return callback(new ContentError('Unexpected payload'));
-      }
-
-      if (info.permissions.admin !== true) {
-        return callback(new PermissionsError('Must be admin to enable conjure'));
-      }
-
-      callback(null, githubClient, orgName, repoName);
-    });
-  });
-
-  // validate hook is not already set
-  waterfall.push((githubClient, orgName, repoName, callback) => {
-    githubClient.org(orgName).repo(repoName).hooks((err, data) => {
-      if (err) {
-        return callback(err);
-      }
-
-      if (!Array.isArray(data)) {
-        return callback(null, githubClient, orgName, repoName);
-      }
-
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].config && data[i].config.url === newHookPath) {
-          return upsertWatchedRepoRecord(req, err => {
-            callback(err || asyncBreak);
-          });
+      if (Array.isArray(data)) {
+        for (let i = 0; i < data.length; i++) {
+          // if we encounter the hook we are looking for, upsert and respond
+          if (data[i].config && data[i].config.url === newHookPath) {
+            await upsertWatchedRepoRecord(req);
+            return res.send({
+              success: true
+            });
+          }
         }
       }
 
-      return callback(null, githubClient, orgName, repoName);
-    });
-  });
+      // create new hook
+      githubClient.org(orgName).repo(repoName).hook({
+        name: 'web',
+        active: true,
+        events: ['push', 'pull_request'],
+        config: {
+          content_type: 'json',
+          insecure_ssl: 1, // todo: config this - see https://developer.github.com/v3/repos/hooks/#create-a-hook
+          secret: config.services.github.inboundWebhookScret,
+          url: newHookPath
+        }
+      }, async err => {
+        if (err) {
+          console.log(err.body.errors);
+          throw err;
+        }
 
-  // create new hook
-  waterfall.push((githubClient, orgName, repoName, callback) => {
-    githubClient.org(orgName).repo(repoName).hook({
-      name: 'web',
-      active: true,
-      events: ['push', 'pull_request'],
-      config: {
-        content_type: 'json',
-        insecure_ssl: 1, // todo: config this - see https://developer.github.com/v3/repos/hooks/#create-a-hook
-        secret: config.services.github.inboundWebhookScret,
-        url: newHookPath
-      }
-    }, err => {
-      if (err) {
-        console.log(err.body.errors);
-      }
-      callback(err);
-    });
-  });
+        // save our own record of the hook
+        await upsertWatchedRepoRecord(req);
 
-  // save reference to watched repo
-  waterfall.push(callback => {
-    upsertWatchedRepoRecord(req, callback);
-  });
-
-  async.waterfall(waterfall, err => {
-    if (err && err !== asyncBreak) {
-      return next(err);
-    }
-
-    res.send({
-      success: true
+        res.send({
+          success: true
+        });
+      });
     });
   });
 });
 
-function upsertWatchedRepoRecord(req, callback) {
+async function upsertWatchedRepoRecord(req) {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
 
   const {
@@ -138,7 +106,7 @@ function upsertWatchedRepoRecord(req, callback) {
     vm
   } = req.body;
 
-  DatabaseTable.upsert('watched_repo', {
+  await DatabaseTable.upsert('watched_repo', {
     account: req.user.id,
     service,
     service_repo_id: githubId,
@@ -154,8 +122,6 @@ function upsertWatchedRepoRecord(req, callback) {
   }, {
     service,
     service_repo_id: githubId
-  }, err => {
-    callback(err);
   });
 }
 

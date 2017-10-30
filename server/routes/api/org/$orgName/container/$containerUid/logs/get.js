@@ -1,6 +1,5 @@
 const Route = require('conjure-core/classes/Route');
-const ContentError = require('conjure-core/modules/err').ContentError;
-const UnexpectedError = require('conjure-core/modules/err').UnexpectedError;
+const { UnexpectedError } = require('conjure-core/modules/err');
 const config = require('conjure-core/modules/config');
 
 const route = new Route({
@@ -12,48 +11,38 @@ const webConfig = config.app.web;
 /*
   Container logs, getting the setup needed to connect via sockets
  */
-route.push((req, res, next) => {
-  const orgName = req.params.orgName;
-  const containerUid = req.params.containerUid;
+route.push(async (req, res) => {
+  const { orgName, containerUid } = req.params;
 
   const database = require('conjure-core/modules/database');
 
   // todo: verify user has github access to this org
 
   // pulling 1 more than needed, to check if there are more results
-  database.query('SELECT domain FROM container WHERE url_uid = $1', [containerUid], (err, result) => {
-    if (err) {
-      return next(err);
-    }
+  const result = await database.query('SELECT domain FROM container WHERE url_uid = $1', [containerUid]);
 
-    // should not happen
-    if (!Array.isArray(result.rows)) {
-      return next(new UnexpectedError('No rows returned'));
-    }
+  // should not happen
+  if (!Array.isArray(result.rows)) {
+    throw new UnexpectedError('No rows returned');
+  }
 
-    const container = result.rows[0];
+  const container = result.rows[0];
+  const workerHost = container.domain.split('.').slice(1).join('.');
 
-    const request = require('request');
+  const request = require('request-promise-native');
+  const body = await request({
+    method: 'POST',
+    url: `${config.app.worker.protocol}://${workerHost}:${config.app.worker.port}/github/container/logs`,
+    body: {
+      orgName,
+      containerUid
+    },
+    json: true
+  });
 
-    const workerHost = container.domain.split('.').slice(1).join('.');
-    request({
-      method: 'POST',
-      url: `${config.app.worker.protocol}://${workerHost}:${config.app.worker.port}/github/container/logs`,
-      body: {
-        orgName,
-        containerUid
-      },
-      json: true
-    }, (logsErr, logsRes, logsBody) => {
-      if (logsErr) {
-        return next(logsErr);
-      }
-
-      res.send({
-        sessionKey: logsBody.sessionKey,
-        host: workerHost
-      });
-    });
+  res.send({
+    sessionKey: body.sessionKey,
+    host: workerHost
   });
 });
 

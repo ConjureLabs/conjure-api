@@ -9,9 +9,8 @@ const route = new Route({
 /*
   dev endpoint to debug env vars
  */
-route.push((req, res, next) => {
+route.push(async () => {
   console.log('env', process.env);
-  next();
 });
 
 module.exports = route;

@@ -1,5 +1,5 @@
 const Route = require('conjure-core/classes/Route');
-const UnexpectedError = require('conjure-core/modules/err').UnexpectedError;
+const { UnexpectedError } = require('conjure-core/modules/err');
 
 const route = new Route({
   requireAuthentication: true
@@ -8,34 +8,26 @@ const route = new Route({
 /*
   Repos listing
  */
-route.push((req, res, next) => {
+route.push(async (req, res) => {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   const accountGithub = new DatabaseTable('account_github');
 
-  if (!req.user) {
-    return next(new UnexpectedError('No req.user available'));
+  const rows = await accountGithub.select({
+    account: req.user.id
+  });
+
+  // should not be possible
+  if (!rows.length) {
+    throw new UnexpectedError('Could not find GitHub account record');
   }
 
-  accountGithub.select({
-    account: req.user.id
-  }, (err, rows) => {
-    if (err) {
-      return next(err);
-    }
+  // should not be possible
+  if (rows.length > 1) {
+    throw new UnexpectedError('Expected a single row for GitHub account record, received multiple');
+  }
 
-    // should not be possible
-    if (!rows.length) {
-      return next(new UnexpectedError('Could not find GitHub account record'));
-    }
-
-    // should not be possible
-    if (rows.length > 1) {
-      return next(new UnexpectedError('Expected a single row for GitHub account record, received multiple'));
-    }
-
-    res.send({
-      account: rows[0]
-    });
+  res.send({
+    account: rows[0]
   });
 });
 

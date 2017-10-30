@@ -1,13 +1,13 @@
 const Route = require('conjure-core/classes/Route');
-const ContentError = require('conjure-core/modules/err').ContentError;
+const { ContentError } = require('conjure-core/modules/err');
 
 const route = new Route({
   requireAuthentication: true
 });
 
-route.push((req, res, next) => {
+route.push(async (req, res) => {
   if (!req.body.label || !req.body.value) {
-    return next(new ContentError('Payload missing or in an unexpected format'));
+    throw new ContentError('Payload missing or in an unexpected format');
   }
 
   res.cookie('conjure-onboard-orgs', req.body, {
