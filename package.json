@@ -5,9 +5,9 @@
   "private": true,
   "main": "./server",
   "scripts": {
-    "dev": "node ./server/",
-    "lint": "bash ./bash/npm/lint.sh",
-    "start": "bash ./bash/npm/start.sh"
+    "dev": "bash ./bash/yarn/run-dev.sh",
+    "lint": "bash ./bash/yarn/lint.sh",
+    "start": "node ./server/"
   },
   "repository": {
     "type": "git",

@@ -48,7 +48,7 @@ server.use(cookieSession({
   secret: config.session.secret,
 
   // cookie options
-  domain: `.${config.app.api.domain}`,
+  domain: process.env.NODE_ENV === 'production' ? '.conjure.sh' : `.${config.app.api.domain}`,
   httpOnly: true,
   maxAge: config.session.duration,
   overwrite: true,
@@ -74,6 +74,17 @@ passport.deserializeUser((user, done) => {
   console.log('deserializeUser', user);
   done(null, user);
 });
+
+if (config.app.api.protocol === 'https') {
+  const forcedHttpsRouter = express.Router();
+  forcedHttpsRouter.get('*', (req, res, next) => {
+    if (req.headers && req.headers['x-forwarded-proto'] === 'https') {
+      return next();
+    }
+    res.redirect(`${config.app.api.url}${req.url}`);
+  });
+  server.use(forcedHttpsRouter);
+}
 
 passport.use(
   new GitHubStrategy(
@@ -189,7 +200,7 @@ passport.use(
         return callback(err);
       }
 
-      githubAccount = githubAccountRows[0];
+      const githubAccount = githubAccountRows[0];
 
       callback(err, account);
 
@@ -322,7 +333,7 @@ async function ensureEmailsStored(account, seenEmails) {
   const alreadyHave = rows.map(row => row.email);
   const pendingEmails = seenEmails.filter(email => !alreadyHave.includes(email));
 
-  for (let i = 0; i < accountEmails.length; i++) {
+  for (let i = 0; i < pendingEmails.length; i++) {
     try {
       await accountEmails.insert({
         account: account.id,
@@ -384,6 +395,7 @@ server.use(setup.routes.api);
 server.use(setup.routes.auth);
 server.use(setup.routes.debug);
 server.use(setup.routes.hook);
+server.use(setup.routes.aws);
 
 server.use((err, req, res, next) => {
   if (!err) {
