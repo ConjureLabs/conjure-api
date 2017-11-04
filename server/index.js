@@ -87,9 +87,11 @@ passport.use(
         return callback(new ContentError('Github Id was not present in profile json'));
       }
 
+      let githubAccountRows;
+
       try {
         // check for existing account record
-        const githubAccountRows = await DatabaseTable.select('account_github', {
+        githubAccountRows = await DatabaseTable.select('account_github', {
           github_id: profile.id
         });
       } catch(err) {
@@ -100,9 +102,10 @@ passport.use(
       if (githubAccountRows.length) {
         const githubAccount = githubAccountRows[0];
 
+        let accountRows;
         try {
           // finding associated conjure account
-          const accountRows = await DatabaseTable.select('account', {
+          accountRows = await DatabaseTable.select('account', {
             id: githubAccount.account
           });
         } catch(err) {
@@ -155,8 +158,9 @@ passport.use(
       // (should we even do this?)
     
       // need a conjure account
+      let accountRows;
       try {
-        const accountRows = await DatabaseTable.insert('account', {
+        accountRows = await DatabaseTable.insert('account', {
           name: profile.displayName,
           email: profile.emails[0].value,
           onboarded: false,
@@ -171,7 +175,8 @@ passport.use(
       console.log(profile);
 
       try {
-        const githubAccountRows = await DatabaseTable.insert('account_github', {
+        // already defined at start of this func
+        githubAccountRows = await DatabaseTable.insert('account_github', {
           github_id: profile.id,
           account: account.id,
           username: profile.username,
@@ -306,8 +311,9 @@ async function ensureEmailsStored(account, seenEmails) {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   const accountEmails = new DatabaseTable('account_email');
 
+  let rows;
   try {
-    const rows = await accountEmails.select({
+    rows = await accountEmails.select({
       account: account.id
     });
   } catch(err) {
@@ -360,8 +366,9 @@ server.use(async (req, res, next) => {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
 
   // check for existing account record
+  let rows;
   try {
-    const rows = await DatabaseTable.select('account', {
+    rows = await DatabaseTable.select('account', {
       id: req.user.id
     });
   } catch(err) {
