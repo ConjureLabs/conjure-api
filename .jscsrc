@@ -1,6 +1,6 @@
 {
   "excludeFiles": [ "node_modules/**" ],
-  "disallowTrailingWhitespace": true,
+  "disallowTrailingWhitespace": false,
   "requireLineFeedAtFileEnd": true,
   "disallowEmptyBlocks": true,
   "disallowKeywordsOnNewLine": [ "else", "catch", "finally" ],
@@ -53,7 +53,7 @@
   "disallowSpacesInCallExpression": true,
   "requireBlocksOnNewline": true,
   "disallowPaddingNewlinesInBlocks": true,
-  "requirePaddingNewLinesInObjects": true,
+  "requirePaddingNewLinesInObjects": false,
   "requireCommaBeforeLineBreak": true,
   "disallowSpaceAfterPrefixUnaryOperators": [ "++", "--", "+", "-", "~", "!" ],
   "disallowSpaceBeforePostfixUnaryOperators": [ "++", "--" ],

@@ -1,10 +1,5 @@
 {
   "parser": "babel-eslint",
-  "ecmaFeatures": {
-    "experimentalObjectRestSpread": true,
-    "jsx": false,
-    "modules": false
-  },
   "env": {
     "browser": false,
     "es6": true,
