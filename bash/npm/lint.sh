@@ -14,16 +14,9 @@ if ! hash eslint 2>/dev/null; then
   exit 1;
 fi
 
-BABEL_LINT=$(npm list -g | grep babel-eslint | wc -l);
-
-if [ $BABEL_LINT -eq 0 ]; then
-  error "eslint is installed, but babel support is not - you may need to run 'npm install babel-eslint -g'";
-  exit 1;
-fi
-
 set -e;
 
-eslint ./**/*.js;
+eslint ./**/*.js --quiet;
 jscs ./**/*.js;
 
 progress "Lint passed";
