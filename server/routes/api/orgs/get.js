@@ -1,5 +1,4 @@
 const Route = require('conjure-core/classes/Route');
-const UnexpectedError = require('conjure-core/modules/err').UnexpectedError;
 
 const route = new Route({
   requireAuthentication: true
@@ -8,32 +7,26 @@ const route = new Route({
 /*
   Repos listing
  */
-route.push((req, res, next) => {
-  const UniqueArray = require('conjure-core/classes/Array/UniqueArray');
-  const GitHubRepo = require('conjure-core/classes/Repo/GitHub');
-  
+route.push(async (req, res, next) => {
   const apiGetAccountGitHub = require('../account/github/get.js').call;
-  apiGetAccountGitHub(req, null, (err, result) => {
+  const githubAccount = (await apiGetAccountGitHub(req)).account;
+
+  const github = require('octonode');
+  const githubClient = github.client(githubAccount.access_token);
+
+  // just for debub purposes
+  // todo: move or remove this
+  githubClient.limit((err, left, max, reset) => {
     if (err) {
-      return next(err);
+      console.log(err);
+    } else {
+      console.log('left', left);
+      console.log('max', max);
+      console.log('reset', reset);
     }
+  });
 
-    const githubAccount = result.account;
-
-    const github = require('octonode');
-    const githubClient = github.client(githubAccount.access_token);
-
-    githubClient.limit((err, left, max, reset) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('left', left);
-        console.log('max', max);
-        console.log('reset', reset);
-      }
-    });
-
-    /*
+  /*
   [{ login: 'ConjureLabs',
     id: 1783213,
     url: 'https://api.github.com/orgs/ConjureLabs',
@@ -45,27 +38,26 @@ route.push((req, res, next) => {
     public_members_url: 'https://api.github.com/orgs/ConjureLabs/public_members{/member}',
     avatar_url: 'https://avatars2.githubusercontent.com/u/1783213?v=3',
     description: '' }]
-     */
-    githubClient.get('/user/orgs', {}, (err, status, body) => {
-      if (err) {
-        return next(err);
-      }
+   */
+  githubClient.get('/user/orgs', {}, (err, status, body) => {
+    if (err) {
+      throw err;
+    }
 
-      const allOrgs = body;
+    const allOrgs = body;
 
-      allOrgs.push({
-        id: githubAccount.github_id,
-        login: githubAccount.username
-      });
+    allOrgs.push({
+      id: githubAccount.github_id,
+      login: githubAccount.username
+    });
 
-      res.send({
-        orgs: allOrgs.map(org => {
-          return {
-            id: org.id,
-            login: org.login
-          };
-        })
-      });
+    res.send({
+      orgs: allOrgs.map(org => {
+        return {
+          id: org.id,
+          login: org.login
+        };
+      })
     });
   });
 });

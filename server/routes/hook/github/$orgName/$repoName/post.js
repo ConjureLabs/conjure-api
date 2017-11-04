@@ -5,18 +5,16 @@ const log = require('conjure-core/modules/log')('github webhook inbound');
 // todo: move port logic into a class, and use available ports that are free'd
 let workerPort = process.env.PORT;
 
-// todo: set up a module that handles cases like this
-const asyncBreak = {};
-
 const route = new Route();
 
-route.push((req, res, next) => {
+route.push(async (req, res) => {
   const { orgName, repoName } = req.params;
 
   const GitHubWebhookPayload = require('conjure-core/classes/Repo/GitHub/Webhook/Payload');
   const payload = new GitHubWebhookPayload(req.body);
   const { type, action } = payload;
 
+  // telling GitHub it's all good, right away
   res.send({
     success: true,
     type,

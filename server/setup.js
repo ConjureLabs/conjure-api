@@ -14,6 +14,7 @@ const apiRoutesDir = path.resolve(__dirname, 'routes', 'api');
 const authRoutesDir = path.resolve(__dirname, 'routes', 'auth');
 const debugRoutesDir = path.resolve(__dirname, 'routes', 'debug');
 const hookRoutesDir = path.resolve(__dirname, 'routes', 'hook');
+const awsRoutesDir = path.resolve(__dirname, 'routes', 'aws');
 const jsFileExt = /\.js$/;
 const startingDollarSign = /^\$/;
 const validVerbs = ['all', 'get', 'post', 'put', 'patch', 'delete'];
@@ -73,8 +74,7 @@ function crawlRoutesDir(ignoreCurrentDir, dirpath, uriPathTokens) {
 }
 
 function padRight(label, len) {
-  return label.length >= len ? label :
-    `${label}${' '.repeat(len - label.length)}`;
+  return label.length >= len ? label : `${label}${' '.repeat(len - label.length)}`;
 }
 
 log.timeEnd('finished setup');
@@ -84,6 +84,7 @@ module.exports = {
     api: crawlRoutesDir(false, apiRoutesDir),
     auth: crawlRoutesDir(false, authRoutesDir),
     debug: crawlRoutesDir(false, debugRoutesDir),
-    hook: crawlRoutesDir(false, hookRoutesDir)
+    hook: crawlRoutesDir(false, hookRoutesDir),
+    aws: crawlRoutesDir(true, awsRoutesDir)
   }
 };
