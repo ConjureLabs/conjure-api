@@ -192,7 +192,7 @@ passport.use(
 
       const githubAccount = githubAccountRows[0];
 
-      callback(err, account);
+      callback(null, account);
 
       // record the login
       try {

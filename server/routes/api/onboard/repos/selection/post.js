@@ -66,7 +66,7 @@ route.push(async (req, res) => {
   });
 
   // all good
-  res.send({});
+  return res.send({});
 });
 
 module.exports = route;

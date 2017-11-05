@@ -88,7 +88,7 @@ route.push(async (req, res, next) => {
 
   const qs = require('qs');
 
-  res.send({
+  return res.send({
     timeline,
     paging: {
       prev: page === 0 ? null : `${config.app.api.url}/api/org/${orgName}/containers/timeline?${qs.stringify({

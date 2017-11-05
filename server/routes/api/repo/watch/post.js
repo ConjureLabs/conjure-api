@@ -34,64 +34,85 @@ route.push(async (req, res) => {
   const githubClient = github.client(githubAccount.access_token);
 
   // validate permissions on repo
-  githubClient.repo(`${orgName}/${repoName}`).info((err, info) => { 
-    if (err) {
-      throw err;
-    }
+  const info = await promisifiedGitHubInfo(githubClient, orgName, repoName);
 
-    if (!info || !info.permissions) {
-      throw new ContentError('Unexpected payload');
-    }
+  if (!info || !info.permissions) {
+    throw new ContentError('Unexpected payload');
+  }
 
-    if (info.permissions.admin !== true) {
-      throw new PermissionsError('Must be admin to enable conjure');
-    }
+  if (info.permissions.admin !== true) {
+    throw new PermissionsError('Must be admin to enable conjure');
+  }
 
-    // validate hook is not already set
-    githubClient.org(orgName).repo(repoName).hooks(async (err, data) => {
-      if (err) {
-        throw err;
-      }
+  // validate hook is not already set
+  const hooks = await promisifiedGitHubRepoHooks(githubClient, orgName, repoName);
 
-      if (Array.isArray(data)) {
-        for (let i = 0; i < data.length; i++) {
-          // if we encounter the hook we are looking for, upsert and respond
-          if (data[i].config && data[i].config.url === newHookPath) {
-            await upsertWatchedRepoRecord(req);
-            return res.send({
-              success: true
-            });
-          }
-        }
-      }
-
-      // create new hook
-      githubClient.org(orgName).repo(repoName).hook({
-        name: 'web',
-        active: true,
-        events: ['push', 'pull_request'],
-        config: {
-          content_type: 'json',
-          insecure_ssl: 1, // todo: config this - see https://developer.github.com/v3/repos/hooks/#create-a-hook
-          secret: config.services.github.inboundWebhookScret,
-          url: newHookPath
-        }
-      }, async err => {
-        if (err) {
-          console.log(err.body.errors);
-          throw err;
-        }
-
-        // save our own record of the hook
+  if (Array.isArray(hooks)) {
+    for (let i = 0; i < hooks.length; i++) {
+      // if we encounter the hook we are looking for, upsert and respond
+      if (hooks[i].config && hooks[i].config.url === newHookPath) {
         await upsertWatchedRepoRecord(req);
-
-        res.send({
+        return res.send({
           success: true
         });
-      });
-    });
+      }
+    }
+  }
+
+  // create new hook
+  await promisifiedGitHubSetHook(githubClient, orgName, repoName, {
+    name: 'web',
+    active: true,
+    events: ['push', 'pull_request'],
+    config: {
+      content_type: 'json',
+      insecure_ssl: 1, // todo: config this - see https://developer.github.com/v3/repos/hooks/#create-a-hook
+      secret: config.services.github.inboundWebhookScret,
+      url: newHookPath
+    }
+  });
+
+  // save our own record of the hook
+  await upsertWatchedRepoRecord(req);
+
+  return res.send({
+    success: true
   });
 });
+
+// todo: something better
+function promisifiedGitHubInfo(client, orgName, repoName) {
+  return new Promise((resolve, reject) => {
+    client.repo(`${orgName}/${repoName}`).info((err, info) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(info);
+    });
+  });
+}
+
+function promisifiedGitHubRepoHooks(client, orgName, repoName) {
+  return new Promise((resolve, reject) => {
+    client.org(orgName).repo(repoName).hooks((err, data) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data);
+    });
+  });
+}
+
+function promisifiedGitHubSetHook(client, orgName, repoName, data) {
+  return new Promise((resolve, reject) => {
+    client.org(orgName).repo(repoName).hook(data, err => {
+      if (err) {
+        return reject(err);
+      }
+      resolve();
+    });
+  });
+}
 
 async function upsertWatchedRepoRecord(req) {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');

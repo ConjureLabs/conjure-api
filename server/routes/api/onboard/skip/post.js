@@ -27,7 +27,7 @@ route.push(async (req, res) => {
   rows[0].updated = new Date();
   await rows[0].save();
 
-  res.send({});
+  return res.send({});
 });
 
 module.exports = route;

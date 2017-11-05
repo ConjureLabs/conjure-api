@@ -31,7 +31,7 @@ route.push(async (req, res) => {
       return await Card.retrieve(records.stripeCustomer, accountCard.stripe_id);
     });
 
-  res.send({
+  return res.send({
     cards
   });
 });

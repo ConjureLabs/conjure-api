@@ -26,7 +26,7 @@ route.push(async (req, res) => {
     throw new UnexpectedError('Expected a single row for GitHub account record, received multiple');
   }
 
-  res.send({
+  return res.send({
     account: rows[0]
   });
 });
