@@ -70,6 +70,8 @@ route.push(async (req, res) => {
       });
       break;
   }
+
+  return;
 });
 
 module.exports = route;

@@ -30,94 +30,101 @@ route.push(async (req, res) => {
     }
   });
 
-  const async = require('async');
-
   const allRepos = new UniqueArray('fullName');
-  const pullRepos = [];
+  
+  const gitHubOrgs = await promisifyGitHubOrgs(githubClient);
 
   // getting all (possibly private) org repos
-  pullRepos.push(callback => {
-    githubClient.get('/user/orgs', {}, (err, status, body) => {
-      if (err) {
-        return callback(err);
-      }
-
-      const pullOrgRepos = body.map(org => {
-        return cb => {
-          githubClient
-            .org(org.login)
-            .repos((err, repos) => {
-              if (err) {
-                return cb(err);
-              }
-
-              repos = repos.map(repo => new GitHubRepo(repo));
-
-              for (let i = 0; i < repos.length; i++) {
-                allRepos.push(repos[i]);
-              }
-
-              cb();
-            });
-        };
-      });
-
-      async.parallelLimit(pullOrgRepos, 4, callback);
-    });
+  const batchAll = require('conjure-core/modules/utils/Promie/batch-all');
+  const allOrgsRepos = await batchAll(4, gitHubOrgs, org => {
+    return promisifyGitHubOrgRepos(githubClient, org);
   });
+
+  for (let i = 0; i < allOrgsRepos.length; i++) {
+    // each collection in the batch is for an org
+    const orgRepos = allOrgsRepos[i];
+
+    for (let j = 0; j < orgRepos.length; j++) {
+      // each repo within... push into full repo array
+      allRepos.push(new GitHubRepo(orgRepos[j]));
+    }
+  }
 
   // user repos
-  pullRepos.push(callback => {
-    githubClient.user(githubAccount.username).repos((err, repos) => {
-      if (err) {
-        return callback(err);
-      }
+  const userRepos = await promisifyGitHubUserRepos(githubClient, githubAccount);
 
-      repos = repos.map(repo => new GitHubRepo(repo));
+  for (let i = 0; i < userRepos.length; i++) {
+    const repo = new GitHubRepo(userRepos[i]);
 
-      for (let i = 0; i < repos.length; i++) {
-        // filter out repos where the user does not have the correct permissions
-        // todo: possibly make it apparent via the UI that repos were not shown?
-        if (repos[i].permissions.admin !== true) {
-          continue;
-        }
-
-        allRepos.push(repos[i]);
-      }
-
-      callback();
-    });
-  });
-
-  // run the `pullRepos` parallel logic defined above
-  async.parallel(pullRepos, err => {
-    if (err) {
-      throw err;
+    // filter out repos where the user does not have the correct permissions
+    // todo: possibly make it apparent via the UI that repos were not shown?
+    if (repo.permissions.admin !== true) {
+      continue;
     }
 
-    // todo: pagination - should pull org names, then drill in via UI with api calls, which pages (in UI too)
-    const finalRepos = allRepos.native;
+    allRepos.push(repo);
+  }
 
-    const sortInsensitive = require('conjure-core/modules/utils/Array/sort-insensitive');
-    sortInsensitive(finalRepos, 'fullName');
+  // todo: pagination - should pull org names, then drill in via UI with api calls, which pages (in UI too)
+  const finalRepos = allRepos.native;
 
-    const reposByOrg = finalRepos.reduce((mapping, current) => {
-      const orgRepos = mapping[ current.org ];
+  const sortInsensitive = require('conjure-core/modules/utils/Array/sort-insensitive');
+  sortInsensitive(finalRepos, 'fullName');
 
-      if (!Array.isArray(orgRepos)) {
-        mapping[ current.org ] = [ current ];
-      } else {
-        orgRepos.push(current);
-      }
+  const reposByOrg = finalRepos.reduce((mapping, current) => {
+    const orgRepos = mapping[ current.org ];
 
-      return mapping;
-    }, {});
+    if (!Array.isArray(orgRepos)) {
+      mapping[ current.org ] = [ current ];
+    } else {
+      orgRepos.push(current);
+    }
 
-    // todo: stop sending by org all the time - it's an overhead most of the time
-    res.send({
-      reposByOrg
-    });
+    return mapping;
+  }, {});
+
+  // todo: stop sending by org all the time - it's an overhead most of the time
+  return res.send({
+    reposByOrg
   });
 });
+
+// todo: something better
+function promisifyGitHubOrgs(client) {
+  return new Promise((resolve, reject) => {
+    client.get('/user/orgs', {}, (err, status, body) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(body);
+    });
+  });
+}
+
+function promisifyGitHubOrgRepos(client, org) {
+  return new Promise((resolve, reject) => {
+    client
+      .org(org.login)
+      .repos((err, repos) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(repos);
+      });
+  });
+}
+
+function promisifyGitHubUserRepos(client, githubAccount) {
+  return new Promise((resolve, reject) => {
+    client
+      .user(githubAccount.username)
+      .repos((err, repos) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(repos);
+      });
+  });
+}
 
 module.exports = route;
