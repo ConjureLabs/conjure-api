@@ -24,4 +24,13 @@ route.push((req, res, next) => {
   next();
 });
 
+route.push(async (req, res) => {
+  return res.send('test');
+});
+
+route.push((req, res, next) => {
+  console.warn('YOU SHOULD NOT SEE THIS');
+  next();
+});
+
 module.exports = route;
