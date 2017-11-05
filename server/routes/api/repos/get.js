@@ -35,7 +35,7 @@ route.push(async (req, res) => {
   const gitHubOrgs = await promisifyGitHubOrgs(githubClient);
 
   // getting all (possibly private) org repos
-  const batchAll = require('conjure-core/modules/utils/Promie/batch-all');
+  const batchAll = require('conjure-core/modules/utils/Promise/batch-all');
   const allOrgsRepos = await batchAll(4, gitHubOrgs, org => {
     return promisifyGitHubOrgRepos(githubClient, org);
   });

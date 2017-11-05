@@ -81,7 +81,7 @@ route.push(async (req, res) => {
 
   await DatabaseTable.insert('account_card', {
     account: accountRecord.id,
-    stripe_id: cardRecord.id,
+    stripe_id: creditCard.id,
     added: new Date()
   });
 
