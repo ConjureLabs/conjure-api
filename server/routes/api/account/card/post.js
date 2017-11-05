@@ -1,6 +1,5 @@
 const Route = require('conjure-core/classes/Route');
 const { UnexpectedError } = require('conjure-core/modules/err');
-const log = require('conjure-core/modules/log')('account card entry');
 
 const route = new Route({
   requireAuthentication: true

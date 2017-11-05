@@ -11,7 +11,7 @@ const webConfig = config.app.web;
 /*
   Container timeline
  */
-route.push(async (req, res, next) => {
+route.push(async (req, res) => {
   const page = parseInt(req.query.page, 10); // required
   let rel = parseInt(req.query.rel, 10); // may be NaN, if page = 1
 

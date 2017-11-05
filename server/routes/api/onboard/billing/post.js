@@ -1,5 +1,4 @@
 const Route = require('conjure-core/classes/Route');
-const log = require('conjure-core/modules/log')('onboard billing');
 
 const route = new Route({
   requireAuthentication: true

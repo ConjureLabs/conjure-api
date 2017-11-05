@@ -5,22 +5,12 @@ const route = new Route({
   requireAuthentication: true
 });
 
-// todo: set up a module that handles cases like this
-const asyncBreak = {};
-
 route.push(async (req, res) => {
   const config = require('conjure-core/modules/config');
 
   const {
-    service,
-    url,
-    name,
-    fullName,
     orgName,
-    repoName,
-    githubId,
-    isPrivate,
-    vm
+    repoName
   } = req.body;
 
   const newHookPath = `${config.app.api.protocol}://${config.app.api.publicDomain}/hook/github/${orgName}/${repoName}`;

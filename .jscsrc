@@ -1,8 +1,8 @@
 {
   "excludeFiles": [ "node_modules/**" ],
   "disallowTrailingWhitespace": false,
-  "requireLineFeedAtFileEnd": true,
-  "disallowEmptyBlocks": true,
+  "requireLineFeedAtFileEnd": false,
+  "disallowEmptyBlocks": false,
   "disallowKeywordsOnNewLine": [ "else", "catch", "finally" ],
   "disallowMixedSpacesAndTabs": true,
   "disallowQuotedKeysInObjects": "allButReserved",

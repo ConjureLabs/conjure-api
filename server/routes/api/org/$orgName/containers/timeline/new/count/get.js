@@ -1,17 +1,14 @@
 const Route = require('conjure-core/classes/Route');
 const { ContentError, UnexpectedError } = require('conjure-core/modules/err');
-const config = require('conjure-core/modules/config');
 
 const route = new Route({
   requireAuthentication: true
 });
 
-const webConfig = config.app.web;
-
 /*
   New container timeline rows, since last reference (row id)
  */
-route.push(async (req, res, next) => {
+route.push(async (req, res) => {
   let rel = parseInt(req.query.rel, 10); // required - is most recent row id in existing timeline
 
   if (isNaN(rel)) {

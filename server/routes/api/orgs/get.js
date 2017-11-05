@@ -7,7 +7,7 @@ const route = new Route({
 /*
   Repos listing
  */
-route.push(async (req, res, next) => {
+route.push(async (req, res) => {
   const apiGetAccountGitHub = require('../account/github/get.js').call;
   const githubAccount = (await apiGetAccountGitHub(req)).account;
 

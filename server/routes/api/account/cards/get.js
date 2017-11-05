@@ -28,7 +28,7 @@ route.push(async (req, res) => {
     })
     .map(async accountCard => {
       const Card = require('conjure-core/classes/Stripe/Card');
-      return await Card.retrieve(records.stripeCustomer, accountCard.stripe_id);
+      return await Card.retrieve(stripeCustomer, accountCard.stripe_id);
     });
 
   return res.send({

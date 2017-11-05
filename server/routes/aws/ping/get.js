@@ -4,7 +4,7 @@ const route = new Route({
   requireAuthentication: false
 });
 
-route.push((req, res, next) => {
+route.push((req, res) => {
   res.send('pong');
 });
 

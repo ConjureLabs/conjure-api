@@ -35,7 +35,6 @@ route.push(async (req, res) => {
   }
 
   const cardMatch = cardMatches[0];
-  const series = [];
 
   // first delete our own reference to it
   await cardMatch.delete();

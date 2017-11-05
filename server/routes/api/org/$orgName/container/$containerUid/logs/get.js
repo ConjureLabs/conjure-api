@@ -6,8 +6,6 @@ const route = new Route({
   requireAuthentication: false
 });
 
-const webConfig = config.app.web;
-
 /*
   Container logs, getting the setup needed to connect via sockets
  */

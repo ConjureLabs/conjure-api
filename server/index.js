@@ -8,7 +8,6 @@ const express = require('express');
 const compression = require('compression');
 const cookieSession = require('cookie-session');
 const morgan = require('morgan');
-const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');

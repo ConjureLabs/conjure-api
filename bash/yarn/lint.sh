@@ -5,8 +5,8 @@ BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
 
 set -e;
 
-eslint ./**/*.js --quiet;
+eslint $APP_DIR --quiet;
 progress "Lint passed";
 
-jscs ./**/*.js;
+jscs $APP_DIR;
 progress "Coding style passed";

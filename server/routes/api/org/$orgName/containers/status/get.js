@@ -1,12 +1,9 @@
 const Route = require('conjure-core/classes/Route');
 const { ContentError, UnexpectedError } = require('conjure-core/modules/err');
-const config = require('conjure-core/modules/config');
 
 const route = new Route({
   requireAuthentication: true
 });
-
-const webConfig = config.app.web;
 
 /*
   Container status endpoint
