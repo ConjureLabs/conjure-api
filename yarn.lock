@@ -173,7 +173,7 @@ async@0.2.x, async@~0.2.9:
   version "0.2.10"
   resolved "https://registry.yarnpkg.com/async/-/async-0.2.10.tgz#b6bbe0b0674b9d719708ca38de8c237cb526c3d1"
 
-async@^2.3.0, async@^2.5.0:
+async@^2.3.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/async/-/async-2.5.0.tgz#843190fd6b7357a0b9e1c956edddd5ec8462b54d"
   dependencies:
@@ -577,11 +577,10 @@ configstore@^3.0.0:
 
 "conjure-core@git+ssh://git@github.com:ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+ssh://git@github.com:ConjureLabs/conjure-core.git#09ff612e24b158bc238e773f36666b7b63086a3f"
+  resolved "git+ssh://git@github.com:ConjureLabs/conjure-core.git#360b6ef0cdd7e9ee819a43a0b3582d34ddb281b3"
   dependencies:
     amqp "^0.2.6"
     app-root-path "^2.0.1"
-    async "^2.5.0"
     cors "^2.8.3"
     express "^4.15.4"
     node-yaml "^3.1.1"
