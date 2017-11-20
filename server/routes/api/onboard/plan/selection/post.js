@@ -6,7 +6,7 @@ const route = new Route({
 });
 
 route.push(async (req, res) => {
-  const apiAccountBillingPlanCreation = require('../../../account/billing/plan/post.js').call;
+  const apiAccountBillingPlanCreation = require('../../../account/billing/plan/put.js').call;
   const result = await apiAccountBillingPlanCreation(req, req.body);
   return res.send(result);
 });

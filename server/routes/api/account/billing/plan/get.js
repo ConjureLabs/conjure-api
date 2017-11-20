@@ -18,12 +18,12 @@ route.push(async (req, res) => {
   `, [req.user.id]);
 
   // possible if user has no active plan set
-  if (!Array.isArray(matchingPlans)) {
+  if (!Array.isArray(matchingPlans.rows)) {
     throw new NotFoundError('No billing plan found');
   }
 
   // if this happens, then we have conflicting data in the table
-  if (matchingPlans.length > 1) {
+  if (matchingPlans.rows.length > 1) {
     throw new UnexpectedError('Multiple user billing plans found');
   }
 

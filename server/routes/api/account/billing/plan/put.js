@@ -14,26 +14,25 @@ route.push(async (req, res) => {
 
   const database = require('conjure-core/modules/database');
 
-  // pulling 1 more than needed, to check if there are more results
   const matchingPlans = await database.query(`
     SELECT *
-    FROM monthly_billing_plans
+    FROM monthly_billing_plan
     WHERE parallel_container_limit = $1
     AND activated IS NOT NULL
     AND deactivated IS NULL
   `, [containerLimit]);
 
   // should not happen
-  if (!Array.isArray(matchingPlans)) {
-    throw new UnexpectedError('No matching plans found');
+  if (!Array.isArray(matchingPlans.rows)) {
+    throw new UnexpectedError(`No matching plans found (for ${containerLimit} container limit)`);
   }
 
   // if this happens, then we have conflicting data in the table
-  if (matchingPlans.length > 1) {
+  if (matchingPlans.rows.length > 1) {
     throw new UnexpectedError('Multiple matching plans found');
   }
 
-  const plan = results.rows[0];
+  const plan = matchingPlans.rows[0];
 
   // unset any existing plans for the user
   await database.query(`
