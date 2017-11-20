@@ -5,7 +5,7 @@ const route = new Route({
 });
 
 route.push(async (req, res) => {
-  const apiAccountCardCreation = require('../../account/card/post.js').call;
+  const apiAccountCardCreation = require('../../account/billing/card/post.js').call;
   const result = await apiAccountCardCreation(req, req.body);
   return res.send(result);
 });
