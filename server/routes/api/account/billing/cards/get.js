@@ -11,7 +11,7 @@ const route = new Route({
 route.push(async (req, res) => {
   // pull stripe customer instance, based on account record
   const Customer = require('conjure-core/classes/Stripe/Customer');
-  const stripeCustomer = Customer.getRecordFromReq(req);
+  const stripeCustomer = await Customer.getRecordFromReq(req);
 
   // pull account card rows
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');

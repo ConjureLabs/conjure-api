@@ -12,7 +12,7 @@ route.push(async (req, res) => {
   const stripeCardId = req.params.cardStripeId;
 
   const Customer = require('conjure-core/classes/Stripe/Customer');
-  const stripeCustomer = Customer.getRecordFromReq(req);
+  const stripeCustomer = await Customer.getRecordFromReq(req);
 
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   const accountCard = new DatabaseTable('account_card');
