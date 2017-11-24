@@ -147,7 +147,11 @@ passport.use(
           return;
         }
 
-        saveVisibleAccountRepos(githubAccount);
+        try {
+          saveVisibleAccountRepos(githubAccount);
+        } catch(err) {
+          log.error(err);
+        }
         return;
       }
 
@@ -208,7 +212,11 @@ passport.use(
         return emailObj.value;
       }));
 
-      saveVisibleAccountRepos(githubAccount);
+      try {
+        saveVisibleAccountRepos(githubAccount);
+      } catch(err) {
+        log.error(err);
+      }
     }
   )
 );
@@ -216,94 +224,85 @@ passport.use(
 // todo: re-save on a daily cron
 async function saveVisibleAccountRepos(githubAccount) {
   const apiGetRepos = require('./routes/api/repos/get.js').call;
-  apiGetRepos({
+  
+  const userRepos = await apiGetRepos({
     user: {
       id: githubAccount.account
     }
-  }, null, (err, result) => {
-    if (err) {
-      log.error(err);
-      return;
+  });
+
+  const allRepos = [];
+
+  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+  const accountRepo = new DatabaseTable('account_repo');
+
+  const reposByOrg = userRepos.reposByOrg;
+
+  for (let org in reposByOrg) {
+    for (let i = 0; i < reposByOrg[org].length; i++) {
+      const repo = reposByOrg[org][i];
+
+      // push upsert func
+      allRepos.push(repo);
     }
+  }
 
-    const parallel = [];
-    const repoIds = [];
+  console.log(allRepos.map(r => ({
+    id: r.id,
+    name: r.name,
+    org: r.org,
+    url: r.url
+  })))
 
-    const DatabaseTable = require('conjure-core/classes/DatabaseTable');
-    const accountRepo = new DatabaseTable('account_repo');
-
-    for (let org in result.reposByOrg) {
-      for (let i = 0; i < result.reposByOrg[org].length; i++) {
-        const repo = result.reposByOrg[org][i];
-
-        // tracking repo ids, for later pruning
-        repoIds.push(repo.id);
-
-        // push upsert func
-        parallel.push(async callback => {
-          try {
-            await accountRepo.upsert({
-              // insert
-              account: githubAccount.account,
-              service: repo.service.toLowerCase(),
-              service_repo_id: repo.id,
-              url: repo.url,
-              org: repo.org,
-              name: repo.name,
-              access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
-              private: repo.private === true,
-              added: new Date()
-            }, {
-              // update
-              url: repo.url,
-              org: repo.org,
-              name: repo.name,
-              access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
-              private: repo.private === true,
-              updated: new Date()
-            }, {
-              account: githubAccount.account,
-              service: repo.service.toLowerCase(),
-              service_repo_id: repo.id
-            });
-          } catch(err) {
-            return callback(err);
-          }
-          callback();
-        });
-      }
-    }
-
-    // run upserts
-    const async = require('async');
-    async.parallelLimit(parallel, 3, async err => {
-      if (err) {
-        log.error(err);
-        return;
-      }
-
-      // preparing args for account_repo pruning
-      const repoIdsListed = repoIds
-        .map((_, i) => {
-          return `$${i + 2}`;
-        })
-        .join(', ');
-      const pruningArgs = [githubAccount.account, ...repoIds];
-
-      // prune out the old ids, that are apparently no longer visible
-      const database = require('conjure-core/modules/database');
-      try {
-        await database.query(`
-          DELETE FROM account_repo
-          WHERE account = $1
-          AND service = 'github'
-          AND service_repo_id NOT IN (${repoIdsListed})
-        `, pruningArgs);
-      } catch (err) {
-        log.error(err);
-      }
+  // run upserts
+  const batchAll = require('conjure-core/modules/utils/Promise/batch-all');
+  await batchAll(3, allRepos, repo => {
+    console.log(`UPSERTING ${repo.org} / ${repo.name}`);
+    return accountRepo.upsert({
+      // insert
+      account: githubAccount.account,
+      service: repo.service.toLowerCase(),
+      service_repo_id: repo.id,
+      url: repo.url,
+      org: repo.org,
+      name: repo.name,
+      access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
+      private: repo.private === true,
+      added: new Date()
+    }, {
+      // update
+      url: repo.url,
+      org: repo.org,
+      name: repo.name,
+      access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
+      private: repo.private === true,
+      updated: new Date()
+    }, {
+      // update where
+      account: githubAccount.account,
+      service: repo.service.toLowerCase(),
+      service_repo_id: repo.id
     });
   });
+
+  const repoIds = allRepos.map(repo => repo.id);
+
+  // preparing args for account_repo pruning
+  const repoIdsListed = repoIds
+    .map((_, i) => {
+      return `$${i + 2}`;
+    })
+    .join(', ');
+  const pruningArgs = [githubAccount.account, ...repoIds];
+
+  // prune out the old ids, that are apparently no longer visible
+  const database = require('conjure-core/modules/database');
+  await database.query(`
+    DELETE FROM account_repo
+    WHERE account = $1
+    AND service = 'github'
+    AND service_repo_id NOT IN (${repoIdsListed})
+  `, pruningArgs);
 }
 
 async function ensureEmailsStored(account, seenEmails) {
