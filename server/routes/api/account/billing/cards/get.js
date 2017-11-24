@@ -21,15 +21,14 @@ route.push(async (req, res) => {
   });
 
   // pulling full card details
-  const cards = accountCards
-    .filter(accountCard => {
-      // removing any account card records that are not associated to a stripe record
-      return typeof accountCard.stripe_id === 'string' && accountCard.stripe_id;
-    })
-    .map(async accountCard => {
-      const Card = require('conjure-core/classes/Stripe/Card');
-      return (await Card.retrieve(stripeCustomer, accountCard.stripe_id));
-    });
+  const cards = await accountCards.filter(accountCard => {
+    // removing any account card records that are not associated to a stripe record
+    return typeof accountCard.stripe_id === 'string' && accountCard.stripe_id;
+  });
+  const Card = require('conjure-core/classes/Stripe/Card');
+  for (let i = 0; i < cards.length; i++) {
+    cards[i] = await Card.retrieve(stripeCustomer, cards[i].stripe_id);
+  }
 
   return res.send({
     cards
