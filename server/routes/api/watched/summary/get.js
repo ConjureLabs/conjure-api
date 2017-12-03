@@ -48,11 +48,13 @@ route.push(async (req, res) => {
 });
 
 // todo: make a resusable database util that knows how to strip records before sending to client
-function minialRepo(repo => ({
-  org: repo.org,
-  name: repo.name,
-  pirvate: repo.private,
-  disabled: repo.disabled
-}))l
+function minialRepo(repo) {
+  return {
+    org: repo.org,
+    name: repo.name,
+    pirvate: repo.private,
+    disabled: repo.disabled
+  };
+}
 
 module.exports = route;
