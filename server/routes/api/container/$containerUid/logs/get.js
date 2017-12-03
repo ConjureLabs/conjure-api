@@ -29,8 +29,6 @@ route.push(async (req, res) => {
     )
   `, [containerUid, req.user.id]);
 
-  console.log(result);
-
   // should not happen
   if (!Array.isArray(result.rows)) {
     throw new UnexpectedError('No rows returned');
