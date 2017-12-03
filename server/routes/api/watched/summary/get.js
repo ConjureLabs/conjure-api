@@ -55,7 +55,7 @@ route.push(async (req, res) => {
       repos: watchedRepos.map(repo => minialRepo(repo))
     },
     additional: {
-      orgs: !!notWatchedRepos.find(repo => !uniqueWatchedOrgs.includes(repo.org)),
+      orgs: haveAdditionalOrgs,
       reposByOrg: notWatchedReposByOrg
     }
   });
