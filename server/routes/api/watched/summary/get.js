@@ -26,12 +26,12 @@ route.push(async (req, res) => {
 
   const UniqueArray = require('conjure-core/classes/Array/UniqueArray');
   let uniqueWatchedOrgs = new UniqueArray('org');
-  for (let i = 0; i < watchedRepos; i++) {
+  for (let i = 0; i < watchedRepos.length; i++) {
     uniqueWatchedOrgs.push(watchedRepos[i]);
   }
   uniqueWatchedOrgs = uniqueWatchedOrgs.native.map(repo => repo.org);
 
-  res.send({
+  return res.send({
     watched: {
       orgs: uniqueWatchedOrgs,
       repos: watchedRepos.map(repo => minialRepo(repo))
