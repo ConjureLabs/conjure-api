@@ -104,21 +104,21 @@ route.push(async (req, res) => {
     timeline,
     paging: {
       prev: page === 0 ? null : `${config.app.api.url}/api/containers/timeline?${qs.stringify({
-        org
+        org,
         repo,
         page: page - 1,
         rel,
       })}`,
 
       next: !moreRows ? null : `${config.app.api.url}/api/containers/timeline?${qs.stringify({
-        org
+        org,
         repo,
         page: page + 1,
         rel
       })}`
     },
     delta: `${config.app.api.url}/api/containers/timeline/new/count?${qs.stringify({
-      org
+      org,
       repo,
       rel: isNaN(rel) ? 0 : rel
     })}`
