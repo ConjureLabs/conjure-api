@@ -11,7 +11,7 @@ route.push(async (req, res) => {
   const DatabaseTable = require('conjure-core/classes/DatabaseTable');
   
   const watchedRepo = new DatabaseTable('watched_repo');
-  const watchedRepos = watchedRepo.select({
+  const watchedRepos = await watchedRepo.select({
     account: req.user.id
   });
 
@@ -20,7 +20,7 @@ route.push(async (req, res) => {
     account: req.user.id
   });
 
-  const watchedReposServiceIds = (await watchedRepos).map(repo => repo.service_repo_id);
+  const watchedReposServiceIds = watchedRepos.map(repo => repo.service_repo_id);
 
   const notWatchedRepos = accountRepos.filter(repo => !watchedReposServiceIds.includes(repo.service_repo_id));
 
