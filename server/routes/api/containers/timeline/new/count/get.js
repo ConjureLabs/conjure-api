@@ -48,7 +48,7 @@ route.push(async (req, res) => {
     WHERE ${sqlWheres.join(`
       AND
     `)}
-  `, [orgName]);
+  `, sqlArgs);
 
   // should not happen
   if (!Array.isArray(result.rows)) {
