@@ -47,7 +47,7 @@ route.push(async (req, res) => {
       return byOrg;
     }, baseWatchedRepos);
 
-  const haveAdditionalOrgs = Object.keys(notWatchedReposByOrg).length > watchedOrgs;
+  const haveAdditionalOrgs = Object.keys(notWatchedReposByOrg).length > watchedOrgs.length;
 
   return res.send({
     watched: {
