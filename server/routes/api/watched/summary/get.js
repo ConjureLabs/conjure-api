@@ -29,7 +29,7 @@ route.push(async (req, res) => {
   for (let i = 0; i < watchedRepos; i++) {
     uniqueWatchedOrgs.push(watchedRepos[i]);
   }
-  uniqueWatchedOrgs = uniqueWatchedOrgs.map(repo => repo.org);
+  uniqueWatchedOrgs = uniqueWatchedOrgs.native.map(repo => repo.org);
 
   res.send({
     watched: {
