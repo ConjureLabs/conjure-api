@@ -8,41 +8,55 @@ const route = new Route({
   Repos listing
  */
 route.push(async (req, res) => {
-  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
-  
-  const watchedRepo = new DatabaseTable('watched_repo');
-  const watchedRepos = await watchedRepo.select({
-    account: req.user.id
-  });
+  const database = require('conjure-core/modules/database');
 
-  const accountRepo = new DatabaseTable('account_repo');
-  const accountRepos = await watchedRepo.select({
-    account: req.user.id
-  });
+  // getting all repo records user has access to
+  const accountRepos = (
+    await database.query(`
+      SELECT
+        ar.*,
+        CASE
+          WHEN wr.id IS NULL THEN false
+          ELSE true
+        END watching
+      FROM account_repo ar
+      LEFT JOIN watched_repo wr
+        ON ar.service_repo_id = wr.service_repo_id
+      WHERE ar.account = $1
+    `, [req.user.id])
+  ).rows;
 
-  const watchedReposServiceIds = watchedRepos.map(repo => repo.service_repo_id);
+  const watchedRepos = accountRepos.filter(repo => repo.watching === true);
+  const watchedOrgs = watchedRepos
+    .map(repo => repo.org)
+    .reduce((unique, org) => {
+      if (!unique.includes(org)) {
+        unique.push(org);
+      }
+      return unique;
+    }, []);
 
-  const notWatchedRepos = accountRepos.filter(repo => !watchedReposServiceIds.includes(repo.service_repo_id));
+  const baseWatchedRepos = watchedOrgs.reduce((base, org) => {
+    base[org] = false;
+    return base;
+  }, {});
+  const notWatchedReposByOrg = accountRepos
+    .filter(repo => repo.watching === false)
+    .reduce((byOrg, repo) => {
+      byOrg[ repo.org ] = true;
+      return byOrg;
+    }, baseWatchedRepos);
 
-  const UniqueArray = require('conjure-core/classes/Array/UniqueArray');
-  let uniqueWatchedOrgs = new UniqueArray('org');
-  for (let i = 0; i < watchedRepos.length; i++) {
-    uniqueWatchedOrgs.push(watchedRepos[i]);
-  }
-  uniqueWatchedOrgs = uniqueWatchedOrgs.native.map(repo => repo.org);
+  const haveAdditionalOrgs = Object.keys(notWatchedReposByOrg).length > watchedOrgs;
 
   return res.send({
     watched: {
-      orgs: uniqueWatchedOrgs,
+      orgs: watchedOrgs,
       repos: watchedRepos.map(repo => minialRepo(repo))
     },
     additional: {
       orgs: !!notWatchedRepos.find(repo => !uniqueWatchedOrgs.includes(repo.org)),
-      // repos, by already watched org ids
-      reposByOrg: uniqueWatchedOrgs.reduce((indicators, org) => {
-        indicators[org] = !!notWatchedRepos.find(repo => !watchedReposServiceIds.includes(repo.service_repo_id));
-        return indicators;
-      }, {})
+      reposByOrg: notWatchedReposByOrg
     }
   });
 });
