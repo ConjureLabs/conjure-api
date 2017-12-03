@@ -24,12 +24,12 @@ route.push(async (req, res) => {
   const sqlWheres = [];
 
   if (org !== '*') {
-    sqlWheres.push(`wr.org = $${sqlArgs.length + 1} )`);
+    sqlWheres.push(`wr.org = $${sqlArgs.length + 1}`);
     sqlArgs.push(org);
   }
 
   if (repo !== '*') {
-    sqlWheres.push(`wr.name = $${sqlArgs.length + 1} )`);
+    sqlWheres.push(`wr.name = $${sqlArgs.length + 1}`);
     sqlArgs.push(repo);
   }
 
