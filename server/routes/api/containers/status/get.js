@@ -20,33 +20,36 @@ route.push(async (req, res) => {
   }
 
   const database = require('conjure-core/modules/database');
-
-  const orgName = req.params.orgName;
-
-  // todo: verify user has github access to this org
   
-  const sqlArgs = [orgName];
+  const sqlArgs = [];
+  const sqlWheres = [];
 
+  // records associated to user
+  sqlWheres.push(`wr.service_repo_id IN ( SELECT service_repo_id FROM account_repo WHERE account = $${sqlArgs.length + 1} )`);
+  sqlArgs.push(req.user.id);
+
+  // ids checking within
+  // todo: see if this breaks with too many container ids
+  const idsInMunged = containerIds
+    .map((_, i) => {
+      return `$${i + 1 + sqlArgs.length}`;
+    })
+    .join(',');
+  sqlWheres.push(`c.id IN (${idsInMunged})`);
   for (let i = 0; i < containerIds.length; i++) {
     sqlArgs.push(containerIds[i]);
   }
-
-  const idsInMunged = containerIds
-    .map((_, i) => {
-      return `$${i + 2}`;
-    })
-    .join(',');
 
   // pulling 1 more than needed, to check if there are more results
   const result = await database.query(`
     SELECT
       id, is_active, active_start
     FROM container c
-    WHERE repo IN (
-      SELECT id FROM watched_repo WHERE org = $1
-    )
-    AND id IN (${idsInMunged})
-    ORDER BY added DESC
+    INNER JOIN watched_repo wr ON c.repo = wr.id
+    WHERE ${sqlWheres.join(`
+      AND
+    `)}
+    ORDER BY c.added DESC
   `, sqlArgs);
 
   // should not happen

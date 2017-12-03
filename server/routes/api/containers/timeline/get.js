@@ -12,8 +12,11 @@ const webConfig = config.app.web;
   Container timeline
  */
 route.push(async (req, res) => {
-  const page = parseInt(req.query.page, 10); // required
-  let rel = parseInt(req.query.rel, 10); // may be NaN, if page = 1
+  const { org, repo } = req.query;
+  let { page, rel } = req.query;
+
+  page = parseInt(page, 10); // required
+  rel = parseInt(rel, 10); // may be NaN, if page = 1
 
   const limit = 32; // todo: config this?
 
@@ -25,16 +28,26 @@ route.push(async (req, res) => {
 
   const database = require('conjure-core/modules/database');
 
-  const orgName = req.params.orgName;
+  const sqlArgs = [];
+  const sqlWheres = [];
 
-  // todo: verify user has github access to this org
-  
-  const sqlArgs = [orgName];
+  if (org !== '*') {
+    sqlWheres.push(`wr.org = $${sqlArgs.length + 1} )`);
+    sqlArgs.push(org);
+  }
+
+  if (repo !== '*') {
+    sqlWheres.push(`wr.name = $${sqlArgs.length + 1} )`);
+    sqlArgs.push(repo);
+  }
+
+  // records associated to user
+  sqlWheres.push(`wr.service_repo_id IN ( SELECT service_repo_id FROM account_repo WHERE account = $${sqlArgs.length + 1} )`);
+  sqlArgs.push(req.user.id);
 
   // if using paging rel (relative row id that marks row 0) then we must page against that row
-  let sqlWhereAddition = '';
   if (rel) {
-    sqlWhereAddition = `AND c.id <= $2`;
+    sqlWheres.push(`c.id <= $${sqlArgs.length + 1}`);
     sqlArgs.push(rel);
   }
 
@@ -46,10 +59,9 @@ route.push(async (req, res) => {
       wr.private repo_private
     FROM container c
     INNER JOIN watched_repo wr ON c.repo = wr.id
-    WHERE c.repo IN (
-      SELECT id FROM watched_repo WHERE org = $1
-    )
-    ${sqlWhereAddition}
+    WHERE ${sqlWheres.join(`
+      AND
+    `)}
     ORDER BY added DESC
     LIMIT ${limit + 1}
     OFFSET ${page * limit}
@@ -91,17 +103,23 @@ route.push(async (req, res) => {
   return res.send({
     timeline,
     paging: {
-      prev: page === 0 ? null : `${config.app.api.url}/api/org/${orgName}/containers/timeline?${qs.stringify({
+      prev: page === 0 ? null : `${config.app.api.url}/api/containers/timeline?${qs.stringify({
+        org
+        repo,
         page: page - 1,
-        rel
+        rel,
       })}`,
 
-      next: !moreRows ? null : `${config.app.api.url}/api/org/${orgName}/containers/timeline?${qs.stringify({
+      next: !moreRows ? null : `${config.app.api.url}/api/containers/timeline?${qs.stringify({
+        org
+        repo,
         page: page + 1,
         rel
       })}`
     },
-    delta: `${config.app.api.url}/api/org/${orgName}/containers/timeline/new/count?${qs.stringify({
+    delta: `${config.app.api.url}/api/containers/timeline/new/count?${qs.stringify({
+      org
+      repo,
       rel: isNaN(rel) ? 0 : rel
     })}`
   });
