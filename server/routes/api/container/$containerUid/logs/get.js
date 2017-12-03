@@ -3,7 +3,7 @@ const { UnexpectedError } = require('conjure-core/modules/err');
 const config = require('conjure-core/modules/config');
 
 const route = new Route({
-  requireAuthentication: false
+  requireAuthentication: true
 });
 
 /*
@@ -14,10 +14,22 @@ route.push(async (req, res) => {
 
   const database = require('conjure-core/modules/database');
 
-  // todo: verify user has github access to this org
-
   // pulling 1 more than needed, to check if there are more results
-  const result = await database.query('SELECT domain FROM container WHERE url_uid = $1', [containerUid]);
+  const result = await database.query(`
+    SELECT c.domain
+    FROM container c
+    INNER JOIN watched_repo wr
+      ON c.repo = wr.id
+    WHERE c.url_uid = $1
+    AND is_active IS TRUE
+    AND wr.service_repo_id IN (
+      SELECT service_repo_id
+      FROM account_repo
+      WHERE account = $2
+    )
+  `, [containerUid, req.user.id]);
+
+  console.log(result);
 
   // should not happen
   if (!Array.isArray(result.rows)) {
