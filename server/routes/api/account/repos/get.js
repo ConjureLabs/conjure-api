@@ -30,7 +30,7 @@ route.push(async (req, res) => {
   const repos = await promisifyGitHubUserRepos(gitHubClient, gitHubAccount);
 
   const sortInsensitive = require('conjure-core/modules/utils/Array/sort-insensitive');
-  sortInsensitive(repos, 'fullName');
+  sortInsensitive(repos, 'full_name');
 
   // todo: stop sending by org all the time - it's an overhead most of the time
   return res.send({
