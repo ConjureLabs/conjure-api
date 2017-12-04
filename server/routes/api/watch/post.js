@@ -11,7 +11,7 @@ route.push(async (req, res) => {
   }
 
   // getting all user repos
-  const apiGetRepos = require('../../repos/get.js').call;
+  const apiGetRepos = require('../repos/get.js').call;
   const apiGetReposResult = apiGetRepos(req);
   const { reposByOrg } = await apiGetReposResult;
 
@@ -39,7 +39,7 @@ route.push(async (req, res) => {
   }
 
   // batching 3 promises at a time
-  const apiWatchRepo = require('../../repo/watch/post.js').call;
+  const apiWatchRepo = require('../repo/watch/post.js').call;
   const batchAll = require('conjure-core/modules/utils/Promise/batch-all');
   await batchAll(3, repos, repo => {
     return apiWatchRepo(req, {
