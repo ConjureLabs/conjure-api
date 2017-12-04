@@ -11,7 +11,7 @@ route.push(async (req, res) => {
   const orgName = req.params.orgName;
 
   // todo: assumes account has a github record in our db - we should have more handlers for services like bitbucket
-  const apiGetAccountGitHub = require('../account/github/get.js').call;
+  const apiGetAccountGitHub = require('../../../account/github/get.js').call;
   const githubAccount = (await apiGetAccountGitHub(req)).account;
 
   const github = require('octonode');
