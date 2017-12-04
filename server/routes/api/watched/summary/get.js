@@ -66,7 +66,7 @@ function minialRepo(repo) {
   return {
     org: repo.org,
     name: repo.name,
-    pirvate: repo.private,
+    private: repo.private,
     disabled: repo.disabled
   };
 }
