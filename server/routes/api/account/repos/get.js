@@ -9,7 +9,7 @@ const route = new Route({
  */
 route.push(async (req, res) => {
   // todo: assumes account has a github record in our db - we should have more handlers for services like bitbucket
-  const apiGetAccountGitHub = require('../account/github/get.js').call;
+  const apiGetAccountGitHub = require('../github/get.js').call;
   const gitHubAccount = (await apiGetAccountGitHub(req)).account;
 
   const github = require('octonode');
