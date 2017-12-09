@@ -586,7 +586,7 @@ configstore@^3.0.0:
 
 "conjure-core@git+ssh://git@github.com:ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+ssh://git@github.com:ConjureLabs/conjure-core.git#a3d8a7c0705fecf927a2b3bec6acf95335178689"
+  resolved "git+ssh://git@github.com:ConjureLabs/conjure-core.git#e4eb7cde2e419990fd5d23244082edafecb9815f"
   dependencies:
     amqp "^0.2.6"
     app-root-path "^2.0.1"
@@ -595,6 +595,7 @@ configstore@^3.0.0:
     node-yaml "^3.1.1"
     octonode "^0.7.13"
     pg "^7.3.0"
+    postmark "1.5.0"
     request "^2.81.0"
     request-promise-native "1.0.5"
     stripe "^4.19.0"
@@ -1960,6 +1961,10 @@ merge-descriptors@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
 
+merge@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.0.tgz#7531e39d4949c281a66b8c5a6e0265e8b05894da"
+
 methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
@@ -2439,6 +2444,12 @@ postgres-interval@^1.1.0:
   resolved "https://registry.yarnpkg.com/postgres-interval/-/postgres-interval-1.1.1.tgz#acdb0f897b4b1c6e496d9d4e0a853e1c428f06f0"
   dependencies:
     xtend "^4.0.0"
+
+postmark@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-1.5.0.tgz#6812a35195d14e59922181aba5920f3ceec156b6"
+  dependencies:
+    merge "1.2.0"
 
 prelude-ls@~1.1.2:
   version "1.1.2"
