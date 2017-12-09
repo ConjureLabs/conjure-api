@@ -26,7 +26,7 @@ async function emailUser(req) {
         <div style="display: block; padding: 20px; text-align: center;">
           <h2 style="display: block; font-size: 16px; font-weight: 600; margin-bottom: 16px;">You've joined Conjure 👏</h2>
           <p style="display: block; font-size: 14px; font-weight: 100; margin-bottom: 12px;">At any time you can manage what Conjure watches at <a href='${config.app.web.url}'>${config.app.web.host}</a>.</p>
-          <p style="display: block; font-size: 12px; font-weight: 100; margin-bottom: 12px;">Don't forget to read <a href='${config.app.web.url}/docs/configuration'>our configuration documentation</a> to make sure your repos are set up properly.</p>
+          <p style="display: block; font-size: 12px; font-weight: 100; margin-bottom: 12px;">Don't forget to read <a href='${config.app.web.url}/docs/configuration'>our configuration docs</a> to make sure your repos are set up properly.</p>
           <p style="display: block; font-size: 12px; font-weight: 100; margin-bottom: 12px;">We're happy you're you've joined us!</p>
         </div>
       </body>
