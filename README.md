@@ -1,7 +1,5 @@
 <p align="center">
-  <strong>c o n j u r e</strong>
-  <kbd>⎔</kbd>
-  <strong>a p i</strong>
+  <kbd>a p i</kbd>
 </p>
 
 # Conjure API
