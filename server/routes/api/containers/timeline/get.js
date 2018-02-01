@@ -1,5 +1,5 @@
 const Route = require('conjure-core/classes/Route');
-const { ContentError, UnexpectedError } = require('conjure-core/modules/err');
+const { ContentError, UnexpectedError } = require('conjureerr');
 const config = require('conjure-core/modules/config');
 
 const route = new Route({

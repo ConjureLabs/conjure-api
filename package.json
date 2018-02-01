@@ -26,6 +26,7 @@
     "cookie-parser": "1.4.3",
     "cookie-session": "2.0.0-alpha.2",
     "debug": "2.6.0",
+    "err": "ConjureLabs/err",
     "express": "4.15.2",
     "morgan": "1.7.0",
     "passport": "^0.4.0",
