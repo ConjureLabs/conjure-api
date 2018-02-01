@@ -18,7 +18,7 @@ route.push(async (req, res) => {
     throw new ContentError('Missing `rel` (number)');
   }
 
-  const database = require('conjure-core/modules/database');
+  const { query } = require('db');
 
   const sqlArgs = [];
   const sqlWheres = [];
@@ -41,7 +41,7 @@ route.push(async (req, res) => {
   sqlWheres.push(`c.id > $${sqlArgs.length + 1}`);
   sqlArgs.push(rel);
 
-  const result = await database.query(`
+  const result = await query(`
     SELECT COUNT(*) num
     FROM container c
     INNER JOIN watched_repo wr ON c.repo = wr.id

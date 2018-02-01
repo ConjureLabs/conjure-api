@@ -12,9 +12,9 @@ route.push(async (req, res) => {
     throw new ContentError('Payload missing or in an unexpected format');
   }
 
-  const database = require('conjure-core/modules/database');
+  const { query } = require('db');
 
-  const matchingPlans = await database.query(`
+  const matchingPlans = await query(`
     SELECT *
     FROM monthly_billing_plan
     WHERE parallel_container_limit = $1
@@ -35,7 +35,7 @@ route.push(async (req, res) => {
   const plan = matchingPlans.rows[0];
 
   // unset any existing plans for the user
-  await database.query(`
+  await query(`
     UPDATE account_monthly_billing_plan
     SET deactivated = NOW()
     WHERE deactivated IS NULL
@@ -44,7 +44,7 @@ route.push(async (req, res) => {
   `, [req.user.id]);
 
   // set new pricing plan for the user
-  await database.query(`
+  await query(`
     INSERT INTO account_monthly_billing_plan(account, monthly_billing_plan, added, activated)
     VALUES($1, $2, NOW(), NOW())
   `, [req.user.id, plan.id]);

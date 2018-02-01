@@ -19,7 +19,7 @@ route.push(async (req, res) => {
     throw new ContentError('Expecting array of `id`s');
   }
 
-  const database = require('conjure-core/modules/database');
+  const { query } = require('db');
   
   const sqlArgs = [];
   const sqlWheres = [];
@@ -41,7 +41,7 @@ route.push(async (req, res) => {
   }
 
   // pulling 1 more than needed, to check if there are more results
-  const result = await database.query(`
+  const result = query(`
     SELECT
       id, is_active, active_start
     FROM container c

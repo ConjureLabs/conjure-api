@@ -8,11 +8,11 @@ const route = new Route({
   Repos listing
  */
 route.push(async (req, res) => {
-  const database = require('conjure-core/modules/database');
+  const { query } = require('db');
 
   // getting all repo records user has access to
   const accountRepos = (
-    await database.query(`
+    await query(`
       SELECT
         ar.*,
         CASE

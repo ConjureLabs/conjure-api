@@ -5,10 +5,10 @@ const route = new Route({
 });
 
 route.push(async (req, res) => {
-  const database = require('conjure-core/modules/database');
+  const { query } = require('db');
 
   // unset any existing plans for the user
-  await database.query(`
+  await query(`
     UPDATE account_monthly_billing_plan
     SET deactivated = NOW()
     WHERE deactivated IS NULL

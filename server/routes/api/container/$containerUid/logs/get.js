@@ -12,10 +12,10 @@ const route = new Route({
 route.push(async (req, res) => {
   const { orgName, containerUid } = req.params;
 
-  const database = require('conjure-core/modules/database');
+  const { query } = require('db');
 
   // pulling 1 more than needed, to check if there are more results
-  const result = await database.query(`
+  const result = await query(`
     SELECT c.domain
     FROM container c
     INNER JOIN watched_repo wr

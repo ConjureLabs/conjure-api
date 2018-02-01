@@ -296,8 +296,8 @@ async function saveVisibleAccountRepos(githubAccount) {
   const pruningArgs = [githubAccount.account, ...repoIds];
 
   // prune out the old ids, that are apparently no longer visible
-  const database = require('conjure-core/modules/database');
-  await database.query(`
+  const { query } = require('db');
+  await query(`
     DELETE FROM account_repo
     WHERE account = $1
     AND service = 'github'
