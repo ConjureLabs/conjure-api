@@ -706,6 +706,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+db@ConjureLabs/db:
+  version "1.0.0"
+  resolved "git+ssh://git@github.com/ConjureLabs/db.git#67a0851fa8bdd02ad2d1be68a102e9eb2e55b94a"
+
 debug@2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.2.tgz#94cb466ef7d6d2c7e5245cdd6e4104f2d0d70d30"

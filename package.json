@@ -25,6 +25,7 @@
     "conjure-core": "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git",
     "cookie-parser": "1.4.3",
     "cookie-session": "2.0.0-alpha.2",
+    "db": "ConjureLabs/db",
     "debug": "2.6.0",
     "err": "ConjureLabs/err",
     "express": "4.15.2",
