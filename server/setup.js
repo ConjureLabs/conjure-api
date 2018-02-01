@@ -11,7 +11,9 @@ log.info('beginning setup');
 log.timeStart('finished setup');
 
 // configure db connection
-require('db').init(config.database.pg);
+require('db').init(config.database.pg, (sql, args) => {
+  log.dev.info(sql, process.env.NODE_ENV === 'production' && args ? '---REDACTED---' : args);
+});
 
 // crawling routes
 const apiRoutesDir = path.resolve(__dirname, 'routes', 'api');
