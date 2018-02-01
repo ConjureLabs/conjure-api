@@ -9,7 +9,7 @@ const route = new Route({
   Repos listing
  */
 route.push(async (req, res) => {
-  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+  const DatabaseTable = require('db/table');
   const Account = new DatabaseTable('account');
 
   const rows = await Account.select({

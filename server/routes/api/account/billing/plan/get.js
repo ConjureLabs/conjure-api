@@ -28,7 +28,7 @@ route.push(async (req, res) => {
   }
 
   // get full row
-  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+  const DatabaseTable = require('db/table');
   const monthlyBillingPlan = new DatabaseTable('monthly_billing_plan');
 
   // not checking for active billing plan, in case user is somehow grandfathered in

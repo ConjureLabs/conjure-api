@@ -169,7 +169,7 @@ function promisifiedGitHubSetHook(client, orgName, repoName, data) {
 }
 
 async function upsertWatchedRepoRecord(req) {
-  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+  const DatabaseTable = require('db/table');
 
   const {
     service,

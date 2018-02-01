@@ -4,10 +4,14 @@
 
 const fs = require('fs');
 const path = require('path');
+const config = require('conjure-core/modules/config');
 const log = require('conjure-core/modules/log')();
 
 log.info('beginning setup');
 log.timeStart('finished setup');
+
+// configure db connection
+require('db').init(config.database.pg);
 
 // crawling routes
 const apiRoutesDir = path.resolve(__dirname, 'routes', 'api');

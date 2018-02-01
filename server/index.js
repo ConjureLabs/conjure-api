@@ -50,7 +50,7 @@ server.use(bodyParser.json());
 server.use(cookieParser());
 
 passport.serializeUser((user, done) => {
-  const DatabaseRow = require('conjure-core/classes/DatabaseRow');
+  const DatabaseRow = require('db/row');
   console.log('serializeUser', user);
   done(null, new DatabaseRow('account', user));
 });
@@ -80,7 +80,7 @@ passport.use(
     },
 
     async function(accessToken, refreshToken, profile, callback) {
-      const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+      const DatabaseTable = require('db/table');
 
       if (!profile.id || isNaN(parseInt(profile.id, 10))) {
         return callback(new ContentError('Github Id was not present in profile json'));
@@ -233,7 +233,7 @@ async function saveVisibleAccountRepos(githubAccount) {
 
   const allRepos = [];
 
-  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+  const DatabaseTable = require('db/table');
   const accountRepo = new DatabaseTable('account_repo');
 
   const reposByOrg = userRepos.reposByOrg;
@@ -306,7 +306,7 @@ async function saveVisibleAccountRepos(githubAccount) {
 }
 
 async function ensureEmailsStored(account, seenEmails) {
-  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+  const DatabaseTable = require('db/table');
   const accountEmails = new DatabaseTable('account_email');
 
   let rows;
@@ -361,7 +361,7 @@ server.use(async (req, res, next) => {
     return next();
   }
 
-  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+  const DatabaseTable = require('db/table');
 
   // check for existing account record
   let rows;

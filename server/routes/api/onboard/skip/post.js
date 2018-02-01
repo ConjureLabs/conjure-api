@@ -6,7 +6,7 @@ const route = new Route({
 });
 
 route.push(async (req, res) => {
-  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+  const DatabaseTable = require('db/table');
   const account = new DatabaseTable('account');
 
   const rows = await account.select({

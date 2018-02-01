@@ -56,7 +56,7 @@ route.push(async (req, res) => {
   });
 
   // mark account as onboarded
-  const DatabaseTable = require('conjure-core/classes/DatabaseTable');
+  const DatabaseTable = require('db/table');
   const account = new DatabaseTable('account');
   await account.update({
     onboarded: true,
