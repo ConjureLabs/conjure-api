@@ -1,5 +1,5 @@
 const Route = require('conjure-core/classes/Route');
-const { ContentError } = require('conjureerr');
+const { ContentError } = require('err');
 
 const route = new Route({
   requireAuthentication: true

@@ -13,7 +13,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy;
 const log = require('conjure-core/modules/log')();
-const { ConjureError, ContentError, NotFoundError } = require('conjureerr');
+const { ConjureError, ContentError, NotFoundError } = require('err');
 
 const port = config.app.api.port;
 const server = express();
