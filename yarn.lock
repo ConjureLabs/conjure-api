@@ -586,11 +586,12 @@ configstore@^3.0.0:
 
 "conjure-core@git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#96e80967c2e54e4bdfe11b2a2db3645ae0b70fa1"
+  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#165ea5ed2f74d8e50009b865bc1f64ad4504efa6"
   dependencies:
     amqp "^0.2.6"
     app-root-path "^2.0.1"
     cors "^2.8.3"
+    db ConjureLabs/db
     err ConjureLabs/err
     express "^4.15.4"
     node-yaml "^3.1.1"
