@@ -1,4 +1,4 @@
-require('conjure-core/modules/utils/process/handle-exceptions');
+require('utils/process/handle-exceptions');
 
 // first running any synchronous setup
 const setup = require('./setup');
@@ -255,7 +255,7 @@ async function saveVisibleAccountRepos(githubAccount) {
   })))
 
   // run upserts
-  const batchAll = require('conjure-core/modules/utils/Promise/batch-all');
+  const batchAll = require('utils/Promise/batch-all');
   await batchAll(3, allRepos, repo => {
     console.log(`UPSERTING ${repo.org} / ${repo.name}`);
     return accountRepo.upsert({

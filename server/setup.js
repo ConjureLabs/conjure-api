@@ -38,7 +38,7 @@ function crawlRoutesDir(ignoreCurrentDir, dirpath, uriPathTokens) {
   const routes = [];
   const files = [];
 
-  const sortInsensitive = require('conjure-core/modules/utils/Array/sort-insensitive');
+  const sortInsensitive = require('utils/Array/sort-insensitive');
   sortInsensitive(list);
 
   for (let i = 0; i < list.length; i++) {

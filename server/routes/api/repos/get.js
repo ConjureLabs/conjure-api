@@ -35,7 +35,7 @@ route.push(async (req, res) => {
   const gitHubOrgs = await promisifyGitHubOrgs(githubClient);
 
   // getting all (possibly private) org repos
-  const batchAll = require('conjure-core/modules/utils/Promise/batch-all');
+  const batchAll = require('utils/Promise/batch-all');
   const allOrgsRepos = await batchAll(4, gitHubOrgs, org => {
     return promisifyGitHubOrgRepos(githubClient, org);
   });
@@ -68,7 +68,7 @@ route.push(async (req, res) => {
   // todo: pagination - should pull org names, then drill in via UI with api calls, which pages (in UI too)
   const finalRepos = allRepos.native;
 
-  const sortInsensitive = require('conjure-core/modules/utils/Array/sort-insensitive');
+  const sortInsensitive = require('utils/Array/sort-insensitive');
   sortInsensitive(finalRepos, 'fullName');
 
   const reposByOrg = finalRepos.reduce((mapping, current) => {
