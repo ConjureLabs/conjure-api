@@ -708,7 +708,7 @@ dashdash@^1.12.0:
 
 db@ConjureLabs/db:
   version "1.0.0"
-  resolved "git+ssh://git@github.com/ConjureLabs/db.git#67a0851fa8bdd02ad2d1be68a102e9eb2e55b94a"
+  resolved "git+ssh://git@github.com/ConjureLabs/db.git#55369aa494bf11ff1898e853fdb339f15a376492"
 
 debug@2.3.2:
   version "2.3.2"
