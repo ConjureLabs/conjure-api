@@ -1,4 +1,4 @@
-const Route = require('conjure-core/classes/Route');
+const Route = require('route');
 const { UnexpectedError, ContentError } = require('err');
 
 const route = new Route({

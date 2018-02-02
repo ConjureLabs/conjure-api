@@ -1,4 +1,4 @@
-const Route = require('conjure-core/classes/Route');
+const Route = require('route');
 const log = require('conjure-core/modules/log')('github webhook inbound');
 
 const route = new Route();

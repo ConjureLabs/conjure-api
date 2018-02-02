@@ -381,11 +381,7 @@ server.use(async (req, res, next) => {
   next();
 });
 
-server.use(setup.routes.api);
-server.use(setup.routes.auth);
-server.use(setup.routes.debug);
-server.use(setup.routes.hook);
-server.use(setup.routes.aws);
+server.use(setup.routes);
 
 server.use((err, req, res, next) => {
   if (!err) {

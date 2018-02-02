@@ -1,4 +1,4 @@
-const Route = require('conjure-core/classes/Route');
+const Route = require('route');
 
 const route = new Route({
   requireAuthentication: false

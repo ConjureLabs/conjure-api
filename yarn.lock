@@ -652,7 +652,7 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
-cors@^2.8.3:
+cors@^2.8.3, cors@^2.8.4:
   version "2.8.4"
   resolved "https://registry.yarnpkg.com/cors/-/cors-2.8.4.tgz#2bd381f2eb201020105cd50ea59da63090694686"
   dependencies:
@@ -870,6 +870,10 @@ err@ConjureLabs/err:
   version "1.0.0"
   resolved "https://codeload.github.com/ConjureLabs/err/tar.gz/838ff54cfc3b71187a5ec5cf3a6065e8588387b8"
 
+"err@github:ConjureLabs/err":
+  version "1.0.0"
+  resolved "https://codeload.github.com/ConjureLabs/err/tar.gz/362c12985bdf08dbf24d712d49613beeb6abf222"
+
 es6-promise@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.3.1.tgz#a08cdde84ccdbf34d027a1451bc91d4bcd28a613"
@@ -1044,7 +1048,7 @@ express@4.15.2:
     utils-merge "1.0.0"
     vary "~1.1.0"
 
-express@^4.15.4:
+express@^4.15.4, express@^4.16.2:
   version "4.16.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.2.tgz#e35c6dfe2d64b7dca0a5cd4f21781be3299e076c"
   dependencies:
@@ -2766,6 +2770,15 @@ rimraf@2, rimraf@2.x.x, rimraf@^2.2.8, rimraf@^2.5.1, rimraf@^2.6.1:
   dependencies:
     glob "^7.0.5"
 
+route@ConjureLabs/route:
+  version "1.0.0"
+  resolved "https://codeload.github.com/ConjureLabs/route/tar.gz/d83076e8c3087fc562c5d22acaba8b8486418b80"
+  dependencies:
+    cors "^2.8.4"
+    err "github:ConjureLabs/err"
+    express "^4.16.2"
+    utils "github:ConjureLabs/utils"
+
 run-async@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/run-async/-/run-async-2.3.0.tgz#0371ab4ae0bdd720d4166d7dfda64ff7a445a6c0"
@@ -3237,6 +3250,10 @@ utils-merge@1.0.1, utils-merge@1.x.x:
 utils@ConjureLabs/utils:
   version "1.0.0"
   resolved "https://codeload.github.com/ConjureLabs/utils/tar.gz/02cef9ee289e746591ccf44b55a9d389b9435b92"
+
+"utils@github:ConjureLabs/utils":
+  version "1.0.0"
+  resolved "https://codeload.github.com/ConjureLabs/utils/tar.gz/b4ed64fded8f975fbf9f94fb2ecb7c034691670e"
 
 uuid@^2.0.2:
   version "2.0.3"

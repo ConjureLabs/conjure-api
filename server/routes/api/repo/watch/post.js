@@ -1,4 +1,4 @@
-const Route = require('conjure-core/classes/Route');
+const Route = require('route');
 const { ContentError, PermissionsError } = require('err');
 const log = require('conjure-core/modules/log')('github watch repo');
 
