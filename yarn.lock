@@ -2926,7 +2926,7 @@ rimraf@2, rimraf@2.x.x, rimraf@^2.2.8, rimraf@^2.5.1, rimraf@^2.6.1:
 
 route@ConjureLabs/route:
   version "1.0.0"
-  resolved "https://codeload.github.com/ConjureLabs/route/tar.gz/d96f3790d6c45530f64e282b2811d38e87e98054"
+  resolved "https://codeload.github.com/ConjureLabs/route/tar.gz/010ee5425519179c5aac9cb99774dd9707d8431f"
   dependencies:
     cors "^2.8.4"
     err "github:ConjureLabs/err"
