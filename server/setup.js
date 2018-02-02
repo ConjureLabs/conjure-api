@@ -14,6 +14,21 @@ require('db').init(config.database.pg, (sql, args) => {
   log.dev.info(sql, process.env.NODE_ENV === 'production' && args ? '---REDACTED---' : args);
 });
 
+const Route = require('route');
+
+Route.defaultOptions = {
+  cors: {
+    credentials: true,
+    methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE', 'HEAD', 'OPTIONS'],
+    optionsSuccessStatus: 200,
+    origin: [
+      config.app.api.url,
+      config.app.web.url
+    ],
+    preflightContinue: true
+  }
+};
+
 const crawlRoutes = require('route/sync-crawl');
 
 module.exports = {
