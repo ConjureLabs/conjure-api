@@ -2,7 +2,6 @@
 // ... allowing sync in this file since it will only be run at startup, not during the lifetime of the app
 /*eslint no-sync: 0*/
 
-const fs = require('fs');
 const path = require('path');
 const config = require('conjure-core/modules/config');
 const log = require('conjure-core/modules/log')();
