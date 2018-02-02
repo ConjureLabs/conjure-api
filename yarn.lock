@@ -2926,7 +2926,7 @@ rimraf@2, rimraf@2.x.x, rimraf@^2.2.8, rimraf@^2.5.1, rimraf@^2.6.1:
 
 route@ConjureLabs/route:
   version "1.0.0"
-  resolved "https://codeload.github.com/ConjureLabs/route/tar.gz/b36c744ff4af92e74b172a2ffebbd9abc1c8f409"
+  resolved "https://codeload.github.com/ConjureLabs/route/tar.gz/2b5540906d13e9dacde152792cc84dc3385c9bc3"
   dependencies:
     cors "^2.8.4"
     err "github:ConjureLabs/err"
@@ -3528,7 +3528,6 @@ utils-merge@1.0.1, utils-merge@1.x.x:
 
 utils@ConjureLabs/utils, "utils@github:ConjureLabs/utils":
   version "1.0.0"
-  uid b4ed64fded8f975fbf9f94fb2ecb7c034691670e
   resolved "https://codeload.github.com/ConjureLabs/utils/tar.gz/b4ed64fded8f975fbf9f94fb2ecb7c034691670e"
 
 uuid@^2.0.2:
