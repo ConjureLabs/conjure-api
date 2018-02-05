@@ -28,8 +28,19 @@ route.push(async (req, res) => {
   switch (action) {
     // spin up vm
     case GitHubWebhookPayload.actions.opened:
-    case GitHubWebhookPayload.actions.reopened:
       queue = new Queue('defaultExchange', 'repos-create', 'create');
+      queue.publish({
+        content: req.body
+      }, err => {
+        if (err) {
+          log.error(err);
+        }
+      });
+      break;
+
+    // restart vm
+    case GitHubWebhookPayload.actions.reopened:
+      queue = new Queue('defaultExchange', 'repos-start', 'start');
       queue.publish({
         content: req.body
       }, err => {
@@ -42,7 +53,7 @@ route.push(async (req, res) => {
     // spin down vm
     case GitHubWebhookPayload.actions.closed:
     case GitHubWebhookPayload.actions.merged:
-      queue = new Queue('defaultExchange', 'repos-destroy', 'destroy');
+      queue = new Queue('defaultExchange', 'repos-stop', 'stop');
       queue.publish({
         content: req.body
       }, err => {
