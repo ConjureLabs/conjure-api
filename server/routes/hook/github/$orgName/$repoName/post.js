@@ -28,6 +28,7 @@ route.push(async (req, res) => {
   switch (action) {
     // spin up vm
     case GitHubWebhookPayload.actions.opened:
+      log.info('Received hook for "create"');
       queue = new Queue('defaultExchange', 'repos-create', 'create');
       queue.publish({
         content: req.body
@@ -40,6 +41,7 @@ route.push(async (req, res) => {
 
     // restart vm
     case GitHubWebhookPayload.actions.reopened:
+      log.info('Received hook for "start"');
       queue = new Queue('defaultExchange', 'repos-start', 'start');
       queue.publish({
         content: req.body
@@ -53,6 +55,7 @@ route.push(async (req, res) => {
     // spin down vm
     case GitHubWebhookPayload.actions.closed:
     case GitHubWebhookPayload.actions.merged:
+      log.info('Received hook for "stop"');
       queue = new Queue('defaultExchange', 'repos-stop', 'stop');
       queue.publish({
         content: req.body
@@ -65,6 +68,7 @@ route.push(async (req, res) => {
 
     // update running vm
     case GitHubWebhookPayload.actions.updated:
+      log.info('Received hook for "update"');
       queue = new Queue('defaultExchange', 'repos-update', 'update');
       queue.publish({
         content: req.body
