@@ -30,7 +30,7 @@ route.push(async (req, res) => {
     case GitHubWebhookPayload.actions.opened:
       log.info('Received hook for "create"');
       queue = new Queue('container.create');
-      queue.publish({
+      queue.push({
         content: req.body
       }, err => {
         if (err) {
@@ -43,7 +43,7 @@ route.push(async (req, res) => {
     case GitHubWebhookPayload.actions.reopened:
       log.info('Received hook for "start"');
       queue = new Queue('container.start');
-      queue.publish({
+      queue.push({
         content: req.body
       }, err => {
         if (err) {
@@ -57,7 +57,7 @@ route.push(async (req, res) => {
     case GitHubWebhookPayload.actions.merged:
       log.info('Received hook for "stop"');
       queue = new Queue('container.stop');
-      queue.publish({
+      queue.push({
         content: req.body
       }, err => {
         if (err) {
@@ -70,7 +70,7 @@ route.push(async (req, res) => {
     case GitHubWebhookPayload.actions.updated:
       log.info('Received hook for "update"');
       queue = new Queue('container.update');
-      queue.publish({
+      queue.push({
         content: req.body
       }, err => {
         if (err) {
