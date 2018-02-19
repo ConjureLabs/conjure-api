@@ -30,26 +30,32 @@ route.push(async (req, res) => {
     case GitHubWebhookPayload.actions.opened:
       log.info('Received hook for "create"');
       queue = new Queue('container.create');
-      queue.push({
-        content: req.body
-      }, err => {
+      try {
+        await queue.push({
+          content: req.body
+        });
+        log.info('Job pushed to queue (container.create)');
+      } catch(err) {
         if (err) {
           log.error(err);
         }
-      });
+      }
       break;
 
     // restart vm
     case GitHubWebhookPayload.actions.reopened:
       log.info('Received hook for "start"');
       queue = new Queue('container.start');
-      queue.push({
-        content: req.body
-      }, err => {
+      try {
+        await queue.push({
+          content: req.body
+        });
+        log.info('Job pushed to queue (container.start)');
+      } catch(err) {
         if (err) {
           log.error(err);
         }
-      });
+      }
       break;
 
     // spin down vm
@@ -57,26 +63,30 @@ route.push(async (req, res) => {
     case GitHubWebhookPayload.actions.merged:
       log.info('Received hook for "stop"');
       queue = new Queue('container.stop');
-      queue.push({
-        content: req.body
-      }, err => {
+      try {
+        await queue.push({
+          content: req.body
+        });
+        log.info('Job pushed to queue (container.stop)');
+      } catch(err) {
         if (err) {
           log.error(err);
         }
-      });
+      }
       break;
 
     // update running vm
     case GitHubWebhookPayload.actions.updated:
       log.info('Received hook for "update"');
       queue = new Queue('container.update');
-      queue.push({
-        content: req.body
-      }, err => {
-        if (err) {
-          log.error(err);
-        }
-      });
+      try {
+        await queue.push({
+          content: req.body
+        });
+        log.info('Job pushed to queue (container.update)');
+      } catch(err) {
+        log.error(err);
+      }
       break;
   }
 
