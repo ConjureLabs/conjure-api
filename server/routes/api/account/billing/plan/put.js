@@ -6,7 +6,8 @@ const route = new Route({
 });
 
 route.push(async (req, res) => {
-  const { containerLimit } = req.body;
+  const { containerLimit, orgName, orgId } = req.body;
+  const activate = req.body.activate === undefined ? true : req.boyd.activate;
 
   if (!containerLimit || isNaN(containerLimit)) {
     throw new ContentError('Payload missing or in an unexpected format');
@@ -34,20 +35,25 @@ route.push(async (req, res) => {
 
   const plan = matchingPlans.rows[0];
 
-  // unset any existing plans for the user
+  // unset any existing plans for the user/org
+  // todo: verify user has access to do this...
   await query(`
-    UPDATE account_monthly_billing_plan
+    UPDATE github_org_monthly_billing_plan
     SET deactivated = NOW()
     WHERE deactivated IS NULL
     AND activated IS NOT NULL
-    AND account = $1
-  `, [req.user.id]);
+    AND orgId = $1
+  `, [orgId]);
 
-  // set new pricing plan for the user
+  // set new pricing plan for the user/org
+  const activateValue = activate === true ? 'NOW()' : 'NULL';
   await query(`
-    INSERT INTO account_monthly_billing_plan(account, monthly_billing_plan, added, activated)
-    VALUES($1, $2, NOW(), NOW())
-  `, [req.user.id, plan.id]);
+    INSERT INTO github_org_monthly_billing_plan(account, org, org_id, monthly_billing_plan, added, activated)
+    VALUES($1, $2, $3, $4, NOW(), ${activateValue})
+  `, [req.user.id, orgName, orgId, plan.id]);
+
+  // used in onboarding
+  req.planId = plan.id;
 
   return res.send({});
 });

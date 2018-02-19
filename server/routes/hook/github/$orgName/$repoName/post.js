@@ -6,7 +6,7 @@ const route = new Route();
 route.push(async (req, res) => {
   const GitHubWebhookPayload = require('conjure-core/classes/Repo/GitHub/Webhook/Payload');
   const payload = new GitHubWebhookPayload(req.body);
-  const { type, action } = payload;
+  const { type, action, orgName } = payload;
 
   // telling GitHub it's all good, right away
   res.send({
@@ -21,9 +21,15 @@ route.push(async (req, res) => {
   }
 
   const Queue = require('conjure-core/classes/Queue');
+  const RedisCounter = require('conjure-core/classes/Redis/Counter');
   let queue;
 
-  // todo: what to do if a container is still starting and the pr is closed?
+  // get the count of containers running for this org
+  const counter = new RedisCounter('conjure:contaiers:running', orgName);
+  const currentlyRunning = await counter.get();
+
+  // get the count of containers org is allowed in parallel
+  
 
   switch (action) {
     // spin up vm

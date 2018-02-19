@@ -1,5 +1,5 @@
 const Route = require('route');
-const { ContentError } = require('err');
+const { ContentError, UnexpectedError } = require('err');
 
 const route = new Route({
   requireAuthentication: true
@@ -38,6 +38,26 @@ route.push(async (req, res) => {
     throw new ContentError('No repos selected');
   }
 
+  if (!req.cookies['conjure-onboard-plan']) {
+    throw new ContentError('No plan id available');
+  }
+
+  const DatabaseTable = require('db/table');
+
+  // activate billing plan at this point
+  const orgPlan = new DatabaseTable('github_org_monthly_billing_plan');
+  const orgPlanUpdates = await orgPlan.update({
+    activated: DatabaseTable.literal('NOW()')
+  }, {
+    org_id: req.cookies['conjure-onboard-orgs'].value,
+    activated: null,
+    monthly_billing_plan: req.cookies['conjure-onboard-plan']
+  });
+
+  if (!orgPlanUpdates.length) {
+    throw new UnexpectedError('Org plan not activated');
+  }
+
   // batching 3 promises at a time
   const apiWatchRepo = require('../../../repo/watch/post.js').call;
   const batchAll = require('utils/Promise/batch-all');
@@ -56,7 +76,6 @@ route.push(async (req, res) => {
   });
 
   // mark account as onboarded
-  const DatabaseTable = require('db/table');
   const account = new DatabaseTable('account');
   await account.update({
     onboarded: true,
