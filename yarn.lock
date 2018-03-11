@@ -649,12 +649,14 @@ configstore@^3.0.0:
 
 "conjure-core@git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#d557763929c922e0938270266e351843c72a4820"
+  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#4aa7e04970c45a9d8cb69bbd241855a73344edcb"
   dependencies:
     "@conjurelabs/db" "0.0.2"
+    "@conjurelabs/err" "0.0.2"
     bee-queue "1.2.2"
     node-yaml "^3.1.1"
     octonode "^0.7.13"
+    pg "^7.4.0"
     postmark "1.5.0"
     request "^2.81.0"
     request-promise-native "1.0.5"
