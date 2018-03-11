@@ -1,5 +1,5 @@
-const Route = require('route');
-const { UnexpectedError } = require('err');
+const Route = require('@conjurelabs/route');
+const { UnexpectedError } = require('@conjurelabs/err');
 
 const route = new Route({
   requireAuthentication: true
@@ -9,7 +9,7 @@ const route = new Route({
   Repos listing
  */
 route.push(async (req, res) => {
-  const DatabaseTable = require('db/table');
+  const DatabaseTable = require('@conjurelabs/db/table');
   const Account = new DatabaseTable('account');
 
   const rows = await Account.select({

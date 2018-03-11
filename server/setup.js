@@ -10,11 +10,11 @@ log.info('beginning setup');
 log.timeStart('finished setup');
 
 // configure db connection
-require('db').init(config.database.pg, (sql, args) => {
+require('@conjurelabs/db').init(config.database.pg, (sql, args) => {
   log.dev.info(sql, process.env.NODE_ENV === 'production' && args ? '---REDACTED---' : args);
 });
 
-const Route = require('route');
+const Route = require('@conjurelabs/route');
 
 Route.defaultOptions = {
   cors: {
@@ -29,7 +29,7 @@ Route.defaultOptions = {
   }
 };
 
-const crawlRoutes = require('route/sync-crawl');
+const crawlRoutes = require('@conjurelabs/route/sync-crawl');
 
 module.exports = {
   routes: crawlRoutes(path.resolve(__dirname, 'routes'))

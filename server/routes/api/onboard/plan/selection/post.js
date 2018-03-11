@@ -1,5 +1,5 @@
-const Route = require('route');
-const { ContentError, UnexpectedError } = require('err');
+const Route = require('@conjurelabs/route');
+const { ContentError, UnexpectedError } = require('@conjurelabs/err');
 
 const route = new Route({
   requireAuthentication: true

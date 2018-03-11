@@ -1,12 +1,12 @@
-const Route = require('route');
-const { NotFoundError, UnexpectedError } = require('err');
+const Route = require('@conjurelabs/route');
+const { NotFoundError, UnexpectedError } = require('@conjurelabs/err');
 
 const route = new Route({
   requireAuthentication: true
 });
 
 route.push(async (req, res) => {
-  const DatabaseTable = require('db/table');
+  const DatabaseTable = require('@conjurelabs/db/table');
   const account = new DatabaseTable('account');
 
   const rows = await account.select({

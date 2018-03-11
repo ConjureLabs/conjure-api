@@ -1,5 +1,5 @@
-const Route = require('route');
-const { ContentError, PermissionsError } = require('err');
+const Route = require('@conjurelabs/route');
+const { ContentError, PermissionsError } = require('@conjurelabs/err');
 const log = require('conjure-core/modules/log')('github watch repo');
 
 const route = new Route({
@@ -169,7 +169,7 @@ function promisifiedGitHubSetHook(client, orgName, repoName, data) {
 }
 
 async function upsertWatchedRepoRecord(req) {
-  const DatabaseTable = require('db/table');
+  const DatabaseTable = require('@conjurelabs/db/table');
 
   const {
     service,

@@ -1,5 +1,5 @@
 const config = require('conjure-core/modules/config');
-const Route = require('route');
+const Route = require('@conjurelabs/route');
 const passport = require('passport');
 
 const route = new Route();
@@ -19,6 +19,7 @@ route.push(async (req, res) => {
   }
 
   res.redirect(302, config.app.web.url);
+  return;
 });
 
 module.exports = route;

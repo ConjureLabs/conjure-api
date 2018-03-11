@@ -1,4 +1,5 @@
-const Route = require('route');
+const Route = require('@conjurelabs/route');
+const { ConjureError } = require('@conjurelabs/err');
 const log = require('conjure-core/modules/log')('github webhook inbound');
 
 const route = new Route();
@@ -23,13 +24,6 @@ route.push(async (req, res) => {
   const Queue = require('conjure-core/classes/Queue');
   const RedisCounter = require('conjure-core/classes/Redis/Counter');
   let queue;
-
-  // get the count of containers running for this org
-  const counter = new RedisCounter('conjure:contaiers:running', orgName);
-  const currentlyRunning = await counter.get();
-
-  // get the count of containers org is allowed in parallel
-  
 
   switch (action) {
     // spin up vm

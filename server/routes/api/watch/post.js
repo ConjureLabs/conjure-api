@@ -1,5 +1,5 @@
-const Route = require('route');
-const { ContentError } = require('err');
+const Route = require('@conjurelabs/route');
+const { ContentError } = require('@conjurelabs/err');
 
 const route = new Route({
   requireAuthentication: true
@@ -40,7 +40,7 @@ route.push(async (req, res) => {
 
   // batching 3 promises at a time
   const apiWatchRepo = require('../repo/watch/post.js').call;
-  const batchAll = require('utils/Promise/batch-all');
+  const batchAll = require('@conjurelabs/utils/Promise/batch-all');
   await batchAll(3, repos, repo => {
     return apiWatchRepo(req, {
       service: repo.service.toLowerCase(), // keep lower?
@@ -56,7 +56,7 @@ route.push(async (req, res) => {
   });
 
   // mark account as onboarded
-  const DatabaseTable = require('db/table');
+  const DatabaseTable = require('@conjurelabs/db/table');
   const account = new DatabaseTable('account');
   await account.update({
     onboarded: true,

@@ -1,5 +1,5 @@
-const Route = require('route');
-const { UnexpectedError, ContentError } = require('err');
+const Route = require('@conjurelabs/route');
+const { UnexpectedError, ContentError } = require('@conjurelabs/err');
 
 const route = new Route({
   requireAuthentication: true
@@ -14,7 +14,7 @@ route.push(async (req, res) => {
   const stripeCustomer = await Customer.getRecordFromReq(req);
 
   // pull account card rows
-  const DatabaseTable = require('db/table');
+  const DatabaseTable = require('@conjurelabs/db/table');
   const accountCard = new DatabaseTable('account_card');
   const accountCards = await accountCard.select({
     account: req.user.id

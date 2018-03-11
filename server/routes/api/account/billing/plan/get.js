@@ -1,12 +1,12 @@
-const Route = require('route');
-const { NotFoundError, UnexpectedError } = require('err');
+const Route = require('@conjurelabs/route');
+const { NotFoundError, UnexpectedError } = require('@conjurelabs/err');
 
 const route = new Route({
   requireAuthentication: true
 });
 
 route.push(async (req, res) => {
-  const { query } = require('db');
+  const { query } = require('@conjurelabs/db');
 
   // unset any existing plans for the user
   const matchingPlans = await query(`
@@ -28,7 +28,7 @@ route.push(async (req, res) => {
   }
 
   // get full row
-  const DatabaseTable = require('db/table');
+  const DatabaseTable = require('@conjurelabs/db/table');
   const monthlyBillingPlan = new DatabaseTable('monthly_billing_plan');
 
   // not checking for active billing plan, in case user is somehow grandfathered in

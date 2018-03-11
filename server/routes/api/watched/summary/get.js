@@ -1,4 +1,4 @@
-const Route = require('route');
+const Route = require('@conjurelabs/route');
 
 const route = new Route({
   requireAuthentication: true
@@ -8,7 +8,7 @@ const route = new Route({
   Repos listing
  */
 route.push(async (req, res) => {
-  const { query } = require('db');
+  const { query } = require('@conjurelabs/db');
 
   // getting all repo records user has access to
   const accountRepos = (

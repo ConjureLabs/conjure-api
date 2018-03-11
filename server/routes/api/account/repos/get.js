@@ -1,4 +1,4 @@
-const Route = require('route');
+const Route = require('@conjurelabs/route');
 
 const route = new Route({
   requireAuthentication: true
@@ -29,7 +29,7 @@ route.push(async (req, res) => {
 
   const repos = await promisifyGitHubUserRepos(gitHubClient, gitHubAccount);
 
-  const sortInsensitive = require('utils/Array/sort-insensitive');
+  const sortInsensitive = require('@conjurelabs/utils/Array/sort-insensitive');
   sortInsensitive(repos, 'full_name');
 
   // todo: stop sending by org all the time - it's an overhead most of the time

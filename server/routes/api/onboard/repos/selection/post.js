@@ -1,5 +1,5 @@
-const Route = require('route');
-const { ContentError, UnexpectedError } = require('err');
+const Route = require('@conjurelabs/route');
+const { ContentError, UnexpectedError } = require('@conjurelabs/err');
 
 const route = new Route({
   requireAuthentication: true
@@ -42,7 +42,7 @@ route.push(async (req, res) => {
     throw new ContentError('No plan id available');
   }
 
-  const DatabaseTable = require('db/table');
+  const DatabaseTable = require('@conjurelabs/db/table');
 
   // activate billing plan at this point
   const orgPlan = new DatabaseTable('github_org_monthly_billing_plan');
@@ -60,7 +60,7 @@ route.push(async (req, res) => {
 
   // batching 3 promises at a time
   const apiWatchRepo = require('../../../repo/watch/post.js').call;
-  const batchAll = require('utils/Promise/batch-all');
+  const batchAll = require('@conjurelabs/utils/Promise/batch-all');
   await batchAll(3, repos, repo => {
     return apiWatchRepo(req, {
       service: repo.service.toLowerCase(), // keep lower?

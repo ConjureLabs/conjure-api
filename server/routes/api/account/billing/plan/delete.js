@@ -1,11 +1,11 @@
-const Route = require('route');
+const Route = require('@conjurelabs/route');
 
 const route = new Route({
   requireAuthentication: true
 });
 
 route.push(async (req, res) => {
-  const { query } = require('db');
+  const { query } = require('@conjurelabs/db');
 
   // unset any existing plans for the user
   await query(`

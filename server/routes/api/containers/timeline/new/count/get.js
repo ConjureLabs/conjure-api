@@ -1,5 +1,5 @@
-const Route = require('route');
-const { ContentError, UnexpectedError } = require('err');
+const Route = require('@conjurelabs/route');
+const { ContentError, UnexpectedError } = require('@conjurelabs/err');
 
 const route = new Route({
   requireAuthentication: true
@@ -18,7 +18,7 @@ route.push(async (req, res) => {
     throw new ContentError('Missing `rel` (number)');
   }
 
-  const { query } = require('db');
+  const { query } = require('@conjurelabs/db');
 
   const sqlArgs = [];
   const sqlWheres = [];

@@ -1,4 +1,4 @@
-require('utils/process/handle-exceptions');
+require('@conjurelabs/utils/process/handle-exceptions');
 
 // first running any synchronous setup
 const setup = require('./setup');
@@ -13,7 +13,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy;
 const log = require('conjure-core/modules/log')();
-const { ConjureError, ContentError, NotFoundError } = require('err');
+const { ConjureError, ContentError, NotFoundError } = require('@conjurelabs/err');
 
 const port = config.app.api.port;
 const server = express();
@@ -50,7 +50,7 @@ server.use(bodyParser.json());
 server.use(cookieParser());
 
 passport.serializeUser((user, done) => {
-  const DatabaseRow = require('db/row');
+  const DatabaseRow = require('@conjurelabs/db/row');
   console.log('serializeUser', user);
   done(null, new DatabaseRow('account', user));
 });
@@ -80,7 +80,7 @@ passport.use(
     },
 
     async function(accessToken, refreshToken, profile, callback) {
-      const DatabaseTable = require('db/table');
+      const DatabaseTable = require('@conjurelabs/db/table');
 
       if (!profile.id || isNaN(parseInt(profile.id, 10))) {
         return callback(new ContentError('Github Id was not present in profile json'));
@@ -233,7 +233,7 @@ async function saveVisibleAccountRepos(githubAccount) {
 
   const allRepos = [];
 
-  const DatabaseTable = require('db/table');
+  const DatabaseTable = require('@conjurelabs/db/table');
   const accountRepo = new DatabaseTable('account_repo');
 
   const reposByOrg = userRepos.reposByOrg;
@@ -255,7 +255,7 @@ async function saveVisibleAccountRepos(githubAccount) {
   })))
 
   // run upserts
-  const batchAll = require('utils/Promise/batch-all');
+  const batchAll = require('@conjurelabs/utils/Promise/batch-all');
   await batchAll(3, allRepos, repo => {
     console.log(`UPSERTING ${repo.org} / ${repo.name}`);
     return accountRepo.upsert({
@@ -296,7 +296,7 @@ async function saveVisibleAccountRepos(githubAccount) {
   const pruningArgs = [githubAccount.account, ...repoIds];
 
   // prune out the old ids, that are apparently no longer visible
-  const { query } = require('db');
+  const { query } = require('@conjurelabs/db');
   await query(`
     DELETE FROM account_repo
     WHERE account = $1
@@ -306,7 +306,7 @@ async function saveVisibleAccountRepos(githubAccount) {
 }
 
 async function ensureEmailsStored(account, seenEmails) {
-  const DatabaseTable = require('db/table');
+  const DatabaseTable = require('@conjurelabs/db/table');
   const accountEmails = new DatabaseTable('account_email');
 
   let rows;
@@ -361,7 +361,7 @@ server.use(async (req, res, next) => {
     return next();
   }
 
-  const DatabaseTable = require('db/table');
+  const DatabaseTable = require('@conjurelabs/db/table');
 
   // check for existing account record
   let rows;

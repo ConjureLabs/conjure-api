@@ -1,5 +1,5 @@
-const Route = require('route');
-const { ContentError, UnexpectedError } = require('err');
+const Route = require('@conjurelabs/route');
+const { ContentError, UnexpectedError } = require('@conjurelabs/err');
 
 const route = new Route({
   requireAuthentication: true
@@ -13,7 +13,7 @@ route.push(async (req, res) => {
     throw new ContentError('Payload missing or in an unexpected format');
   }
 
-  const { query } = require('db');
+  const { query } = require('@conjurelabs/db');
 
   const matchingPlans = await query(`
     SELECT *

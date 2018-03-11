@@ -1,5 +1,5 @@
-const Route = require('route');
-const { ContentError, UnexpectedError } = require('err');
+const Route = require('@conjurelabs/route');
+const { ContentError, UnexpectedError } = require('@conjurelabs/err');
 const config = require('conjure-core/modules/config');
 
 const route = new Route({
@@ -26,7 +26,7 @@ route.push(async (req, res) => {
     throw new ContentError('Must pass `rel` if paging');
   }
 
-  const { query } = require('db');
+  const { query } = require('@conjurelabs/db');
 
   const sqlArgs = [];
   const sqlWheres = [];

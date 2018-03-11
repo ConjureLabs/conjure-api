@@ -1,5 +1,5 @@
-const Route = require('route');
-const { UnexpectedError } = require('err');
+const Route = require('@conjurelabs/route');
+const { UnexpectedError } = require('@conjurelabs/err');
 
 const route = new Route({
   requireAuthentication: true
@@ -19,7 +19,7 @@ const route = new Route({
 // todo: verify card does not already exist in our system
 
 route.push(async (req, res) => {
-  const DatabaseTable = require('db/table');
+  const DatabaseTable = require('@conjurelabs/db/table');
   const cardData = req.body.card;
   const addressData = req.body.address;
 

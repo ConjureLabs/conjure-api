@@ -1,4 +1,4 @@
-const Route = require('route');
+const Route = require('@conjurelabs/route');
 const config = require('conjure-core/modules/config');
 
 const route = new Route({

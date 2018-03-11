@@ -1,4 +1,4 @@
-const Route = require('route');
+const Route = require('@conjurelabs/route');
 
 const route = new Route({
   requireAuthentication: false

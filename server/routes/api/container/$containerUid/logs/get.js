@@ -1,5 +1,5 @@
-const Route = require('route');
-const { UnexpectedError } = require('err');
+const Route = require('@conjurelabs/route');
+const { UnexpectedError } = require('@conjurelabs/err');
 const config = require('conjure-core/modules/config');
 
 const route = new Route({
@@ -12,7 +12,7 @@ const route = new Route({
 route.push(async (req, res) => {
   const { orgName, containerUid } = req.params;
 
-  const { query } = require('db');
+  const { query } = require('@conjurelabs/db');
 
   // pulling 1 more than needed, to check if there are more results
   const result = await query(`
