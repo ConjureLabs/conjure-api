@@ -1,14 +1,14 @@
-const Route = require('@conjurelabs/route');
+const Route = require('@conjurelabs/route')
 
 const route = new Route({
   requireAuthentication: true
-});
+})
 
 /*
   Repos listing
  */
 route.push(async (req, res) => {
-  const { query } = require('@conjurelabs/db');
+  const { query } = require('@conjurelabs/db')
 
   // getting all repo records user has access to
   const accountRepos = (
@@ -24,30 +24,30 @@ route.push(async (req, res) => {
         ON ar.service_repo_id = wr.service_repo_id
       WHERE ar.account = $1
     `, [req.user.id])
-  ).rows;
+  ).rows
 
-  const watchedRepos = accountRepos.filter(repo => repo.watching === true);
+  const watchedRepos = accountRepos.filter(repo => repo.watching === true)
   const watchedOrgs = watchedRepos
     .map(repo => repo.org)
     .reduce((unique, org) => {
       if (!unique.includes(org)) {
-        unique.push(org);
+        unique.push(org)
       }
-      return unique;
-    }, []);
+      return unique
+    }, [])
 
   const baseWatchedRepos = watchedOrgs.reduce((base, org) => {
-    base[org] = false;
-    return base;
-  }, {});
+    base[org] = false
+    return base
+  }, {})
   const notWatchedReposByOrg = accountRepos
     .filter(repo => repo.watching === false)
     .reduce((byOrg, repo) => {
-      byOrg[ repo.org ] = true;
-      return byOrg;
-    }, baseWatchedRepos);
+      byOrg[ repo.org ] = true
+      return byOrg
+    }, baseWatchedRepos)
 
-  const haveAdditionalOrgs = Object.keys(notWatchedReposByOrg).length > watchedOrgs.length;
+  const haveAdditionalOrgs = Object.keys(notWatchedReposByOrg).length > watchedOrgs.length
 
   return res.send({
     watched: {
@@ -58,8 +58,8 @@ route.push(async (req, res) => {
       orgs: haveAdditionalOrgs,
       reposByOrg: notWatchedReposByOrg
     }
-  });
-});
+  })
+})
 
 // todo: make a resusable database util that knows how to strip records before sending to client
 function minialRepo(repo) {
@@ -68,7 +68,7 @@ function minialRepo(repo) {
     name: repo.name,
     private: repo.private,
     disabled: repo.disabled
-  };
+  }
 }
 
-module.exports = route;
+module.exports = route

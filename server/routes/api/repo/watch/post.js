@@ -1,51 +1,51 @@
-const Route = require('@conjurelabs/route');
-const { ContentError, PermissionsError } = require('@conjurelabs/err');
-const log = require('conjure-core/modules/log')('github watch repo');
+const Route = require('@conjurelabs/route')
+const { ContentError, PermissionsError } = require('@conjurelabs/err')
+const log = require('conjure-core/modules/log')('github watch repo')
 
 const route = new Route({
   requireAuthentication: true
-});
+})
 
 route.push(async (req, res) => {
-  const config = require('conjure-core/modules/config');
+  const config = require('conjure-core/modules/config')
 
   const {
     orgName,
     repoName
-  } = req.body;
+  } = req.body
 
-  const newHookPath = `${config.app.api.protocol}://${config.app.api.publicDomain}/hook/github/${orgName}/${repoName}`;
+  const newHookPath = `${config.app.api.protocol}://${config.app.api.publicDomain}/hook/github/${orgName}/${repoName}`
 
   // get github client
-  const apiGetAccountGitHub = require('../../account/github/get.js').call;
-  const githubAccount = (await apiGetAccountGitHub(req)).account;
+  const apiGetAccountGitHub = require('../../account/github/get.js').call
+  const githubAccount = (await apiGetAccountGitHub(req)).account
 
   // prepare github api client
-  const github = require('octonode');
-  const githubClient = github.client(githubAccount.access_token);
+  const github = require('octonode')
+  const githubClient = github.client(githubAccount.access_token)
 
   // validate permissions on repo
-  const info = await promisifiedGitHubInfo(githubClient, orgName, repoName);
+  const info = await promisifiedGitHubInfo(githubClient, orgName, repoName)
 
   if (!info || !info.permissions) {
-    throw new ContentError('Unexpected payload');
+    throw new ContentError('Unexpected payload')
   }
 
   if (info.permissions.admin !== true) {
-    throw new PermissionsError('Must be admin to enable conjure');
+    throw new PermissionsError('Must be admin to enable conjure')
   }
 
   // validate hook is not already set
-  const hooks = await promisifiedGitHubRepoHooks(githubClient, orgName, repoName);
+  const hooks = await promisifiedGitHubRepoHooks(githubClient, orgName, repoName)
 
   if (Array.isArray(hooks)) {
     for (let i = 0; i < hooks.length; i++) {
       // if we encounter the hook we are looking for, upsert and respond
       if (hooks[i].config && hooks[i].config.url === newHookPath) {
-        await upsertWatchedRepoRecord(req);
+        await upsertWatchedRepoRecord(req)
         return res.send({
           success: true
-        });
+        })
       }
     }
   }
@@ -61,7 +61,7 @@ route.push(async (req, res) => {
       secret: config.services.github.inboundWebhookScret,
       url: newHookPath
     }
-  });
+  })
   await promisifiedGitHubSetHook(githubClient, orgName, repoName, {
     name: 'web',
     active: true,
@@ -72,26 +72,26 @@ route.push(async (req, res) => {
       secret: config.services.github.inboundWebhookScret,
       url: newHookPath
     }
-  });
+  })
 
   // save our own record of the hook
-  await upsertWatchedRepoRecord(req);
+  await upsertWatchedRepoRecord(req)
 
   return res.send({
     success: true
-  });
-});
+  })
+})
 
 // todo: something better
 function promisifiedGitHubInfo(client, orgName, repoName) {
   return new Promise((resolve, reject) => {
     client.repo(`${orgName}/${repoName}`).info((err, info) => {
       if (err) {
-        return reject(err);
+        return reject(err)
       }
-      resolve(info);
-    });
-  });
+      resolve(info)
+    })
+  })
 }
 
 /*
@@ -142,14 +142,14 @@ function promisifiedGitHubRepoHooks(client, orgName, repoName) {
       if (err) {
         if (err.body && Array.isArray(err.body.errors)) {
           err.body.errors.forEach(specificErr => {
-            log.error(specificErr);
-          });
+            log.error(specificErr)
+          })
         }
-        return reject(err);
+        return reject(err)
       }
-      resolve(data);
-    });
-  });
+      resolve(data)
+    })
+  })
 }
 
 function promisifiedGitHubSetHook(client, orgName, repoName, data) {
@@ -158,18 +158,18 @@ function promisifiedGitHubSetHook(client, orgName, repoName, data) {
       if (err) {
         if (err.body && Array.isArray(err.body.errors)) {
           err.body.errors.forEach(specificErr => {
-            log.error(specificErr);
-          });
+            log.error(specificErr)
+          })
         }
-        return reject(err);
+        return reject(err)
       }
-      resolve();
-    });
-  });
+      resolve()
+    })
+  })
 }
 
 async function upsertWatchedRepoRecord(req) {
-  const DatabaseTable = require('@conjurelabs/db/table');
+  const DatabaseTable = require('@conjurelabs/db/table')
 
   const {
     service,
@@ -179,7 +179,7 @@ async function upsertWatchedRepoRecord(req) {
     githubId,
     isPrivate,
     vm
-  } = req.body;
+  } = req.body
 
   await DatabaseTable.upsert('watched_repo', {
     account: req.user.id,
@@ -197,7 +197,7 @@ async function upsertWatchedRepoRecord(req) {
   }, {
     service,
     service_repo_id: githubId
-  });
+  })
 }
 
-module.exports = route;
+module.exports = route

@@ -1,11 +1,11 @@
-const Route = require('@conjurelabs/route');
+const Route = require('@conjurelabs/route')
 
 const route = new Route({
   requireAuthentication: true
-});
+})
 
 route.push(async (req, res) => {
-  const { query } = require('@conjurelabs/db');
+  const { query } = require('@conjurelabs/db')
 
   // unset any existing plans for the user
   await query(`
@@ -14,9 +14,9 @@ route.push(async (req, res) => {
     WHERE deactivated IS NULL
     AND activated IS NOT NULL
     AND account = $1
-  `, [req.user.id]);
+  `, [req.user.id])
 
-  return res.send({});
-});
+  return res.send({})
+})
 
-module.exports = route;
+module.exports = route

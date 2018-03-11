@@ -1,13 +1,13 @@
-const Route = require('@conjurelabs/route');
-const { ContentError } = require('@conjurelabs/err');
+const Route = require('@conjurelabs/route')
+const { ContentError } = require('@conjurelabs/err')
 
 const route = new Route({
   requireAuthentication: true
-});
+})
 
 route.push(async (req, res) => {
   if (!req.body.label || !req.body.value) {
-    throw new ContentError('Payload missing or in an unexpected format');
+    throw new ContentError('Payload missing or in an unexpected format')
   }
 
   // record for org billing is set at plan selection
@@ -15,9 +15,9 @@ route.push(async (req, res) => {
   res.cookie('conjure-onboard-orgs', req.body, {
     maxAge: 259200000, // 3 days
     httpOnly: true
-  });
+  })
 
-  return res.send({});
-});
+  return res.send({})
+})
 
-module.exports = route;
+module.exports = route

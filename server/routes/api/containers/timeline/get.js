@@ -1,54 +1,54 @@
-const Route = require('@conjurelabs/route');
-const { ContentError, UnexpectedError } = require('@conjurelabs/err');
-const config = require('conjure-core/modules/config');
+const Route = require('@conjurelabs/route')
+const { ContentError, UnexpectedError } = require('@conjurelabs/err')
+const config = require('conjure-core/modules/config')
 
 const route = new Route({
   requireAuthentication: true
-});
+})
 
-const webConfig = config.app.web;
+const webConfig = config.app.web
 
 /*
   Container timeline
  */
 route.push(async (req, res) => {
-  const { org, repo } = req.query;
-  let { page, rel } = req.query;
+  const { org, repo } = req.query
+  let { page, rel } = req.query
 
-  page = parseInt(page, 10); // required
-  rel = parseInt(rel, 10); // may be NaN, if page = 1
+  page = parseInt(page, 10) // required
+  rel = parseInt(rel, 10) // may be NaN, if page = 1
 
-  const limit = 32; // todo: config this?
+  const limit = 32 // todo: config this?
 
   if (isNaN(page) || page < 0) {
-    throw new ContentError('Missing page number');
+    throw new ContentError('Missing page number')
   } else if (page > 1 && isNaN(rel)) {
-    throw new ContentError('Must pass `rel` if paging');
+    throw new ContentError('Must pass `rel` if paging')
   }
 
-  const { query } = require('@conjurelabs/db');
+  const { query } = require('@conjurelabs/db')
 
-  const sqlArgs = [];
-  const sqlWheres = [];
+  const sqlArgs = []
+  const sqlWheres = []
 
   if (org !== '*') {
-    sqlWheres.push(`wr.org = $${sqlArgs.length + 1}`);
-    sqlArgs.push(org);
+    sqlWheres.push(`wr.org = $${sqlArgs.length + 1}`)
+    sqlArgs.push(org)
   }
 
   if (repo !== '*') {
-    sqlWheres.push(`wr.name = $${sqlArgs.length + 1}`);
-    sqlArgs.push(repo);
+    sqlWheres.push(`wr.name = $${sqlArgs.length + 1}`)
+    sqlArgs.push(repo)
   }
 
   // records associated to user
-  sqlWheres.push(`wr.service_repo_id IN ( SELECT service_repo_id FROM account_repo WHERE account = $${sqlArgs.length + 1} )`);
-  sqlArgs.push(req.user.id);
+  sqlWheres.push(`wr.service_repo_id IN ( SELECT service_repo_id FROM account_repo WHERE account = $${sqlArgs.length + 1} )`)
+  sqlArgs.push(req.user.id)
 
   // if using paging rel (relative row id that marks row 0) then we must page against that row
   if (rel) {
-    sqlWheres.push(`c.id <= $${sqlArgs.length + 1}`);
-    sqlArgs.push(rel);
+    sqlWheres.push(`c.id <= $${sqlArgs.length + 1}`)
+    sqlArgs.push(rel)
   }
 
   // pulling 1 more than needed, to check if there are more results
@@ -65,20 +65,20 @@ route.push(async (req, res) => {
     ORDER BY added DESC
     LIMIT ${limit + 1}
     OFFSET ${page * limit}
-  `, sqlArgs);
+  `, sqlArgs)
 
   // should not happen
   if (!Array.isArray(result.rows)) {
-    throw new UnexpectedError('No rows returned');
+    throw new UnexpectedError('No rows returned')
   }
 
-  const moreRows = result.rows.length > limit;
+  const moreRows = result.rows.length > limit
   if (moreRows) {
-    result.rows.pop(); // taking off extra row, which was used as an indicator
+    result.rows.pop() // taking off extra row, which was used as an indicator
   }
 
   if (isNaN(rel) && result.rows.length) {
-    rel = result.rows[0].id;
+    rel = result.rows[0].id
   }
 
   const timeline = result.rows.map(row => {
@@ -95,10 +95,10 @@ route.push(async (req, res) => {
         'Unknown', // should not happen
       start: row.active_start || row.added,
       stop: row.active_stop
-    };
-  });
+    }
+  })
 
-  const qs = require('qs');
+  const qs = require('qs')
 
   return res.send({
     timeline,
@@ -107,7 +107,7 @@ route.push(async (req, res) => {
         org,
         repo,
         page: page - 1,
-        rel,
+        rel
       })}`,
 
       next: !moreRows ? null : `${config.app.api.url}/api/containers/timeline?${qs.stringify({
@@ -122,7 +122,7 @@ route.push(async (req, res) => {
       repo,
       rel: isNaN(rel) ? 0 : rel
     })}`
-  });
-});
+  })
+})
 
-module.exports = route;
+module.exports = route

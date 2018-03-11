@@ -1,47 +1,47 @@
-const Route = require('@conjurelabs/route');
+const Route = require('@conjurelabs/route')
 
 const route = new Route({
   requireAuthentication: true
-});
+})
 
 /*
   Repos listing
  */
 route.push(async (req, res) => {
-  const apiGetAccountGitHub = require('../account/github/get.js').call;
-  const githubAccount = (await apiGetAccountGitHub(req)).account;
+  const apiGetAccountGitHub = require('../account/github/get.js').call
+  const githubAccount = (await apiGetAccountGitHub(req)).account
 
-  const github = require('octonode');
-  const githubClient = github.client(githubAccount.access_token);
+  const github = require('octonode')
+  const githubClient = github.client(githubAccount.access_token)
 
   // just for debub purposes
   // todo: move or remove this
   githubClient.limit((err, left, max, reset) => {
     if (err) {
-      console.log(err);
+      console.log(err)
     } else {
-      console.log('left', left);
-      console.log('max', max);
-      console.log('reset', reset);
+      console.log('left', left)
+      console.log('max', max)
+      console.log('reset', reset)
     }
-  });
+  })
 
-  const allOrgs = await promisifiedGitHubGet(githubClient);
+  const allOrgs = await promisifiedGitHubGet(githubClient)
 
   allOrgs.push({
     id: githubAccount.github_id,
     login: githubAccount.username
-  });
+  })
 
   return res.send({
     orgs: allOrgs.map(org => {
       return {
         id: org.id,
         login: org.login
-      };
+      }
     })
-  });
-});
+  })
+})
 
 // todo: something better than this
 function promisifiedGitHubGet(githubClient) {
@@ -61,11 +61,11 @@ function promisifiedGitHubGet(githubClient) {
      */
     githubClient.get('/user/orgs', {}, (err, status, body) => {
       if (err) {
-        return reject(err);
+        return reject(err)
       }
-      resolve(body);
-    });
-  });
+      resolve(body)
+    })
+  })
 }
 
-module.exports = route;
+module.exports = route

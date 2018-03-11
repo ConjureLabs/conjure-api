@@ -1,23 +1,23 @@
-const Route = require('@conjurelabs/route');
-const config = require('conjure-core/modules/config');
+const Route = require('@conjurelabs/route')
+const config = require('conjure-core/modules/config')
 
 const route = new Route({
   requireAuthentication: true
-});
+})
 
 route.push(async (req, res) => {
-  const apiAccountCardCreation = require('../../account/billing/card/post.js').call;
-  const result = await apiAccountCardCreation(req, req.body);
+  const apiAccountCardCreation = require('../../account/billing/card/post.js').call
+  const result = await apiAccountCardCreation(req, req.body)
 
-  emailUser(req);
+  emailUser(req)
 
-  return res.send(result);
-});
+  return res.send(result)
+})
 
 async function emailUser(req) {
-  const apiAccountGet = require('../../account/get.js').call;
-  const account = (await apiAccountGet(req)).account;
-  const mail = require('conjure-core/modules/mail');
+  const apiAccountGet = require('../../account/get.js').call
+  const account = (await apiAccountGet(req)).account
+  const mail = require('conjure-core/modules/mail')
   mail.send({
     to: account.email,
     subject: 'Welcome to Conjure!',
@@ -31,7 +31,7 @@ async function emailUser(req) {
         </div>
       </body>
     `
-  });
+  })
 }
 
-module.exports = route;
+module.exports = route

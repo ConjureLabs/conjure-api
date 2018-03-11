@@ -1,14 +1,14 @@
-const Route = require('@conjurelabs/route');
+const Route = require('@conjurelabs/route')
 
 const route = new Route({
   requireAuthentication: true
-});
+})
 
 /*
   Repos listing
  */
 route.push(async (req, res) => {
-  const { query } = require('@conjurelabs/db');
+  const { query } = require('@conjurelabs/db')
 
   // getting all repo records user has access to
   const accountRepos = (
@@ -24,19 +24,19 @@ route.push(async (req, res) => {
         ON ar.service_repo_id = wr.service_repo_id
       WHERE ar.account = $1
     `, [req.user.id])
-  ).rows;
+  ).rows
 
-  const watchedRepos = accountRepos.filter(repo => repo.watching === true);
+  const watchedRepos = accountRepos.filter(repo => repo.watching === true)
   const watchedOrgs = watchedRepos
     .map(repo => repo.org)
     .reduce((unique, org) => {
       if (!unique.includes(org)) {
-        unique.push(org);
+        unique.push(org)
       }
-      return unique;
-    }, []);
+      return unique
+    }, [])
 
-  return res.send(watchedOrgs);
-});
+  return res.send(watchedOrgs)
+})
 
-module.exports = route;
+module.exports = route
