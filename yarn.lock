@@ -649,7 +649,7 @@ configstore@^3.0.0:
 
 "conjure-core@git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#4aa7e04970c45a9d8cb69bbd241855a73344edcb"
+  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#0f49e7b84c8ac7241c37a24814dbd10b1fe7a42d"
   dependencies:
     "@conjurelabs/db" "0.0.2"
     "@conjurelabs/err" "0.0.2"
