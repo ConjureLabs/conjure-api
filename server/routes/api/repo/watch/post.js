@@ -77,7 +77,7 @@ route.push(async (req, res) => {
   // save our own record of the hook
   await upsertWatchedRepoRecord(req)
 
-  return res.send({
+  res.send({
     success: true
   })
 })

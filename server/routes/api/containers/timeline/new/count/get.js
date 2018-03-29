@@ -55,7 +55,7 @@ route.push(async (req, res) => {
     throw new UnexpectedError('No rows returned')
   }
 
-  return res.send({
+  res.send({
     count: result.rows[0].num
   })
 })

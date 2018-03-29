@@ -17,7 +17,7 @@ route.push(async (req, res) => {
     httpOnly: true
   })
 
-  return res.send({})
+  res.send({})
 })
 
 module.exports = route

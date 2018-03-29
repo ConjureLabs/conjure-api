@@ -44,7 +44,7 @@ route.push(async (req, res) => {
   const Card = require('conjure-core/classes/Stripe/Card')
   await Card.delete(await stripeCustomer, stripeCardId)
 
-  return res.send({})
+  res.send({})
 })
 
 module.exports = route

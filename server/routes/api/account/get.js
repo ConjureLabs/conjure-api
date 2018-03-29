@@ -26,7 +26,7 @@ route.push(async (req, res) => {
     throw new UnexpectedError('Expected a single row for account record, received multiple')
   }
 
-  return res.send({
+  res.send({
     account: rows[0]
   })
 })

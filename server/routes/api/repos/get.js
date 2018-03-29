@@ -84,7 +84,7 @@ route.push(async (req, res) => {
   }, {})
 
   // todo: stop sending by org all the time - it's an overhead most of the time
-  return res.send({
+  res.send({
     reposByOrg
   })
 })

@@ -4,7 +4,7 @@ const log = require('conjure-core/modules/log')('github webhook inbound')
 
 const route = new Route()
 
-route.push(async (req, res) => {
+route.push(async (req, res, next) => {
   const GitHubWebhookPayload = require('conjure-core/classes/Repo/GitHub/Webhook/Payload')
   const payload = new GitHubWebhookPayload(req.body)
   const { type, action } = payload
@@ -18,7 +18,7 @@ route.push(async (req, res) => {
 
   if (type === GitHubWebhookPayload.types.branch) {
     // todo: if the commit is ontop of a PR, we will have to update the vm
-    return
+    return next()
   }
 
   const Queue = require('conjure-core/classes/Queue')
@@ -90,7 +90,9 @@ route.push(async (req, res) => {
       break
   }
 
-  return
+  res.send({
+    success: true
+  })
 })
 
 module.exports = route

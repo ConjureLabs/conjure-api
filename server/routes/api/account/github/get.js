@@ -10,7 +10,7 @@ const route = new Route({
  */
 route.push(async (req, res) => {
   const DatabaseTable = require('@conjurelabs/db/table')
-  const accountGithub = new DatabaseTable('account_github')
+  const accountGithub = new DatabaseTable('accountGithub')
 
   const rows = await accountGithub.select({
     account: req.user.id
@@ -26,7 +26,7 @@ route.push(async (req, res) => {
     throw new UnexpectedError('Expected a single row for GitHub account record, received multiple')
   }
 
-  return res.send({
+  res.send({
     account: rows[0]
   })
 })

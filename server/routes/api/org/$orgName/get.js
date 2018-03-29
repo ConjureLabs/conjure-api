@@ -32,7 +32,7 @@ route.push(async (req, res) => {
   const orgInfo = await promisifyGitHubOrg(githubClient, orgName)
 
   // todo: stop sending by org all the time - it's an overhead most of the time
-  return res.send(orgInfo)
+  res.send(orgInfo)
 })
 
 function promisifyGitHubOrg(client, orgName) {

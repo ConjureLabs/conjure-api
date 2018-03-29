@@ -48,7 +48,7 @@ route.push(async (req, res) => {
     json: true
   })
 
-  return res.send({
+  res.send({
     sessionKey: body.sessionKey,
     host: workerHost
   })

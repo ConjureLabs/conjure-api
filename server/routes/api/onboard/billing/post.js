@@ -11,7 +11,7 @@ route.push(async (req, res) => {
 
   emailUser(req)
 
-  return res.send(result)
+  res.send(result)
 })
 
 async function emailUser(req) {

@@ -67,7 +67,7 @@ route.push(async (req, res) => {
     return dict
   }, {})
 
-  return res.send({
+  res.send({
     statuses
   })
 })

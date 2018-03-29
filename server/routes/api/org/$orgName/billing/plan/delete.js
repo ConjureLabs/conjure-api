@@ -25,5 +25,5 @@ route.push(async (req, res) => {
     AND org_id = $1
   `, [githubOrg.id])
 
-  return res.send({})
+  res.send({})
 })

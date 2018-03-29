@@ -9,9 +9,10 @@ const route = new Route({
 /*
   dev endpoint to debug user object
  */
-route.push(async req => {
+route.push(async (req, res, next) => {
   console.log('authed', req.isAuthenticated())
   console.log('user', req.user)
+  next()
 })
 
 module.exports = route

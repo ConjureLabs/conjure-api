@@ -11,7 +11,7 @@ route.push(passport.authenticate('github', {
   failureRedirect: config.app.web.url
 }))
 
-route.push(async (req, res) => {
+route.push((req, res) => {
   if (req.cookies && typeof req.cookies['conjure-auth-redirection'] === 'string') {
     res.clearCookie('conjure-auth-redirection')
     res.redirect(302, req.cookies['conjure-auth-redirection'])
@@ -19,7 +19,6 @@ route.push(async (req, res) => {
   }
 
   res.redirect(302, config.app.web.url)
-  return
 })
 
 module.exports = route

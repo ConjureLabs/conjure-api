@@ -33,7 +33,7 @@ route.push(async (req, res) => {
     login: githubAccount.username
   })
 
-  return res.send({
+  res.send({
     orgs: allOrgs.map(org => {
       return {
         id: org.id,

@@ -84,7 +84,7 @@ route.push(async (req, res) => {
     added: new Date()
   })
 
-  return res.send({})
+  res.send({})
 })
 
 module.exports = route

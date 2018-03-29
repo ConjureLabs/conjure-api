@@ -14,9 +14,9 @@ route.push((req, res, next) => {
   next()
 })
 
-route.push(async () => {
+route.push(async (req, res, next) => {
   console.log('HIT ! 222')
-  return null
+  next()
 })
 
 route.push((req, res, next) => {
@@ -25,7 +25,7 @@ route.push((req, res, next) => {
 })
 
 route.push(async (req, res) => {
-  return res.send('test')
+  res.send('test')
 })
 
 route.push((req, res, next) => {

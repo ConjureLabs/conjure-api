@@ -27,15 +27,15 @@ route.push(async (req, res) => {
   }
 
   // getting plan info
-  const matchingPlans = await DatabaseTable.select('monthlyBillingPlan', {
-    id: orgPlan.monthlyBillingPlan
+  const matchingPlans = await DatabaseTable.select('monthly_billing_plan', {
+    id: orgPlan.monthly_billing_plan
   })
 
   if (!matchingPlans.length) {
     throw new NotFoundError('No billing plan found')
   }
 
-  return res.send(matchingPlans[0])
+  res.send(matchingPlans[0])
 })
 
 module.exports = route

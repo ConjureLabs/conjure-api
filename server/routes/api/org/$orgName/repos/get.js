@@ -35,7 +35,7 @@ route.push(async (req, res) => {
   sortInsensitive(repos, 'full_name')
 
   // todo: stop sending by org all the time - it's an overhead most of the time
-  return res.send({
+  res.send({
     [orgName]: repos
   })
 })

@@ -85,7 +85,7 @@ route.push(async (req, res) => {
   })
 
   // all good
-  return res.send({})
+  res.send({})
 })
 
 module.exports = route

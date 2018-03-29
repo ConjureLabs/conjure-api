@@ -36,7 +36,7 @@ route.push(async (req, res) => {
       return unique
     }, [])
 
-  return res.send(watchedOrgs)
+  res.send(watchedOrgs)
 })
 
 module.exports = route

@@ -49,7 +49,7 @@ route.push(async (req, res) => {
 
   const haveAdditionalOrgs = Object.keys(notWatchedReposByOrg).length > watchedOrgs.length
 
-  return res.send({
+  res.send({
     watched: {
       orgs: watchedOrgs,
       repos: watchedRepos.map(repo => minialRepo(repo))

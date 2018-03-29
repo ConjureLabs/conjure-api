@@ -30,7 +30,7 @@ route.push(async (req, res) => {
     cards[i] = await Card.retrieve(stripeCustomer, cards[i].stripe_id)
   }
 
-  return res.send({
+  res.send({
     cards
   })
 })
