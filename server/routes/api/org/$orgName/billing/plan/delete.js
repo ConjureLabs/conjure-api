@@ -27,3 +27,5 @@ route.push(async (req, res) => {
 
   res.send({})
 })
+
+module.exports = route

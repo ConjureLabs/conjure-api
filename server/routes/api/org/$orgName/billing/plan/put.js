@@ -46,3 +46,5 @@ route.push(async (req, res) => {
 
   res.send(records[0])
 })
+
+module.exports = route
