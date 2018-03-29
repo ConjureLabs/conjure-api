@@ -22,7 +22,7 @@ route.push(async (req, res) => {
 
   // prepare github api client
   const github = require('octonode')
-  const githubClient = github.client(githubAccount.access_token)
+  const githubClient = github.client(githubAccount.accessToken)
 
   // validate permissions on repo
   const info = await promisifiedGitHubInfo(githubClient, orgName, repoName)
@@ -50,18 +50,6 @@ route.push(async (req, res) => {
     }
   }
 
-  // create new hook
-  console.log({
-    name: 'web',
-    active: true,
-    events: ['push', 'pull_request'],
-    config: {
-      content_type: 'json',
-      insecure_ssl: 1, // todo: config this - see https://developer.github.com/v3/repos/hooks/#create-a-hook
-      secret: config.services.github.inboundWebhookScret,
-      url: newHookPath
-    }
-  })
   await promisifiedGitHubSetHook(githubClient, orgName, repoName, {
     name: 'web',
     active: true,
