@@ -21,7 +21,7 @@
   "dependencies": {
     "@conjurelabs/db": "0.0.2",
     "@conjurelabs/err": "0.0.2",
-    "@conjurelabs/route": "0.1.1",
+    "@conjurelabs/route": "0.1.4",
     "@conjurelabs/utils": "0.0.1",
     "async": "^2.3.0",
     "body-parser": "1.15.2",
