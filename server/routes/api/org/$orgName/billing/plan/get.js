@@ -27,8 +27,8 @@ route.push(async (req, res) => {
   }
 
   // getting plan info
-  const matchingPlans = await DatabaseTable.select('monthly_billing_plan', {
-    id: orgPlan.monthly_billing_plan
+  const matchingPlans = await DatabaseTable.select('monthlyBillingPlan', {
+    id: orgPlan.monthlyBillingPlan
   })
 
   if (!matchingPlans.length) {

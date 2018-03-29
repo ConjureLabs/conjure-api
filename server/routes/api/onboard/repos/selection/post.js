@@ -45,13 +45,13 @@ route.push(async (req, res) => {
   const DatabaseTable = require('@conjurelabs/db/table')
 
   // activate billing plan at this point
-  const orgPlan = new DatabaseTable('github_org_monthly_billing_plan')
+  const orgPlan = new DatabaseTable('githubOrgMonthlyBillingPlan')
   const orgPlanUpdates = await orgPlan.update({
     activated: DatabaseTable.literal('NOW()')
   }, {
-    org_id: req.cookies['conjure-onboard-orgs'].value,
+    orgId: req.cookies['conjure-onboard-orgs'].value,
     activated: null,
-    monthly_billing_plan: req.cookies['conjure-onboard-plan']
+    monthlyBillingPlan: req.cookies['conjure-onboard-plan']
   })
 
   if (!orgPlanUpdates.length) {

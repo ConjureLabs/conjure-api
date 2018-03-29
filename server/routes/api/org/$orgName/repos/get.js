@@ -15,7 +15,7 @@ route.push(async (req, res) => {
   const githubAccount = (await apiGetAccountGitHub(req)).account
 
   const github = require('octonode')
-  const githubClient = github.client(githubAccount.access_token)
+  const githubClient = github.client(githubAccount.accessToken)
 
   // just for debub purposes
   // todo: move or remove this
@@ -32,7 +32,7 @@ route.push(async (req, res) => {
   const repos = await promisifyGitHubOrgRepos(githubClient, orgName)
 
   const sortInsensitive = require('@conjurelabs/utils/Array/sort-insensitive')
-  sortInsensitive(repos, 'full_name')
+  sortInsensitive(repos, 'fullName')
 
   // todo: stop sending by org all the time - it's an overhead most of the time
   res.send({

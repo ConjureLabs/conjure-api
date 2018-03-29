@@ -90,8 +90,8 @@ passport.use(
 
       try {
         // check for existing account record
-        githubAccountRows = await DatabaseTable.select('account_github', {
-          github_id: profile.id
+        githubAccountRows = await DatabaseTable.select('accountGithub', {
+          githubId: profile.id
         })
       } catch(err) {
         return callback(err)
@@ -122,7 +122,7 @@ passport.use(
 
         // record the login
         try {
-          await DatabaseTable.insert('account_login', {
+          await DatabaseTable.insert('accountLogin', {
             account: account.id,
             service: DatabaseTable.cast('github', 'account_login_service'),
             added: DatabaseTable.literal('NOW()')
@@ -179,8 +179,8 @@ passport.use(
 
       try {
         // already defined at start of this func
-        githubAccountRows = await DatabaseTable.insert('account_github', {
-          github_id: profile.id,
+        githubAccountRows = await DatabaseTable.insert('accountGithub', {
+          githubId: profile.id,
           account: account.id,
           username: profile.username,
           name: profile.displayName,
@@ -199,7 +199,7 @@ passport.use(
 
       // record the login
       try {
-        await DatabaseTable.insert('account_login', {
+        await DatabaseTable.insert('accountLogin', {
           account: account.id,
           service: DatabaseTable.cast('github', 'account_login_service'),
           added: DatabaseTable.literal('NOW()')
@@ -234,7 +234,7 @@ async function saveVisibleAccountRepos(githubAccount) {
   const allRepos = []
 
   const DatabaseTable = require('@conjurelabs/db/table')
-  const accountRepo = new DatabaseTable('account_repo')
+  const accountRepo = new DatabaseTable('accountRepo')
 
   const reposByOrg = userRepos.reposByOrg
 
@@ -262,11 +262,11 @@ async function saveVisibleAccountRepos(githubAccount) {
       // insert
       account: githubAccount.account,
       service: repo.service.toLowerCase(),
-      service_repo_id: repo.id,
+      serviceRepoId: repo.id,
       url: repo.url,
       org: repo.org,
       name: repo.name,
-      access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
+      accessRights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
       private: repo.private === true,
       added: new Date()
     }, {
@@ -274,14 +274,14 @@ async function saveVisibleAccountRepos(githubAccount) {
       url: repo.url,
       org: repo.org,
       name: repo.name,
-      access_rights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
+      accessRights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
       private: repo.private === true,
       updated: new Date()
     }, {
       // update where
       account: githubAccount.account,
       service: repo.service.toLowerCase(),
-      service_repo_id: repo.id
+      serviceRepoId: repo.id
     })
   })
 
@@ -307,7 +307,7 @@ async function saveVisibleAccountRepos(githubAccount) {
 
 async function ensureEmailsStored(account, seenEmails) {
   const DatabaseTable = require('@conjurelabs/db/table')
-  const accountEmails = new DatabaseTable('account_email')
+  const accountEmails = new DatabaseTable('accountEmail')
 
   let rows
   try {

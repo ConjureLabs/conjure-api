@@ -84,17 +84,17 @@ route.push(async (req, res) => {
   const timeline = result.rows.map(row => {
     return {
       id: row.id,
-      repo: row.repo_name,
-      repo_private: row.repo_private,
+      repo: row.repoName,
+      repoPrivate: row.repoPrivate,
       branch: row.branch,
-      view: `${webConfig.protocol}://${row.url_uid}.view.${webConfig.host}`,
-      logs: `${webConfig.protocol}://${row.url_uid}.logs.${webConfig.host}`,
-      status: row.is_active === true && !row.active_start ? 'Spinning Up' :
-        row.is_active === true && row.active_start ? 'Running' :
-        row.is_active === false ? 'Spun Down' :
+      view: `${webConfig.protocol}://${row.urlUid}.view.${webConfig.host}`,
+      logs: `${webConfig.protocol}://${row.urlUid}.logs.${webConfig.host}`,
+      status: row.isActive === true && !row.activeStart ? 'Spinning Up' :
+        row.isActive === true && row.activeStart ? 'Running' :
+        row.isActive === false ? 'Spun Down' :
         'Unknown', // should not happen
-      start: row.active_start || row.added,
-      stop: row.active_stop
+      start: row.activeStart || row.added,
+      stop: row.activeStop
     }
   })
 

@@ -59,9 +59,9 @@ route.push(async (req, res) => {
 
   const statuses = result.rows.reduce((dict, row) => {
     // todo: add this logic to a class or module? it is used here and in the timeline get route
-    dict[ row.id ] = row.is_active === true && !row.active_start ? 'Spinning Up' :
-      row.is_active === true && row.active_start ? 'Running' :
-      row.is_active === false ? 'Spun Down' :
+    dict[ row.id ] = row.isActive === true && !row.activeStart ? 'Spinning Up' :
+      row.isActive === true && row.activeStart ? 'Running' :
+      row.isActive === false ? 'Spun Down' :
       'Unknown' // should not happen
 
     return dict

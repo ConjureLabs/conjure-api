@@ -15,7 +15,7 @@ route.push(async (req, res) => {
 
   // pull account card rows
   const DatabaseTable = require('@conjurelabs/db/table')
-  const accountCard = new DatabaseTable('account_card')
+  const accountCard = new DatabaseTable('accountCard')
   const accountCards = await accountCard.select({
     account: req.user.id
   })
@@ -23,11 +23,11 @@ route.push(async (req, res) => {
   // pulling full card details
   const cards = await accountCards.filter(accountCard => {
     // removing any account card records that are not associated to a stripe record
-    return typeof accountCard.stripe_id === 'string' && accountCard.stripe_id
+    return typeof accountCard.stripeId === 'string' && accountCard.stripeId
   })
   const Card = require('conjure-core/classes/Stripe/Card')
   for (let i = 0; i < cards.length; i++) {
-    cards[i] = await Card.retrieve(stripeCustomer, cards[i].stripe_id)
+    cards[i] = await Card.retrieve(stripeCustomer, cards[i].stripeId)
   }
 
   res.send({

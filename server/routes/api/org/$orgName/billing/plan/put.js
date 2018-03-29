@@ -36,11 +36,11 @@ route.push(async (req, res) => {
   }
 
   // does not set activated timestamp here
-  const records = await DatabaseTable.insert('github_org_monthly_billing_plan', {
+  const records = await DatabaseTable.insert('githubOrgMonthlyBillingPlan', {
     org: req.params.orgName,
     orgId: githubOrg.id,
     account: req.user.id,
-    monthly_billing_plan: monthlyBillingPlan,
+    monthlyBillingPlan,
     added: new Date()
   })
 

@@ -49,8 +49,8 @@ route.push(async (req, res) => {
   }
 
   // does not set activated timestamp here
-  await DatabaseTable.update('github_org_monthly_billing_plan', {
-    monthly_billing_plan: monthlyBillingPlan,
+  await DatabaseTable.update('githubOrgMonthlyBillingPlan', {
+    monthlyBillingPlan,
     updated: new Date()
   }, {
     id: originalRecordsResult.rows[0].id

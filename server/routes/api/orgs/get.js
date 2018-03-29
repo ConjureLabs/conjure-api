@@ -12,7 +12,7 @@ route.push(async (req, res) => {
   const githubAccount = (await apiGetAccountGitHub(req)).account
 
   const github = require('octonode')
-  const githubClient = github.client(githubAccount.access_token)
+  const githubClient = github.client(githubAccount.accessToken)
 
   // just for debub purposes
   // todo: move or remove this
@@ -29,7 +29,7 @@ route.push(async (req, res) => {
   const allOrgs = await promisifiedGitHubGet(githubClient)
 
   allOrgs.push({
-    id: githubAccount.github_id,
+    id: githubAccount.githubId,
     login: githubAccount.username
   })
 

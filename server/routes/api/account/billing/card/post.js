@@ -46,13 +46,13 @@ route.push(async (req, res) => {
   const Customer = require('conjure-core/classes/Stripe/Customer')
 
   // if account has a stripe customer record, get it and continue
-  const customer = accountRecord.stripe_id ? await Customer.retrieve(req.user.id, accountRecord.stripe_id) : await new Customer(req.user.id, {
+  const customer = accountRecord.stripeId ? await Customer.retrieve(req.user.id, accountRecord.stripeId) : await new Customer(req.user.id, {
     email: account.email,
     name: account.name
   }).save()
 
   // store id for stripe customer record, on account row
-  accountRecord.stripe_id = customer.id
+  accountRecord.stripeId = customer.id
   accountRecord.updated = new Date()
   await accountRecord.save()
 
@@ -78,9 +78,9 @@ route.push(async (req, res) => {
   }, req.body)
   await creditCard.save()
 
-  await DatabaseTable.insert('account_card', {
+  await DatabaseTable.insert('accountCard', {
     account: accountRecord.id,
-    stripe_id: creditCard.id,
+    stripeId: creditCard.id,
     added: new Date()
   })
 

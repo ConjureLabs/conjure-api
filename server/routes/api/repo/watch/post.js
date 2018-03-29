@@ -181,10 +181,10 @@ async function upsertWatchedRepoRecord(req) {
     vm
   } = req.body
 
-  await DatabaseTable.upsert('watched_repo', {
+  await DatabaseTable.upsert('watchedRepo', {
     account: req.user.id,
     service,
-    service_repo_id: githubId,
+    serviceRepoId: githubId,
     url,
     org: orgName,
     name,
@@ -196,7 +196,7 @@ async function upsertWatchedRepoRecord(req) {
     updated: new Date()
   }, {
     service,
-    service_repo_id: githubId
+    serviceRepoId: githubId
   })
 }
 

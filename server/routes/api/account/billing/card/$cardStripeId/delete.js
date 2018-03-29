@@ -15,7 +15,7 @@ route.push(async (req, res) => {
   const stripeCustomer = await Customer.getRecordFromReq(req)
 
   const DatabaseTable = require('@conjurelabs/db/table')
-  const accountCard = new DatabaseTable('account_card')
+  const accountCard = new DatabaseTable('accountCard')
 
   const accountCards = await accountCard.select({
     account: req.user.id
@@ -23,7 +23,7 @@ route.push(async (req, res) => {
 
   // verify user even has this card
   const cardMatches = accountCards.filter(card => {
-    return card.stripe_id === stripeCardId
+    return card.stripeId === stripeCardId
   })
 
   if (!cardMatches.length) {
