@@ -6,12 +6,16 @@ const route = new Route({
 })
 
 route.push(async (req, res) => {
+  const orgName = req.cookies['conjure-onboard-orgs'].label
+
   req.body.orgId = req.cookies['conjure-onboard-orgs'].value
-  req.body.orgName = req.cookies['conjure-onboard-orgs'].label
+  req.body.orgName = orgName
   req.body.activate = false // activate upon repos selection
 
   const apiAccountBillingPlanCreation = require('../../../org/$orgName/billing/plan/put.js').call
-  const result = await apiAccountBillingPlanCreation(req, req.body)
+  const result = await apiAccountBillingPlanCreation(req, req.body, {
+    orgName
+  })
 
   // planId appended by api endpoint used
   const { planId } = req
