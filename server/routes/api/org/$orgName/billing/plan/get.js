@@ -6,12 +6,16 @@ const route = new Route({
 })
 
 route.push(async (req, res) => {
+  const { orgName } = req.params
+
   const { query } = require('@conjurelabs/db')
   const DatabaseTable = require('@conjurelabs/db/table')
 
   // must get github org id, based on name
   const apiGetGitHubOrgInfo = require('../../get.js').call
-  const githubOrg = await apiGetGitHubOrgInfo(req)
+  const githubOrg = await apiGetGitHubOrgInfo(req, null, {
+    orgName
+  })
 
   // unset any existing plans for the org
   const orgPlanResult = await query(`

@@ -8,10 +8,10 @@ const route = new Route({
   Repos listing
  */
 route.push(async (req, res) => {
-  const orgName = req.params.orgName
+  const { orgName } = req.params
 
   // todo: assumes account has a github record in our db - we should have more handlers for services like bitbucket
-  const apiGetAccountGitHub = require('../../../account/github/get.js').call
+  const apiGetAccountGitHub = require('../../account/github/get.js').call
   const githubAccount = (await apiGetAccountGitHub(req)).account
 
   const github = require('octonode')

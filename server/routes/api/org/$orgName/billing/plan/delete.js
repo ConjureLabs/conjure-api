@@ -6,11 +6,15 @@ const route = new Route({
 })
 
 route.push(async (req, res) => {
+  const { orgName } = req.params
+
   const { query } = require('@conjurelabs/db')
 
   // must get github org id, based on name
   const apiGetGitHubOrgInfo = require('../../get.js').call
-  const githubOrg = await apiGetGitHubOrgInfo(req)
+  const githubOrg = await apiGetGitHubOrgInfo(req, null, {
+    orgName
+  })
 
   if (!githubOrg.id) {
     throw new NotFoundError('No GitHub org id found')

@@ -6,7 +6,8 @@ const route = new Route({
 })
 
 route.push(async (req, res) => {
-  const { monthlyBillingPlan } = req.body.monthlyBillingPlan
+  const { orgName } = req.body
+  const { monthlyBillingPlan } = req.body
 
   if (!monthlyBillingPlan || isNaN(monthlyBillingPlan)) {
     throw new ContentError('Payload missing or in an unexpected format')
@@ -17,7 +18,9 @@ route.push(async (req, res) => {
 
   // must get github org id, based on name
   const apiGetGitHubOrgInfo = require('../../get.js').call
-  const githubOrg = await apiGetGitHubOrgInfo(req)
+  const githubOrg = await apiGetGitHubOrgInfo(req, null, {
+    orgName
+  })
 
   if (!githubOrg.id) {
     throw new NotFoundError('No GitHub org id found')
