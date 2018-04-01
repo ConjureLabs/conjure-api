@@ -46,18 +46,25 @@ route.push(async (req, res) => {
 
   // activate billing plan at this point
   const orgPlan = new DatabaseTable('githubOrgMonthlyBillingPlan')
-  const orgPlanUpdates = await orgPlan.update({
-    activated: DatabaseTable.literal('NOW()')
-  }, {
-    id: req.cookieSecure('conjure-onboard-plan-billing'),
+  const orgPlansToUpdate = await orgPlan.select({
+    id: parseInt(req.cookieSecure('conjure-onboard-plan-billing'), 10),
     orgId: req.cookies['conjure-onboard-orgs'].value,
     activated: null,
     deactivated: null
   })
 
-  if (!orgPlanUpdates.length) {
+  if (!orgPlansToUpdate.length) {
     throw new UnexpectedError('Org plan not activated')
   }
+
+  const orgPlanUpdates = await orgPlan.update({
+    activated: DatabaseTable.literal('NOW()')
+  }, {
+    id: parseInt(req.cookieSecure('conjure-onboard-plan-billing'), 10),
+    orgId: req.cookies['conjure-onboard-orgs'].value,
+    activated: null,
+    deactivated: null
+  })
 
   // batching 3 promises at a time
   const apiWatchRepo = require('../../../repo/watch/post.js').call

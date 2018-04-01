@@ -18,12 +18,12 @@ route.push(async (req, res) => {
   })
 
   // appending plan id cookie so that we can activate it later
-  res.cookieSecure('conjure-onboard-plan-billing', billingRecord.id, {
+  res.cookieSecure('conjure-onboard-plan-billing', billingRecord.id.toString(), {
     maxAge: 259200000, // 3 days
     httpOnly: true
   })
 
-  res.send(result)
+  res.send(billingRecord)
 })
 
 module.exports = route
