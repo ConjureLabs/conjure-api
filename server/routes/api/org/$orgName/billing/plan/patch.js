@@ -33,7 +33,7 @@ route.push(async (req, res) => {
     AND activated IS NOT NULL
     AND deactivated IS NULL
     LIMIT 1
-  `)
+  `, [monthlyBillingPlan])
   if (!billingPlanResult.rows.length) {
     throw new NotFoundError('No associated billing plan found')
   }

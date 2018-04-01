@@ -33,9 +33,26 @@ route.push(async (req, res) => {
     AND activated IS NOT NULL
     AND deactivated IS NULL
     LIMIT 1
-  `)
+  `, [monthlyBillingPlan])
   if (!billingPlanResult.rows.length) {
     throw new NotFoundError('No associated billing plan found')
+  }
+
+  // verify this is not a duplication
+  const existingOrgPlans = await query(`
+    SELECT id
+    FROM github_org_monthly_billing_plan
+    WHERE orgId = $1
+    AND deactivated IS NOT NULL
+  `, [githubOrg.id])
+  if (existingOrgPlans.rows.length) {
+    // invalidate the old row
+    await query(`
+      UPDATE github_org_monthly_billing_plan
+      SET deactivated = NOW()
+      WHERE orgId = $1
+      AND deactivated IS NOT NULL
+    `, [githubOrg.id])
   }
 
   // does not set activated timestamp here
