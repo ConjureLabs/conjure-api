@@ -18,7 +18,7 @@ route.push(async (req, res) => {
   })
 
   // appending plan id cookie so that we can activate it later
-  res.cookie('conjure-onboard-plan-billing', billingRecord.id, {
+  res.cookieSecure('conjure-onboard-plan-billing', billingRecord.id, {
     maxAge: 259200000, // 3 days
     httpOnly: true
   })

@@ -49,7 +49,7 @@ route.push(async (req, res) => {
   const orgPlanUpdates = await orgPlan.update({
     activated: DatabaseTable.literal('NOW()')
   }, {
-    id: req.cookies['conjure-onboard-plan-billing'],
+    id: req.cookieSecure('conjure-onboard-plan-billing'),
     orgId: req.cookies['conjure-onboard-orgs'].value,
     activated: null,
     deactivated: null
