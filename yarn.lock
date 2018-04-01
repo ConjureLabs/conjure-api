@@ -100,6 +100,10 @@
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@conjurelabs/utils/-/utils-0.0.1.tgz#d72f3c61baa3e4e3334254a235dbfd760ed9c7ec"
 
+"@conjurelabs/utils@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@conjurelabs/utils/-/utils-0.1.0.tgz#72aaff782507d1f40f4e6e3e3703553e56387442"
+
 JSV@^4.0.x:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/JSV/-/JSV-4.0.2.tgz#d077f6825571f82132f9dffaed587b4029feff57"
@@ -678,7 +682,7 @@ configstore@^3.0.0:
 
 "conjure-core@git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#0f49e7b84c8ac7241c37a24814dbd10b1fe7a42d"
+  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#f26e20aa3a5d7ad377809c12c54af0b1613326e1"
   dependencies:
     "@conjurelabs/db" "0.0.2"
     "@conjurelabs/err" "0.0.2"

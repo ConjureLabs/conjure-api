@@ -350,6 +350,41 @@ server.use((req, res, next) => {
   next()
 })
 
+server.use((req, res, next) => {
+  const { cipherAlgorithm, cipherSecret, hmacAlgorithm, hmacSecret } = config.cookies.secure
+
+  const signedEncryption = require('@conjurelabs/utils/crypto/signed-encryption')
+  const encryptor = signedEncryption(cipherAlgorithm, cipherSecret).withHmac(hmacAlgorithm, hmacSecret)
+
+  res.cookieSecure = (name, data, ...extraArgs) => {
+    if (typeof data !== 'string') {
+      throw new ContentError('expected string for res.cookieSecure()')
+    }
+
+    res.cookie(name, encryptor.encrypt(data), ...extraArgs)
+  }
+
+  req.cookieSecure = name => {
+    const cookieVal = req.cookies[name]
+    if (!cookieVal) {
+      return cookieVal
+    }
+
+    let decrypted
+
+    try {
+      decrypted = encryptor.decrypt(cookieVal)
+    } catch(err) {
+      log.error(err)
+      return undefined
+    }
+
+    return decrypted
+  }
+
+  next()
+})
+
 // if user has bad cookie, kick 'um
 server.use(async (req, res, next) => {
   if (!req.isAuthenticated()) {
