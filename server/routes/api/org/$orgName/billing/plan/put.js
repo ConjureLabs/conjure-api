@@ -42,7 +42,7 @@ route.push(async (req, res) => {
   const existingOrgPlans = await query(`
     SELECT id
     FROM github_org_monthly_billing_plan
-    WHERE orgId = $1
+    WHERE org_id = $1
     AND deactivated IS NOT NULL
   `, [githubOrg.id])
   if (existingOrgPlans.rows.length) {
@@ -50,7 +50,7 @@ route.push(async (req, res) => {
     await query(`
       UPDATE github_org_monthly_billing_plan
       SET deactivated = NOW()
-      WHERE orgId = $1
+      WHERE org_id = $1
       AND deactivated IS NOT NULL
     `, [githubOrg.id])
   }
