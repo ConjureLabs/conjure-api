@@ -13,15 +13,12 @@ route.push(async (req, res) => {
   req.body.activate = false // activate upon repos selection
 
   const apiAccountBillingPlanCreation = require('../../../org/$orgName/billing/plan/put.js').call
-  const result = await apiAccountBillingPlanCreation(req, req.body, {
+  const billingRecord = await apiAccountBillingPlanCreation(req, req.body, {
     orgName
   })
 
-  // planId appended by api endpoint used
-  const { planId } = req
-
   // appending plan id cookie so that we can activate it later
-  res.cookie('conjure-onboard-plan', planId, {
+  res.cookie('conjure-onboard-plan-billing', billingRecord.id, {
     maxAge: 259200000, // 3 days
     httpOnly: true
   })

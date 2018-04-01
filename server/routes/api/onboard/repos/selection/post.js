@@ -38,7 +38,7 @@ route.push(async (req, res) => {
     throw new ContentError('No repos selected')
   }
 
-  if (!req.cookies['conjure-onboard-plan']) {
+  if (!req.cookies['conjure-onboard-plan-billing']) {
     throw new ContentError('No plan id available')
   }
 
@@ -49,9 +49,10 @@ route.push(async (req, res) => {
   const orgPlanUpdates = await orgPlan.update({
     activated: DatabaseTable.literal('NOW()')
   }, {
+    id: req.cookies['conjure-onboard-plan-billing'],
     orgId: req.cookies['conjure-onboard-orgs'].value,
     activated: null,
-    monthlyBillingPlan: req.cookies['conjure-onboard-plan']
+    deactivated: null
   })
 
   if (!orgPlanUpdates.length) {
