@@ -43,7 +43,7 @@ route.push(async (req, res) => {
     SELECT id
     FROM github_org_monthly_billing_plan
     WHERE org_id = $1
-    AND deactivated IS NOT NULL
+    AND deactivated IS NULL
   `, [githubOrg.id])
   if (existingOrgPlans.rows.length) {
     // invalidate the old row
@@ -51,7 +51,7 @@ route.push(async (req, res) => {
       UPDATE github_org_monthly_billing_plan
       SET deactivated = NOW()
       WHERE org_id = $1
-      AND deactivated IS NOT NULL
+      AND deactivated IS NULL
     `, [githubOrg.id])
   }
 
