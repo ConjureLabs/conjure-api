@@ -1,13 +1,14 @@
 const Route = require('@conjurelabs/route')
 const { ConjureError } = require('@conjurelabs/err')
 const log = require('conjure-core/modules/log')('github webhook inbound')
+const Queue = require('conjure-core/classes/Queue')
 
 const route = new Route()
 
 route.push(async (req, res, next) => {
   const GitHubWebhookPayload = require('conjure-core/classes/Repo/GitHub/Webhook/Payload')
   const payload = new GitHubWebhookPayload(req.body)
-  const { type, action } = payload
+  const { type, action, repoId, branch } = payload
 
   // telling GitHub it's all good, right away
   res.send({
@@ -17,12 +18,26 @@ route.push(async (req, res, next) => {
   })
 
   if (type === GitHubWebhookPayload.types.branch) {
-    // todo: if the commit is ontop of a PR, we will have to update the vm
+    // todo: if the commit is ontop of a PR, we will have to update the container
     return next()
   }
 
-  const Queue = require('conjure-core/classes/Queue')
-  const RedisCounter = require('conjure-core/classes/Redis/Counter')
+  // todo: queue this? what happens if hooks happen too frequently?
+  const DatabaseTable = require('@conjurelabs/db/table')
+  // checking if a running instance exists
+  const activeContainers = DatabaseTable.select('container', {
+    repo: repoId,
+    branch: branch,
+    isActive: true
+  })
+
+  if (activeContainers.length) {
+    return handleActiveContainer(req, action)
+  }
+  handleInactiveContainer(req, action)
+})
+
+function handleActiveContainer(req, action) {
   let queue
 
   switch (action) {
@@ -89,10 +104,46 @@ route.push(async (req, res, next) => {
       }
       break
   }
+}
 
-  res.send({
-    success: true
-  })
-})
+function handleInactiveContainer(req, action) {
+  let queue
+
+  switch (action) {
+    // spin up vm
+    case GitHubWebhookPayload.actions.opened:
+    case GitHubWebhookPayload.actions.reopened:
+      log.info('Received hook for "available"')
+      queue = new Queue('container.available')
+      try {
+        await queue.push({
+          content: req.body
+        })
+        log.info('Job pushed to queue (container.available)')
+      } catch(err) {
+        if (err) {
+          log.error(err)
+        }
+      }
+      break
+
+    // spin down vm
+    case GitHubWebhookPayload.actions.closed:
+    case GitHubWebhookPayload.actions.merged:
+      log.info('Received hook for "unavailable"')
+      queue = new Queue('container.unavailable')
+      try {
+        await queue.push({
+          content: req.body
+        })
+        log.info('Job pushed to queue (container.unavailable)')
+      } catch(err) {
+        if (err) {
+          log.error(err)
+        }
+      }
+      break
+  }
+}
 
 module.exports = route
