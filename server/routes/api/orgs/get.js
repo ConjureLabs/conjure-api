@@ -34,12 +34,20 @@ route.push(async (req, res) => {
   })
 
   res.send({
-    orgs: allOrgs.map(org => {
-      return {
-        id: org.id,
-        login: org.login
-      }
-    })
+    orgs: allOrgs
+      .filter(org => {
+        if (process.env.NODE_ENV === 'production') {
+          return true
+        }
+        // dev/test blacklist of certain orgs
+        return !['instacart'].includes(org.login)
+      })
+      .map(org => {
+        return {
+          id: org.id,
+          login: org.login
+        }
+      })
   })
 })
 
