@@ -37,7 +37,7 @@ route.push(async (req, res, next) => {
   handleInactiveContainer(req, action)
 })
 
-function handleActiveContainer(req, action) {
+async function handleActiveContainer(req, action) {
   let queue
 
   switch (action) {
@@ -106,7 +106,7 @@ function handleActiveContainer(req, action) {
   }
 }
 
-function handleInactiveContainer(req, action) {
+async function handleInactiveContainer(req, action) {
   let queue
 
   switch (action) {
