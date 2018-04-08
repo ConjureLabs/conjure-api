@@ -78,12 +78,6 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@conjurelabs/db@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@conjurelabs/db/-/db-0.0.2.tgz#5da64224e5e8c76b3fbcfd08b028340c1b840b45"
-  dependencies:
-    "@conjurelabs/err" "0.0.2"
-
 "@conjurelabs/db@0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@conjurelabs/db/-/db-0.1.0.tgz#8fe14e24f7ef334faa04a39d337eeda9974b4c56"
@@ -314,9 +308,13 @@ aws-sign2@~0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.7.0.tgz#b46e890934a9591f2d2f6f86d7e6a9f1b3fe76a8"
 
-aws4@^1.2.1, aws4@^1.6.0:
+aws4@^1.2.1:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.6.0.tgz#83ef5ca860b2b32e4a0deedee8c771b9db57471e"
+
+aws4@^1.6.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.7.0.tgz#d4d0e9b9dbfca77bf08eeb0a8a471550fe39e289"
 
 babel-code-frame@^6.22.0:
   version "6.26.0"
@@ -715,9 +713,9 @@ configstore@^3.0.0:
 
 "conjure-core@git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#d50a72e5c5c70cba760a6107b7ece3a4aade9ab9"
+  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#d69018b9efa8f06320e57297dfc245080bfd5916"
   dependencies:
-    "@conjurelabs/db" "0.0.2"
+    "@conjurelabs/db" "0.1.0"
     "@conjurelabs/err" "0.0.2"
     aws-sdk "2.222.1"
     bee-queue "1.2.2"
