@@ -187,6 +187,7 @@ passport.use(
           email: profile.emails[0].value,
           photo: Array.isArray(profile.photos) && profile.photos[0] ? profile.photos[0].value : null,
           accessToken: accessToken,
+          accessTokenAssumedValid: true,
           added: DatabaseTable.literal('NOW()')
         })
       } catch(err) {
