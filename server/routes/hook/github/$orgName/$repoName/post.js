@@ -2,11 +2,11 @@ const Route = require('@conjurelabs/route')
 const { ConjureError } = require('@conjurelabs/err')
 const log = require('conjure-core/modules/log')('github webhook inbound')
 const Queue = require('conjure-core/classes/Queue')
+const GitHubWebhookPayload = require('conjure-core/classes/Repo/GitHub/Webhook/Payload')
 
 const route = new Route()
 
 route.push(async (req, res, next) => {
-  const GitHubWebhookPayload = require('conjure-core/classes/Repo/GitHub/Webhook/Payload')
   const payload = new GitHubWebhookPayload(req.body)
   const { type, action, repoId, branch } = payload
 
