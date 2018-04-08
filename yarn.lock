@@ -84,9 +84,9 @@
   dependencies:
     "@conjurelabs/err" "0.0.2"
 
-"@conjurelabs/db@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@conjurelabs/db/-/db-0.0.3.tgz#428880e1b33d5a4f17f1a94bcab0b33fdd7b92b9"
+"@conjurelabs/db@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@conjurelabs/db/-/db-0.1.0.tgz#8fe14e24f7ef334faa04a39d337eeda9974b4c56"
   dependencies:
     "@conjurelabs/err" "0.0.2"
 
