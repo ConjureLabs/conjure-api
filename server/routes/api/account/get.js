@@ -9,7 +9,7 @@ const route = new Route({
   Repos listing
  */
 route.push(async (req, res) => {
-  const DatabaseTable = require('@conjurelabs/db/table')
+  const { DatabaseTable } = require('@conjurelabs/db')
   const Account = new DatabaseTable('account')
 
   const rows = await Account.select({

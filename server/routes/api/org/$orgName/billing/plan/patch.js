@@ -13,8 +13,7 @@ route.push(async (req, res) => {
     throw new ContentError('Payload missing or in an unexpected format')
   }
 
-  const { query } = require('@conjurelabs/db')
-  const DatabaseTable = require('@conjurelabs/db/table')
+  const { query, DatabaseTable } = require('@conjurelabs/db')
 
   // must get github org id, based on name
   const apiGetGitHubOrgInfo = require('../../get.js').call

@@ -14,7 +14,7 @@ route.push(async (req, res) => {
   const stripeCustomer = await Customer.getRecordFromReq(req)
 
   // pull account card rows
-  const DatabaseTable = require('@conjurelabs/db/table')
+  const { DatabaseTable } = require('@conjurelabs/db')
   const accountCard = new DatabaseTable('accountCard')
   const accountCards = await accountCard.select({
     account: req.user.id

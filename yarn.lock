@@ -78,9 +78,9 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@conjurelabs/db@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@conjurelabs/db/-/db-0.1.0.tgz#8fe14e24f7ef334faa04a39d337eeda9974b4c56"
+"@conjurelabs/db@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@conjurelabs/db/-/db-1.0.2.tgz#233609eb9f28fada2ea34330700de8578040569f"
   dependencies:
     "@conjurelabs/err" "0.0.2"
 
@@ -707,7 +707,7 @@ configstore@^3.0.0:
 
 "conjure-core@git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#40489abfa4873ac1d08f39400341238bcfa762b4"
+  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#f94a72b3968b1e135b64bbd1a982eb6a563dc2b2"
   dependencies:
     aws-sdk "2.222.1"
     bee-queue "1.2.2"
@@ -765,8 +765,8 @@ copy-descriptor@^0.1.0:
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
 
 core-js@^2.4.0:
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.4.tgz#f2c8bf181f2a80b92f360121429ce63a2f0aeae0"
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.5.tgz#b14dde936c640c0579a6b50cabcc132dd6127e3b"
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"

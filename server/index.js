@@ -50,7 +50,7 @@ server.use(bodyParser.json())
 server.use(cookieParser())
 
 passport.serializeUser((user, done) => {
-  const DatabaseRow = require('@conjurelabs/db/row')
+  const { DatabaseRow } = require('@conjurelabs/db')
   console.log('serializeUser', user)
   done(null, new DatabaseRow('account', user))
 })
@@ -80,7 +80,7 @@ passport.use(
     },
 
     async function(accessToken, refreshToken, profile, callback) {
-      const DatabaseTable = require('@conjurelabs/db/table')
+      const { DatabaseTable } = require('@conjurelabs/db')
 
       if (!profile.id || isNaN(parseInt(profile.id, 10))) {
         return callback(new ContentError('Github Id was not present in profile json'))
@@ -234,7 +234,7 @@ async function saveVisibleAccountRepos(githubAccount) {
 
   const allRepos = []
 
-  const DatabaseTable = require('@conjurelabs/db/table')
+  const { DatabaseTable } = require('@conjurelabs/db')
   const accountRepo = new DatabaseTable('accountRepo')
 
   const reposByOrg = userRepos.reposByOrg
@@ -307,7 +307,7 @@ async function saveVisibleAccountRepos(githubAccount) {
 }
 
 async function ensureEmailsStored(account, seenEmails) {
-  const DatabaseTable = require('@conjurelabs/db/table')
+  const { DatabaseTable } = require('@conjurelabs/db')
   const accountEmails = new DatabaseTable('accountEmail')
 
   let rows
@@ -397,7 +397,7 @@ server.use(async (req, res, next) => {
     return next()
   }
 
-  const DatabaseTable = require('@conjurelabs/db/table')
+  const { DatabaseTable } = require('@conjurelabs/db')
 
   // check for existing account record
   let rows

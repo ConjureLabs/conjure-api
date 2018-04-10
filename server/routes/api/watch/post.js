@@ -56,7 +56,7 @@ route.push(async (req, res) => {
   })
 
   // mark account as onboarded
-  const DatabaseTable = require('@conjurelabs/db/table')
+  const { DatabaseTable } = require('@conjurelabs/db')
   const account = new DatabaseTable('account')
   await account.update({
     onboarded: true,

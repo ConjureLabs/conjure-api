@@ -23,7 +23,7 @@ route.push(async (req, res, next) => {
   }
 
   // todo: queue this? what happens if hooks happen too frequently?
-  const DatabaseTable = require('@conjurelabs/db/table')
+  const { DatabaseTable } = require('@conjurelabs/db')
   // checking if a running instance exists
   const activeContainers = DatabaseTable.select('container', {
     repo: repoId,

@@ -157,7 +157,7 @@ function promisifiedGitHubSetHook(client, orgName, repoName, data) {
 }
 
 async function upsertWatchedRepoRecord(req) {
-  const DatabaseTable = require('@conjurelabs/db/table')
+  const { DatabaseTable } = require('@conjurelabs/db')
 
   const {
     service,

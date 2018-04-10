@@ -42,7 +42,7 @@ route.push(async (req, res) => {
     throw new ContentError('No plan id available')
   }
 
-  const DatabaseTable = require('@conjurelabs/db/table')
+  const { DatabaseTable } = require('@conjurelabs/db')
 
   // activate billing plan at this point
   const orgPlan = new DatabaseTable('githubOrgMonthlyBillingPlan')

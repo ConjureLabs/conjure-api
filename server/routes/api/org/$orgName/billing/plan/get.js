@@ -8,8 +8,7 @@ const route = new Route({
 route.push(async (req, res) => {
   const { orgName } = req.params
 
-  const { query } = require('@conjurelabs/db')
-  const DatabaseTable = require('@conjurelabs/db/table')
+  const { query, DatabaseTable } = require('@conjurelabs/db')
 
   // must get github org id, based on name
   const apiGetGitHubOrgInfo = require('../../get.js').call
