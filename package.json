@@ -21,7 +21,7 @@
   "homepage": "https://github.com/ConjureLabs/conjure-api#readme",
   "dependencies": {
     "@conjurelabs/db": "1.0.2",
-    "@conjurelabs/err": "0.0.2",
+    "@conjurelabs/err": "0.1.0",
     "@conjurelabs/route": "0.1.4",
     "@conjurelabs/utils": "0.1.0",
     "async": "^2.3.0",

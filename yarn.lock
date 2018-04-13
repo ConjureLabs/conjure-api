@@ -88,6 +88,10 @@
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@conjurelabs/err/-/err-0.0.2.tgz#432f40ccecf74fc5c4cab4eeb0886c0bfdf40c67"
 
+"@conjurelabs/err@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@conjurelabs/err/-/err-0.1.0.tgz#6003b69eef4e8599c3858263fea53044ffd75c22"
+
 "@conjurelabs/route@0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@conjurelabs/route/-/route-0.1.4.tgz#2ece3cdd3d289c8997dd5cd07e3268b43715e750"
@@ -707,7 +711,7 @@ configstore@^3.0.0:
 
 "conjure-core@git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#f94a72b3968b1e135b64bbd1a982eb6a563dc2b2"
+  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#822db55169d222c7c28c6a7f96ae25a9b915c7f7"
   dependencies:
     aws-sdk "2.222.1"
     bee-queue "1.2.2"
@@ -2979,8 +2983,8 @@ resolve-url@^0.2.1:
   resolved "https://registry.yarnpkg.com/resolve-url/-/resolve-url-0.2.1.tgz#2c637fe77c893afd2a663fe21aa9080068e2052a"
 
 resolve@^1.1.6:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.7.0.tgz#2bdf5374811207285df0df652b78f118ab8f3c5e"
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.7.1.tgz#aadd656374fd298aee895bc026b8297418677fd3"
   dependencies:
     path-parse "^1.0.5"
 

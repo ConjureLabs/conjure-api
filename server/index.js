@@ -434,7 +434,9 @@ server.use((err, req, res, next) => {
   if (err instanceof ConjureError) {
     return res
       .status(err.httpStatusCode)
-      .send(err.friendlyError)
+      .send({
+        message: err.friendlyError
+      })
   }
 
   res
