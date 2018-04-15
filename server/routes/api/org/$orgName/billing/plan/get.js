@@ -23,7 +23,7 @@ route.push(async (req, res) => {
     AND activated IS NOT NULL
     AND org_id = $1
   `, [githubOrg.id])
-  const orgPlan = result.rows[0]
+  const orgPlan = orgPlanResult.rows[0]
 
   if (!orgPlan) {
     throw new NotFoundError('No billing plan found for org')

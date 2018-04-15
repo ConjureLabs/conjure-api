@@ -57,7 +57,7 @@ route.push(async (req, res) => {
     throw new UnexpectedError('Org plan not activated')
   }
 
-  const orgPlanUpdates = await orgPlan.update({
+  orgPlan.update({
     activated: DatabaseTable.literal('NOW()')
   }, {
     id: parseInt(req.cookieSecure('conjure-onboard-plan-billing'), 10),
