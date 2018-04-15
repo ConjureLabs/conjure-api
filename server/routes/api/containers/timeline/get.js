@@ -89,10 +89,7 @@ route.push(async (req, res) => {
       branch: row.branch,
       view: `${webConfig.protocol}://${row.urlUid}.view.${webConfig.host}`,
       logs: `${webConfig.protocol}://${row.urlUid}.logs.${webConfig.host}`,
-      status: row.isActive === true && !row.activeStart ? 'Spinning Up' :
-        row.isActive === true && row.activeStart ? 'Running' :
-        row.isActive === false ? 'Spun Down' :
-        'Unknown', // should not happen
+      state: row.ecsState,
       start: row.activeStart || row.added,
       stop: row.activeStop
     }
