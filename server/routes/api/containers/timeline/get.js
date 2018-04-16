@@ -56,7 +56,8 @@ route.push(async (req, res) => {
     SELECT
       c.*,
       wr.name repo_name,
-      wr.private repo_private
+      wr.private repo_private,
+      wr.org org_name
     FROM container c
     INNER JOIN watched_repo wr ON c.repo = wr.id
     WHERE ${sqlWheres.join(`
@@ -85,6 +86,7 @@ route.push(async (req, res) => {
     return {
       id: row.id,
       repo: row.repoName,
+      org: row.orgName,
       repoPrivate: row.repoPrivate,
       branch: row.branch,
       view: `${webConfig.protocol}://${row.urlUid}.view.${webConfig.host}`,
