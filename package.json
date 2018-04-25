@@ -8,7 +8,6 @@
     "dev": "hob dev",
     "lint": "hob lint",
     "start": "hob start",
-    "compile": "hob compile",
     "install:fresh": "(rm -rf ./node_modules || true) && (rm ./yarn.lock || true) && yarn install"
   },
   "repository": {
