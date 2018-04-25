@@ -5,9 +5,10 @@
   "private": true,
   "main": "./server",
   "scripts": {
-    "dev": "bash ./bash/yarn/run-dev.sh",
-    "lint": "bash ./bash/yarn/lint.sh",
-    "start": "node ./server/",
+    "dev": "hob dev",
+    "lint": "hob lint",
+    "start": "hob start",
+    "compile": "hob compile",
     "install:fresh": "(rm -rf ./node_modules || true) && (rm ./yarn.lock || true) && yarn install"
   },
   "repository": {
@@ -22,6 +23,7 @@
   "dependencies": {
     "@conjurelabs/db": "1.0.2",
     "@conjurelabs/err": "0.1.0",
+    "@conjurelabs/hob": "0.0.8",
     "@conjurelabs/route": "0.1.4",
     "@conjurelabs/utils": "0.1.0",
     "async": "^2.3.0",
