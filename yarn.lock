@@ -92,9 +92,9 @@
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@conjurelabs/err/-/err-0.1.0.tgz#6003b69eef4e8599c3858263fea53044ffd75c22"
 
-"@conjurelabs/hob@0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@conjurelabs/hob/-/hob-0.0.8.tgz#9a366acdfd5029df3320156b95f5b9c575061c98"
+"@conjurelabs/hob@0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@conjurelabs/hob/-/hob-0.0.12.tgz#a4a79c9a58dcd0d6df1cf88b7935ccfef54ee8a2"
   dependencies:
     cross-spawn "6.0.5"
     minimist "1.2.0"
