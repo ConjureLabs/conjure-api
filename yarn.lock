@@ -103,9 +103,9 @@
     shell-source "1.1.0"
     stylus "0.54.5"
 
-"@conjurelabs/route@0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@conjurelabs/route/-/route-0.1.4.tgz#2ece3cdd3d289c8997dd5cd07e3268b43715e750"
+"@conjurelabs/route@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@conjurelabs/route/-/route-0.2.1.tgz#80e30be7f4a4480a105395c353b7e7c92504d59b"
   dependencies:
     "@conjurelabs/err" "0.0.2"
     "@conjurelabs/utils" "0.0.1"
