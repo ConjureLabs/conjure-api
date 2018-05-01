@@ -38,32 +38,17 @@ route.push(async (req, res) => {
     throw new ContentError('No repos selected')
   }
 
-  if (!req.cookies['conjure-onboard-plan-billing']) {
-    throw new ContentError('No plan id available')
-  }
-
   const { DatabaseTable } = require('@conjurelabs/db')
 
   // activate billing plan at this point
   const orgPlan = new DatabaseTable('githubOrgMonthlyBillingPlan')
-  const orgPlansToUpdate = await orgPlan.select({
-    id: parseInt(req.cookieSecure('conjure-onboard-plan-billing'), 10),
+  await orgPlan.insert({
+    account: req.user.id,
+    org: req.cookies['conjure-onboard-orgs'].label,
     orgId: req.cookies['conjure-onboard-orgs'].value,
-    activated: null,
-    deactivated: null
-  })
-
-  if (!orgPlansToUpdate.length) {
-    throw new UnexpectedError('Org plan not activated')
-  }
-
-  orgPlan.update({
-    activated: DatabaseTable.literal('NOW()')
-  }, {
-    id: parseInt(req.cookieSecure('conjure-onboard-plan-billing'), 10),
-    orgId: req.cookies['conjure-onboard-orgs'].value,
-    activated: null,
-    deactivated: null
+    monthlyBillingPlan: 1,
+    activated: new Date(),
+    added: new Date()
   })
 
   // batching 3 promises at a time
