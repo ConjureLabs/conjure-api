@@ -10,7 +10,7 @@ route.push(async (req, res) => {
     throw new ContentError('Payload missing or in an unexpected format')
   }
 
-  // record for org billing is set at plan selection
+  // record for org payment is set at plan selection
 
   res.cookie('conjure-onboard-orgs', req.body, {
     maxAge: 259200000, // 3 days
