@@ -46,7 +46,7 @@ route.push(async (req, res) => {
     account: req.user.id,
     org: req.cookies['conjure-onboard-orgs'].label,
     orgId: req.cookies['conjure-onboard-orgs'].value,
-    monthlyBillingPlan: 1,
+    monthlyBillingPlan: 2, // current main plan
     activated: new Date(),
     added: new Date()
   })
