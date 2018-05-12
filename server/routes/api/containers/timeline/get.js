@@ -93,7 +93,7 @@ route.push(async (req, res) => {
       logs: `${webConfig.protocol}://${row.urlUid}.logs.${webConfig.host}`,
       state: row.ecsState,
       start: row.activeStart || row.added,
-      stop: row.activeStop
+      stop: row.activeEnd
     }
   })
 
