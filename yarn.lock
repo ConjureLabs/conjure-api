@@ -703,7 +703,7 @@ configstore@^3.0.0:
 
 "conjure-core@git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#beb3b09a7b415699e39b1d2e1bfeb04cb3e4fbd4"
+  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#943aaf4cd6d9daa6cab78022d8e6e4f4deaebf24"
   dependencies:
     aws-sdk "2.222.1"
     bee-queue "1.2.2"
