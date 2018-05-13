@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/ConjureLabs/conjure-api#readme",
   "dependencies": {
-    "@conjurelabs/db": "1.0.2",
+    "@conjurelabs/db": "1.0.3",
     "@conjurelabs/err": "0.1.0",
     "@conjurelabs/hob": "0.0.12",
     "@conjurelabs/route": "0.2.1",

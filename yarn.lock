@@ -78,9 +78,9 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@conjurelabs/db@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@conjurelabs/db/-/db-1.0.2.tgz#233609eb9f28fada2ea34330700de8578040569f"
+"@conjurelabs/db@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@conjurelabs/db/-/db-1.0.3.tgz#25f5ab9c92adc5747fbc8a6f8e757cb060635b74"
   dependencies:
     "@conjurelabs/err" "0.0.2"
 
