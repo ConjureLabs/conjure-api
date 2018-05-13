@@ -73,8 +73,8 @@ if (config.app.api.protocol === 'https') {
 passport.use(
   new GitHubStrategy(
     {
-      clientID: config.services.github.id,
-      clientSecret: config.services.github.secret,
+      clientID: config.services.github.oauth.id,
+      clientSecret: config.services.github.oauth.secret,
       callbackURL: `${config.app.api.url}/auth/github/callback`,
       scope: 'repo,user:email,write:repo_hook'
     },

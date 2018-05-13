@@ -57,7 +57,7 @@ route.push(async (req, res) => {
     config: {
       content_type: 'json',
       insecure_ssl: 1, // todo: config this - see https://developer.github.com/v3/repos/hooks/#create-a-hook
-      secret: config.services.github.inboundWebhookScret,
+      secret: config.services.github.webhook.secret,
       url: newHookPath
     }
   })
