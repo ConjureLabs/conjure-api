@@ -75,8 +75,9 @@ passport.use(
     {
       clientID: config.services.github.oauth.id,
       clientSecret: config.services.github.oauth.secret,
-      callbackURL: `${config.app.api.url}/auth/github/callback`,
-      scope: 'repo,user:email,write:repo_hook'
+      // callbackURL: `${config.app.api.url}/auth/github/callback`,
+      scope: 'repo,user:email',
+      state: true
     },
 
     async function(accessToken, refreshToken, profile, callback) {
@@ -118,8 +119,6 @@ passport.use(
 
         const account = accountRows[0]
 
-        callback(null, account)
-
         // record the login
         try {
           await DatabaseTable.insert('accountLogin', {
@@ -143,15 +142,16 @@ passport.use(
         try {
           await githubAccount.save()
         } catch(err) {
-          log.error(err)
-          return
+          return callback(err)
         }
 
-        try {
-          saveVisibleAccountRepos(githubAccount)
-        } catch(err) {
-          log.error(err)
-        }
+        callback(null, account)
+
+        // try {
+        //   saveVisibleAccountRepos(githubAccount)
+        // } catch(err) {
+        //   log.error(err)
+        // }
         return
       }
 
@@ -175,7 +175,7 @@ passport.use(
 
       const account = accountRows[0]
 
-      console.log(profile)
+      // console.log(profile)
 
       try {
         // already defined at start of this func
@@ -213,11 +213,11 @@ passport.use(
         return emailObj.value
       }))
 
-      try {
-        saveVisibleAccountRepos(githubAccount)
-      } catch(err) {
-        log.error(err)
-      }
+      // try {
+      //   saveVisibleAccountRepos(githubAccount)
+      // } catch(err) {
+      //   log.error(err)
+      // }
     }
   )
 )
