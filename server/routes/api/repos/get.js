@@ -35,7 +35,9 @@ route.push(async (req, res) => {
   }, {})
 
   const sortInsensitive = require('@conjurelabs/utils/Array/sort-insensitive')
-  reposByOrg.map(repos => sortInsensitive(repos, 'name'))
+  for (const org in reposByOrg) {
+    reposByOrg[org] = sortInsensitive(reposByOrg[org], 'name')
+  }
 
   // todo: stop sending by org all the time - it's an overhead most of the time
   res.send({
