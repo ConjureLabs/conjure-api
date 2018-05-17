@@ -408,7 +408,7 @@ async function installInstallRepos(api, installSummary, githubAccount) {
         name: repo.name,
         accessRights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
         private: repo.private === true,
-        verificationIdentifier
+        verificationIdentifier,
         updated: new Date()
       }, {
         // update where
