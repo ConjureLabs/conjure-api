@@ -21,8 +21,8 @@ route.push(async (req, res) => {
   const githubAccount = (await apiGetAccountGitHub(req)).account
 
   // prepare github api client
-  const github = require('octonode')
-  const githubClient = github.client(githubAccount.accessToken)
+  const GitHubUserAPI = require('conjure-core/classes/GitHub/API/User')
+  const gitHubClient = new GitHubUserAPI(gitHubAccount.accessToken)
 
   // validate permissions on repo
   const info = await promisifiedGitHubInfo(githubClient, orgName, repoName)

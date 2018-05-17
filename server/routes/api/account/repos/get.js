@@ -12,8 +12,8 @@ route.push(async (req, res) => {
   const apiGetAccountGitHub = require('../github/get.js').call
   const gitHubAccount = (await apiGetAccountGitHub(req)).account
 
-  const github = require('octonode')
-  const gitHubClient = github.client(gitHubAccount.accessToken)
+  const GitHubUserAPI = require('conjure-core/classes/GitHub/API/User')
+  const gitHubClient = new GitHubUserAPI(gitHubAccount.accessToken)
 
   // just for debub purposes
   // todo: move or remove this
