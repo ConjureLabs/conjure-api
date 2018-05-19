@@ -73,15 +73,6 @@ route.push(async (req, res) => {
     })
   })
 
-  // mark account as onboarded
-  const account = new DatabaseTable('account')
-  await account.update({
-    onboarded: true,
-    updated: new Date()
-  }, {
-    id: req.user.id
-  })
-
   // all good
   res.send({})
 })

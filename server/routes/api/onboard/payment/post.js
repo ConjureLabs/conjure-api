@@ -9,6 +9,16 @@ route.push(async (req, res) => {
   const apiAccountCardCreation = require('../../account/payment/card/post.js').call
   const result = await apiAccountCardCreation(req, req.body)
 
+  // mark account as onboarded
+  const { DatabaseTable } = require('@conjurelabs/db')
+  const account = new DatabaseTable('account')
+  await account.update({
+    onboarded: true,
+    updated: new Date()
+  }, {
+    id: req.user.id
+  })
+
   emailUser(req)
 
   res.send(result)
