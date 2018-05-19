@@ -1,4 +1,5 @@
 const { NotFoundError } = require('@conjurelabs/err')
+const config = require('conjure-core/modules/config')
 const Route = require('@conjurelabs/route')
 
 const route = new Route()
