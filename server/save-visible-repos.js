@@ -110,14 +110,14 @@ async function saveInstallationRecords(installations) {
     return DatabaseTable.upsert('githubAppInstallation', {
       githubId: account.id,
       username: account.login,
-      githubAccountType: account.target_type,
+      githubAccountType: install.target_type,
       installationId: id,
       photo: account.avatar_url,
       lastVerifiedActive: now,
       added: now
     }, {
       username: account.login,
-      githubAccountType: account.target_type,
+      githubAccountType: install.target_type,
       photo: account.avatar_url,
       lastVerifiedActive: now,
       updated: now
@@ -126,12 +126,14 @@ async function saveInstallationRecords(installations) {
     })
   })
 
-  const installedAppsSummary = installationRecords.map(install => ({
-    username: install.username,
-    installationId: install.installationId
-  }))
-
-  return installedAppsSummary
+  // summary
+  return installationRecords.map(installRows => {
+    const install = installRows[0]
+    return {
+      username: install.username,
+      installationId: install.installationId
+    }
+  })
 }
 
 async function installInstallRepos(api, installSummary, githubAccount) {
@@ -144,7 +146,10 @@ async function installInstallRepos(api, installSummary, githubAccount) {
   const verificationIdentifier = uuidv4()
   const accountRepo = new DatabaseTable('accountRepo')
 
-  for (let install of installSummary) {
+  for (const summary of installSummary) {
+    // for each installation, we will override .installationId on API instance
+    api.installationId = summary.installationId
+
     // see https://developer.github.com/v3/apps/installations/#list-repositories
     let reposResult = await api.request({
       path: '/installation/repositories'

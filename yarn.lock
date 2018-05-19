@@ -703,7 +703,7 @@ configstore@^3.0.0:
 
 "conjure-core@git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git":
   version "0.0.0"
-  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#70b950bf9dec9eb4c77d358f650f2b5d905d5c77"
+  resolved "git+https://bf0d2cf12288398265bb750e57c0cac1363f78d7:x-oauth-basic@github.com/ConjureLabs/conjure-core.git#955660c74d71d847c5a48f4066d1c9935c42fa56"
   dependencies:
     aws-sdk "2.222.1"
     bee-queue "1.2.2"
@@ -2248,8 +2248,8 @@ minimist@1.2.0, minimist@^1.2.0:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
 
 minipass@^2.2.1, minipass@^2.2.4:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/minipass/-/minipass-2.3.0.tgz#2e11b1c46df7fe7f1afbe9a490280add21ffe384"
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/minipass/-/minipass-2.3.1.tgz#4e872b959131a672837ab3cb554962bc84b1537d"
   dependencies:
     safe-buffer "^5.1.1"
     yallist "^3.0.0"
