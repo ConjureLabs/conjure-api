@@ -65,7 +65,7 @@ route.push(async (req, res) => {
       name: repo.name,
       fullName: repo.fullName,
       orgName: repo.org,
-      orgId: repo.orgId
+      orgId: repo.orgId,
       repoName: repo.name,
       githubId: repo.id,
       isPrivate: repo.private,
