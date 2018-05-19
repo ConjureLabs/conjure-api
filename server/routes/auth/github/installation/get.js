@@ -8,9 +8,6 @@ const route = new Route()
 route.push(async (req, res, next) => {
   const installationId = req.query.installation_id
 
-  console.log('HEADERS')
-  console.log(req.headers)
-
   const GitHubAPI = require('conjure-core/classes/GitHub/API/App')
   const api = new GitHubAPI()
 
@@ -82,6 +79,33 @@ route.push(async (req, res, next) => {
     // update where
     installationId: installation.id
   })
+
+  /*
+    This is a little confusing but,
+
+    A) user logs into Conjure, auths, and then installs,
+       then the user will hit this page (logged in) and
+       we will be able to pull all associated repos for
+       the logged-in user
+
+    OR
+
+    B) user installs app via GitHub, which means not
+       signed into Conjure yet, and hits this page.
+       we will not be able to save associated repos yet,
+       but when the new user is kicked to the force /login
+       page, she will then go through the oauth flow,
+       which will then skip _this_ endpoint, but will
+       not fail at the saveVisibleAccountRepos call
+       in the oauth handler, since app is installed
+   */
+  if (req.isAuthenticated()) {
+    const apiGetAccountGitHub = require('../github/get.js').call
+    const gitHubAccount = (await apiGetAccountGitHub(req)).account
+
+    const saveVisibleAccountRepos = require('../../../../save-visible-repos')
+    await saveVisibleAccountRepos(req.user, gitHubAccount)
+  }
 
   // on success the api redirects back to web
   res.redirect(302, `${config.app.web.url}/login`)
