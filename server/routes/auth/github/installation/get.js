@@ -84,7 +84,7 @@ route.push(async (req, res, next) => {
   })
 
   // on success the api redirects back to web
-  res.redirect(302, config.app.web.url)
+  res.redirect(302, `${config.app.web.url}/login`)
 })
 
 module.exports = route
