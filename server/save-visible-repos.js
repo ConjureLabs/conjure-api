@@ -176,18 +176,20 @@ async function installInstallRepos(api, installSummary, githubAccount) {
         service: 'github',
         serviceRepoId: repo.id,
         url: repo.url,
-        org: repo.org,
+        org: repo.owner.login,
+        orgId: repo.owner.id,
+        defaultBranch: repo.default_branch,
         name: repo.name,
-        accessRights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
         private: repo.private === true,
         verificationIdentifier,
         added: new Date()
       }, {
         // update
         url: repo.url,
-        org: repo.org,
+        org: repo.owner.login,
+        orgId: repo.owner.id,
+        defaultBranch: repo.default_branch,
         name: repo.name,
-        accessRights: repo.permissions && repo.permissions.push === true ? 'rw' : 'r',
         private: repo.private === true,
         verificationIdentifier,
         updated: new Date()
