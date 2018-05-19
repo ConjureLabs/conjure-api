@@ -17,14 +17,14 @@ route.push(async (req, res) => {
 
   // filtering down to repos selected
   const repos = []
-  const orgs = Object.keys(reposByOrg)
+  const orgNames = Object.keys(reposByOrg)
   const selections = req.body.slice() // slice to ensure native array
 
-  for (let i = 0; i < orgs.length; i++) {
-    const org = orgs[i]
+  for (let i = 0; i < orgNames.length; i++) {
+    const orgName = orgNames[i]
 
-    for (let j = 0; j < reposByOrg[org].length; j++) {
-      const repo = reposByOrg[org][j]
+    for (let j = 0; j < reposByOrg[orgName].length; j++) {
+      const repo = reposByOrg[orgName][j]
 
       if (!selections.includes(repo.id)) {
         continue
@@ -39,21 +39,25 @@ route.push(async (req, res) => {
   }
 
   const { DatabaseTable } = require('@conjurelabs/db')
+  const batchAll = require('@conjurelabs/utils/Promise/batch-all')
 
-  // activate billing plan at this point
+  // activate billing plan for each org
   const orgPlan = new DatabaseTable('githubOrgBillingPlan')
-  await orgPlan.insert({
-    account: req.user.id,
-    org: req.cookies['conjure-onboard-orgs'].label,
-    orgId: req.cookies['conjure-onboard-orgs'].value,
-    billingPlan: 2, // current main plan
-    activated: new Date(),
-    added: new Date()
+  await batchAll(3, orgNames, orgName => {
+    // getting the org id from the first repo row for the org
+    const orgId = reposByOrg[orgName][0].orgId
+    return orgPlan.insert({
+      account: req.user.id,
+      org: orgName,
+      orgId,
+      billingPlan: 2, // current main plan
+      activated: new Date(),
+      added: new Date()
+    })
   })
 
   // batching 3 promises at a time
   const apiWatchRepo = require('../../../repo/watch/post.js').call
-  const batchAll = require('@conjurelabs/utils/Promise/batch-all')
   await batchAll(3, repos, repo => {
     return apiWatchRepo(req, {
       service: repo.service.toLowerCase(), // keep lower?
@@ -61,6 +65,7 @@ route.push(async (req, res) => {
       name: repo.name,
       fullName: repo.fullName,
       orgName: repo.org,
+      orgId: repo.orgId
       repoName: repo.name,
       githubId: repo.id,
       isPrivate: repo.private,

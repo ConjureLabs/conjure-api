@@ -1,5 +1,6 @@
 const Route = require('@conjurelabs/route')
 const { ContentError, PermissionsError } = require('@conjurelabs/err')
+const config = require('conjure-core/modules/config')
 const log = require('conjure-core/modules/log')('github watch repo')
 
 const route = new Route({
@@ -7,28 +8,13 @@ const route = new Route({
 })
 
 route.push(async (req, res) => {
-  const config = require('conjure-core/modules/config')
-
-  const {
-    orgName,
-    repoName
-  } = req.body
-
-  // save our own record of the hook
-  await upsertWatchedRepoRecord(req)
-
-  res.send({
-    success: true
-  })
-})
-
-async function upsertWatchedRepoRecord(req) {
   const { DatabaseTable } = require('@conjurelabs/db')
 
   const {
     service,
     url,
     orgName,
+    orgId,
     name,
     githubId,
     isPrivate,
@@ -41,6 +27,7 @@ async function upsertWatchedRepoRecord(req) {
     serviceRepoId: githubId,
     url,
     org: orgName,
+    orgId,
     name,
     vm,
     private: isPrivate,
@@ -52,6 +39,10 @@ async function upsertWatchedRepoRecord(req) {
     service,
     serviceRepoId: githubId
   })
-}
+
+  res.send({
+    success: true
+  })
+})
 
 module.exports = route
