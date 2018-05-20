@@ -75,7 +75,6 @@ passport.use(
     {
       clientID: config.services.github.oauth.id,
       clientSecret: config.services.github.oauth.secret,
-      // callbackURL: `${config.app.api.url}/auth/github/callback`,
       scope: 'repo,user:email',
       state: true
     },
@@ -133,9 +132,11 @@ passport.use(
 
         // making sure some details on the github account table are up-to-date
 
-        ensureEmailsStored(account, profile.emails.map(emailObj => {
-          return emailObj.value
-        }))
+        if (Array.isArray(profile.emails)) {
+          ensureEmailsStored(account, profile.emails.map(emailObj => {
+            return emailObj.value
+          }))
+        }
 
         githubAccount.photo = Array.isArray(profile.photos) && profile.photos[0] ? profile.photos[0].value : null
         githubAccount.updated = new Date()
@@ -165,7 +166,7 @@ passport.use(
       try {
         accountRows = await DatabaseTable.insert('account', {
           name: profile.displayName,
-          email: profile.emails[0].value,
+          email: Array.isArray(profile.emails) && profile.emails.length ? profile.emails[0].value : null,
           onboarded: false,
           added: DatabaseTable.literal('NOW()')
         })
@@ -184,7 +185,7 @@ passport.use(
           account: account.id,
           username: profile.username,
           name: profile.displayName,
-          email: profile.emails[0].value,
+          email: Array.isArray(profile.emails) && profile.emails[0] ? profile.emails[0].value : null,
           photo: Array.isArray(profile.photos) && profile.photos[0] ? profile.photos[0].value : null,
           accessToken: accessToken,
           accessTokenAssumedValid: true,
@@ -207,9 +208,11 @@ passport.use(
         log.error(err)
       }
 
-      ensureEmailsStored(account, profile.emails.map(emailObj => {
-        return emailObj.value
-      }))
+      if (Array.isArray(profile.emails)) {
+        ensureEmailsStored(account, profile.emails.map(emailObj => {
+          return emailObj.value
+        }))
+      }
 
       try {
         await saveVisibleAccountRepos(account, githubAccount)
