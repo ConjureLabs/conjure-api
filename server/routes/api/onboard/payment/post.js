@@ -1,3 +1,4 @@
+const { UnexpectedError, ContentError } = require('@conjurelabs/err')
 const Route = require('@conjurelabs/route')
 const config = require('conjure-core/modules/config')
 
@@ -6,8 +7,15 @@ const route = new Route({
 })
 
 route.push(async (req, res) => {
-  const apiAccountCardCreation = require('../../account/payment/card/post.js').call
-  const result = await apiAccountCardCreation(req, req.body)
+  const onboardReposSelection = req.cookieSecure('onboard-repos')
+
+  if (!onboardReposSelection) {
+    throw new UnexpectedError('Expected onboard repos selection (cookie)')
+  }
+
+  const cardResult = await saveCreditCard(req)
+  const { reposByOrg, selectedOrgs } = await saveReposSelected(req)
+  await enableBillingPlan(req, reposByOrg, selectedOrgs)
 
   // mark account as onboarded
   const { DatabaseTable } = require('@conjurelabs/db')
@@ -21,8 +29,94 @@ route.push(async (req, res) => {
 
   emailUser(req)
 
-  res.send(result)
+  res.send(cardResult)
 })
+
+async function saveCreditCard(req) {
+  const apiAccountCardCreation = require('../../account/payment/card/post.js').call
+  const result = await apiAccountCardCreation(req, req.body)
+  return result
+}
+
+async function saveReposSelected(req) {
+  // getting all user repos
+  const apiGetRepos = require('../../../repos/get.js').call
+  const apiGetReposResult = apiGetRepos(req)
+  const { reposByOrg } = await apiGetReposResult
+
+  // filtering down to repos selected
+  const repos = []
+  const selectedOrgs = []
+  const orgNames = Object.keys(reposByOrg)
+  const selections = req.body.slice() // slice to ensure native array
+
+  res.cookieSecure('onboard-repos', selections)
+
+  for (let i = 0; i < orgNames.length; i++) {
+    const orgName = orgNames[i]
+
+    for (let j = 0; j < reposByOrg[orgName].length; j++) {
+      const repo = reposByOrg[orgName][j]
+
+      if (!selections.includes(repo.id)) {
+        continue
+      }
+
+      if (!selectedOrgs.includes(orgName)) {
+        selectedOrgs.push(orgName)
+      }
+
+      repos.push(repo)
+    }
+  }
+
+  if (!repos.length) {
+    throw new ContentError('No repos selected')
+  }
+
+  const batchAll = require('@conjurelabs/utils/Promise/batch-all')
+  const apiWatchRepo = require('../../../repo/watch/post.js').call
+  await batchAll(3, repos, repo => {
+    return apiWatchRepo(req, {
+      service: repo.service.toLowerCase(), // keep lower?
+      url: repo.url,
+      name: repo.name,
+      fullName: repo.fullName,
+      orgName: repo.org,
+      orgId: repo.orgId,
+      repoName: repo.name,
+      githubId: repo.id,
+      isPrivate: repo.private,
+      vm: 'web' // forced to web for now
+    })
+  })
+
+  return {
+    selectedRepos: repos,
+    reposByOrg,
+    selectedOrgs: selectedOrgs
+  }
+}
+
+async function enableBillingPlan(req, reposByOrg, selectedOrgs) {
+  const { DatabaseTable } = require('@conjurelabs/db')
+  const orgPlan = new DatabaseTable('githubOrgBillingPlan')
+  const batchAll = require('@conjurelabs/utils/Promise/batch-all')
+
+  // activate billing plan for each org
+  await batchAll(3, selectedOrgs, orgName => {
+    // getting the org id from the first repo row for the org
+    // these will activated once payment is entered
+    const orgId = reposByOrg[orgName][0].orgId
+    return orgPlan.insert({
+      account: req.user.id,
+      org: orgName,
+      orgId,
+      billingPlan: 2, // current main plan
+      added: new Date()
+    })
+  })
+}
 
 async function emailUser(req) {
   const apiAccountGet = require('../../account/get.js').call
