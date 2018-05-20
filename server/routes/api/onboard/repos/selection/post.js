@@ -10,11 +10,12 @@ route.push(async (req, res) => {
     throw new ContentError('Payload missing or in an unexpected format')
   }
 
-  const selections = req.body.slice() // slice to ensure native array
-  res.cookieSecure('onboard-repos', selections)
+  res.cookieSecure('onboard-repos', JSON.stringify(req.body))
 
   // all good
-  res.send({})
+  res.send({
+    success: true
+  })
 })
 
 module.exports = route

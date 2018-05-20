@@ -7,14 +7,15 @@ const route = new Route({
 })
 
 route.push(async (req, res) => {
-  const onboardReposSelection = req.cookieSecure('onboard-repos')
+  const onboardReposSelectionCookie = req.cookieSecure('onboard-repos')
+  const onboardReposSelection = JSON.parse(onboardReposSelectionCookie)
 
   if (!onboardReposSelection) {
     throw new UnexpectedError('Expected onboard repos selection (cookie)')
   }
 
   const cardResult = await saveCreditCard(req)
-  const { reposByOrg, selectedOrgs } = await saveReposSelected(req)
+  const { reposByOrg, selectedOrgs } = await saveReposSelected(req, onboardReposSelection)
   await enableBillingPlan(req, reposByOrg, selectedOrgs)
 
   // mark account as onboarded
@@ -29,6 +30,8 @@ route.push(async (req, res) => {
 
   emailUser(req)
 
+  res.clearCookie('onboard-repos')
+
   res.send(cardResult)
 })
 
@@ -38,9 +41,9 @@ async function saveCreditCard(req) {
   return result
 }
 
-async function saveReposSelected(req) {
+async function saveReposSelected(req, onboardReposSelection) {
   // getting all user repos
-  const apiGetRepos = require('../../../repos/get.js').call
+  const apiGetRepos = require('../../repos/get.js').call
   const apiGetReposResult = apiGetRepos(req)
   const { reposByOrg } = await apiGetReposResult
 
@@ -48,9 +51,6 @@ async function saveReposSelected(req) {
   const repos = []
   const selectedOrgs = []
   const orgNames = Object.keys(reposByOrg)
-  const selections = req.body.slice() // slice to ensure native array
-
-  res.cookieSecure('onboard-repos', selections)
 
   for (let i = 0; i < orgNames.length; i++) {
     const orgName = orgNames[i]
@@ -58,7 +58,7 @@ async function saveReposSelected(req) {
     for (let j = 0; j < reposByOrg[orgName].length; j++) {
       const repo = reposByOrg[orgName][j]
 
-      if (!selections.includes(repo.id)) {
+      if (!onboardReposSelection.includes(repo.id)) {
         continue
       }
 
@@ -75,7 +75,7 @@ async function saveReposSelected(req) {
   }
 
   const batchAll = require('@conjurelabs/utils/Promise/batch-all')
-  const apiWatchRepo = require('../../../repo/watch/post.js').call
+  const apiWatchRepo = require('../../repo/watch/post.js').call
   await batchAll(3, repos, repo => {
     return apiWatchRepo(req, {
       service: repo.service.toLowerCase(), // keep lower?
