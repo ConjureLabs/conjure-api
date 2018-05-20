@@ -7,8 +7,11 @@ const GitHubWebhookPayload = require('conjure-core/classes/Repo/GitHub/Webhook/P
 const route = new Route()
 
 route.push(async (req, res, next) => {
-  console.log('HEADERS')
-  console.log(req.headers)
+  // console.log('HEADERS')
+  // console.log(req.headers)
+
+  // console.log('PAYLOAD')
+  // console.log(req.body)
 
   const payload = new GitHubWebhookPayload(req.body)
   const { type, action, repoId, branch } = payload
