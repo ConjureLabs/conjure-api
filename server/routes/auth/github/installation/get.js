@@ -93,8 +93,6 @@ route.push(async (req, res, next) => {
     return next(new NotFoundError(`Installation ${installationId} does not exist`))
   }
 
-  console.log(installation, installation.target_type)
-
   const { DatabaseTable } = require('@conjurelabs/db')
   const now = new Date()
   await DatabaseTable.upsert('githubAppInstallation', {
