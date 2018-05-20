@@ -1,5 +1,5 @@
 const Route = require('@conjurelabs/route')
-const { UnexpectedError, ContentError } = require('@conjurelabs/err')
+const { UnexpectedError, ContentError, NotFoundError } = require('@conjurelabs/err')
 
 const route = new Route({
   requireAuthentication: true
@@ -11,7 +11,18 @@ const route = new Route({
 route.push(async (req, res) => {
   // pull stripe customer instance, based on account record
   const Customer = require('conjure-core/classes/Stripe/Customer')
-  const stripeCustomer = await Customer.getRecordFromReq(req)
+  let stripeCustomer
+  try {
+    stripeCustomer = await Customer.getRecordFromReq(req)
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.send({
+        cards: []
+      })
+      return
+    }
+    throw err
+  }
 
   // pull account card rows
   const { DatabaseTable } = require('@conjurelabs/db')
