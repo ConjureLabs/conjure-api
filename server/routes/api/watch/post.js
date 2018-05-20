@@ -48,8 +48,9 @@ route.push(async (req, res) => {
       name: repo.name,
       fullName: repo.fullName,
       orgName: repo.org,
+      orgId: repo.orgId,
       repoName: repo.name,
-      githubId: repo.id,
+      githubId: repo.serviceRepoId,
       isPrivate: repo.private,
       vm: 'web' // forced to web for now
     })
