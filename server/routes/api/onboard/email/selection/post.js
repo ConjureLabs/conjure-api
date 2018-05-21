@@ -6,13 +6,15 @@ const route = new Route({
 })
 
 route.push(async (req, res) => {
-  if (!req.body.email) {
+  const { email } = req.body
+
+  if (typeof email !== 'string' || !email.trim()) {
     throw new ContentError('Payload missing or in an unexpected format')
   }
 
   const { DatabaseTable } = require('@conjurelabs/db')
   await DatabaseTable.update('account', {
-    email
+    email: email.trim()
   }, {
     id: req.user.id
   })
