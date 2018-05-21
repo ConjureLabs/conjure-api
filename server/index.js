@@ -102,6 +102,13 @@ passport.use(
       if (githubAccountRows.length) {
         const githubAccount = githubAccountRows[0]
 
+        // update access token
+        await githubAccount
+          .set({
+            accessToken
+          })
+          .save()
+
         let accountRows
         try {
           // finding associated conjure account

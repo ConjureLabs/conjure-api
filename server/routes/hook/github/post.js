@@ -85,7 +85,6 @@ async function handleActiveContainer(req, action) {
 
     // spin down vm
     case GitHubWebhookPayload.actions.closed:
-    case GitHubWebhookPayload.actions.merged:
       log.info('Received hook for "stop"')
       queue = new Queue('container.stop')
       try {
@@ -93,6 +92,22 @@ async function handleActiveContainer(req, action) {
           content: req.body
         })
         log.info('Job pushed to queue (container.stop)')
+      } catch(err) {
+        if (err) {
+          log.error(err)
+        }
+      }
+      break
+
+    // prune the issue
+    case GitHubWebhookPayload.actions.merged:
+      log.info('Received hook for "prune"')
+      queue = new Queue('container.prune')
+      try {
+        await queue.push({
+          content: req.body
+        })
+        log.info('Job pushed to queue (container.prune)')
       } catch(err) {
         if (err) {
           log.error(err)
