@@ -6,11 +6,16 @@ const route = new Route({
 })
 
 route.push(async (req, res) => {
-  if (!Array.isArray(req.body)) {
+  if (!req.body.email) {
     throw new ContentError('Payload missing or in an unexpected format')
   }
 
-  res.cookieSecure('onboard-repos', JSON.stringify(req.body))
+  const { DatabaseTable } = require('@conjurelabs/db')
+  await DatabaseTable.update('account', {
+    email
+  }, {
+    id: req.user.id
+  })
 
   // all good
   res.send({
