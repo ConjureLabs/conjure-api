@@ -222,14 +222,14 @@ passport.use(
       }
 
       try {
-        await saveVisibleAccountRepos(account, githubAccount)
+        await saveVisibleAccountRepos(account)
       } catch(err) {
         log.error(err)
         account.requiresInstallation = true
       }
 
       callback(null, account)
-      slackNotifySignup()
+      slackNotifySignup(account, githubAccount)
     }
   )
 )
@@ -264,22 +264,30 @@ async function ensureEmailsStored(account, seenEmails) {
   }
 }
 
-function slackNotifySignup() {
+function slackNotifySignup(account) {
   const request = require('request')
   request({
     url: 'https://hooks.slack.com/services/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',
     method: 'POST',
-    data: {
-      payload: {
-        channel: '#conjure-signups',
-        username: 'Conjure API',
-        text: 'User signed up',
-        icon_emoji: ':conjure:'
-      }
+    json: true,
+    body: {
+      channel: '#conjure-signups',
+      username: 'Conjure API',
+      text: 'User signed up',
+      icon_emoji: ':conjure:',
+      attachments: [{
+        fields: [{
+          title: 'Account Id',
+          value: account.id,
+          short: true
+        }]
+      }]
     }
-  }, err => {
+  }, (err, res, body) => {
     if (err) {
       log.error(err)
+    } else if (res.statusCode !== 200) {
+      log.error(new ConjureError(body))
     }
   })
 }
