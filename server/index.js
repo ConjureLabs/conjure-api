@@ -272,7 +272,7 @@ function slackNotifySignup() {
     data: {
       payload: {
         channel: '#conjure-signups',
-        username: 'Conjure API'
+        username: 'Conjure API',
         text: 'User signed up',
         icon_emoji: ':conjure:'
       }
