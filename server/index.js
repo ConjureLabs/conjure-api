@@ -229,6 +229,7 @@ passport.use(
       }
 
       callback(null, account)
+      slackNotifySignup()
     }
   )
 )
@@ -261,6 +262,26 @@ async function ensureEmailsStored(account, seenEmails) {
       log.error(err)
     }
   }
+}
+
+function slackNotifySignup() {
+  const request = require('request')
+  request({
+    url: 'https://hooks.slack.com/services/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',
+    method: 'POST',
+    data: {
+      payload: {
+        channel: '#conjure-signups',
+        username: 'Conjure API'
+        text: 'User signed up',
+        icon_emoji: ':conjure:'
+      }
+    }
+  }, err => {
+    if (err) {
+      log.error(err)
+    }
+  })
 }
 
 server.use((req, res, next) => {
