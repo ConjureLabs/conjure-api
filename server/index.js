@@ -265,6 +265,10 @@ async function ensureEmailsStored(account, seenEmails) {
 }
 
 function slackNotifySignup(account) {
+  if (process.env.NODE_ENV !== 'production') {
+    return
+  }
+
   const request = require('request')
   request({
     url: 'https://hooks.slack.com/services/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',
