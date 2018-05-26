@@ -222,14 +222,14 @@ passport.use(
       }
 
       try {
-        await saveVisibleAccountRepos(account)
+        await saveVisibleAccountRepos(account, githubAccount)
       } catch(err) {
         log.error(err)
         account.requiresInstallation = true
       }
 
       callback(null, account)
-      slackNotifySignup(account, githubAccount)
+      slackNotifySignup(account)
     }
   )
 )

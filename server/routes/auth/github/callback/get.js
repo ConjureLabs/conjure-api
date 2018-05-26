@@ -27,9 +27,6 @@ route.push((req, res) => {
     return
   }
 
-  // seeing if user has any repos w/ app installed (on github)
-  
-
   res.redirect(302, config.app.web.url)
 })
 
