@@ -10,6 +10,8 @@ const route = new Route({
 route.push(async (req, res) => {
   const { query } = require('@conjurelabs/db')
 
+  const { fullRecords } = req.query
+
   // getting all repo records user has access to
   const accountRepos = (
     await query(`
@@ -52,7 +54,9 @@ route.push(async (req, res) => {
   res.send({
     watched: {
       orgs: watchedOrgs,
-      repos: watchedRepos.map(repo => minialRepo(repo))
+      repos: watchedRepos.map(repo => {
+        fullRecords.toString() === 'true' ? repo : minialRepo(repo)
+      })
     },
     additional: {
       orgs: haveAdditionalOrgs,

@@ -9,9 +9,9 @@ const route = new Route({
 
 route.push(async (req, res) => {
   const { DatabaseTable } = require('@conjurelabs/db')
-  const { orgName, repoName } = req.body
+  const { orgName, name } = req.body
 
-  if (!orgName || !repoName) {
+  if (!orgName || !name) {
     throw new ContentError('Request body missing required fields')
   }
 
@@ -19,7 +19,7 @@ route.push(async (req, res) => {
   const apiRepos = require('../../repos/get.js').call
   const repoByOrg = await apiRepos(req, {
     org: orgName,
-    name: repoName
+    name
   })
 
   if (!repoByOrg[orgName] || !repoByOrg[orgName].length) {
@@ -28,7 +28,7 @@ route.push(async (req, res) => {
 
   await DatabaseTable.update('watchedRepo', {
     org: orgName,
-    name: repoName,
+    name,
     disabled: true,
     updated: new Date()
   })
