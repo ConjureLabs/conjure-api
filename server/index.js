@@ -229,7 +229,9 @@ passport.use(
       }
 
       callback(null, account)
-      slackNotifySignup(account)
+      try {
+        slackNotifySignup(account)
+      } catch(err) {}
     }
   )
 )

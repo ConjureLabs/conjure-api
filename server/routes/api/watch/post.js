@@ -68,42 +68,6 @@ route.push(async (req, res) => {
 
   // all good
   res.send({})
-
-  slackNotify(repos)
 })
-
-function slackNotify(repos) {
-  if (process.env.NODE_ENV !== 'production') {
-    return
-  }
-
-  const request = require('request')
-  request({
-    url: 'https://hooks.slack.com/services/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',
-    method: 'POST',
-    json: true,
-    body: {
-      channel: '#conjure-repos',
-      username: 'Conjure API',
-      text: `Repo{repos.length === 1 ? '' : 's'} watched`,
-      icon_emoji: ':conjure:',
-      attachments: [{
-        fields: repos.map(repo => {
-          return {
-            title: `${repo.org}/${repo.name}`,
-            value: `<${repo.url}|${repo.service}>`,
-            short: false
-          }
-        })
-      }]
-    }
-  }, (err, res, body) => {
-    if (err) {
-      log.error(err)
-    } else if (res.statusCode !== 200) {
-      log.error(new ConjureError(body))
-    }
-  })
-}
 
 module.exports = route

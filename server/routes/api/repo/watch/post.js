@@ -20,7 +20,7 @@ route.push(async (req, res) => {
     vm
   } = req.body
 
-  await DatabaseTable.upsert('watchedRepo', {
+  const watchedRecords = await DatabaseTable.upsert('watchedRepo', {
     account: req.user.id,
     service,
     serviceRepoId: githubId,
@@ -43,6 +43,42 @@ route.push(async (req, res) => {
   res.send({
     success: true
   })
+
+  try {
+    slackNotify(watchedRecords[0])
+  } catch(err) {}
 })
+
+function slackNotify(watchedRecord) {
+  if (process.env.NODE_ENV !== 'production') {
+    return
+  }
+
+  const request = require('request')
+  request({
+    url: 'https://hooks.slack.com/services/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',
+    method: 'POST',
+    json: true,
+    body: {
+      channel: '#conjure-repos',
+      username: 'Conjure API',
+      text: 'Repo watched',
+      icon_emoji: ':conjure:',
+      attachments: [{
+        fields: [{
+          title: `${watchedRecord.org}/${watchedRecord.name}`,
+          value: `<https://github.com/${watchedRecord.org}/${watchedRecord.name}|${watchedRecord.service}>`,
+          short: false
+        }]
+      }]
+    }
+  }, (err, res, body) => {
+    if (err) {
+      log.error(err)
+    } else if (res.statusCode !== 200) {
+      log.error(new ConjureError(body))
+    }
+  })
+}
 
 module.exports = route
