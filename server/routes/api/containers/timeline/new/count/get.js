@@ -45,7 +45,8 @@ route.push(async (req, res) => {
     SELECT COUNT(*) num
     FROM container c
     INNER JOIN watched_repo wr ON c.repo = wr.id
-    WHERE ${sqlWheres.join(`
+    WHERE wr.disabled IS FALSE
+    AND ${sqlWheres.join(`
       AND
     `)}
   `, sqlArgs)

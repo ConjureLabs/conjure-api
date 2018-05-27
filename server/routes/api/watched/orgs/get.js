@@ -20,9 +20,10 @@ route.push(async (req, res) => {
           ELSE true
         END watching
       FROM account_repo ar
-      LEFT JOIN watched_repo wr
+      INNER JOIN watched_repo wr
         ON ar.service_repo_id = wr.service_repo_id
       WHERE ar.account = $1
+      AND wr.disabled IS FALSE
     `, [req.user.id])
   ).rows
 

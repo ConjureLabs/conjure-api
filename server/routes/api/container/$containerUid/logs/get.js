@@ -22,6 +22,7 @@ route.push(async (req, res) => {
       ON c.repo = wr.id
     WHERE c.url_uid = $1
     AND is_active IS TRUE
+    AND wr.disabled IS FALSE
     AND wr.service_repo_id IN (
       SELECT service_repo_id
       FROM account_repo

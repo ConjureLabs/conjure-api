@@ -34,11 +34,12 @@ route.push(async (req, res, next) => {
   const activeContainersResult = await query(`
     SELECT c.id
     FROM container c
-    LEFT JOIN watched_repo wr
+    INNER JOIN watched_repo wr
     ON c.repo = wr.id
     WHERE wr.service_repo_id = $1
     AND branch = $2
-    AND is_active = true
+    AND is_active IS TRUE
+    AND wr.disabled IS FALSE
   `, [repoId, branch])
 
   if (activeContainersResult.rows.length) {
