@@ -27,10 +27,11 @@ route.push(async (req, res) => {
   }
 
   await DatabaseTable.update('watchedRepo', {
-    org,
-    name,
     disabled: true,
     updated: new Date()
+  }, {
+    org,
+    name
   })
 
   res.send({

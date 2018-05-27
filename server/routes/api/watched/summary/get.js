@@ -55,7 +55,7 @@ route.push(async (req, res) => {
     watched: {
       orgs: watchedOrgs,
       repos: watchedRepos.map(repo => {
-        return fullRecords.toString() === 'true' ? repo : minialRepo(repo)
+        return fullRecords && fullRecords.toString() === 'true' ? repo : minialRepo(repo)
       })
     },
     additional: {
