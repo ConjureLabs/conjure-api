@@ -9,25 +9,25 @@ const route = new Route({
 
 route.push(async (req, res) => {
   const { DatabaseTable } = require('@conjurelabs/db')
-  const { orgName, name } = req.body
+  const { org, name } = req.body
 
-  if (!orgName || !name) {
+  if (!org || !name) {
     throw new ContentError('Request body missing required fields')
   }
 
   // ensure user has correct access to this repo
   const apiRepos = require('../../repos/get.js').call
-  const repoByOrg = await apiRepos(req, {
-    org: orgName,
+  const { reposByOrg } = await apiRepos(req, {
+    org,
     name
   })
 
-  if (!repoByOrg[orgName] || !repoByOrg[orgName].length) {
+  if (!reposByOrg[org] || !reposByOrg[org].length) {
     throw new PermissionsError('User does not have access to this repo')
   }
 
   await DatabaseTable.update('watchedRepo', {
-    org: orgName,
+    org,
     name,
     disabled: true,
     updated: new Date()
