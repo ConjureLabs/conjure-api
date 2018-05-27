@@ -33,6 +33,7 @@ route.push(async (req, res) => {
     disabled: false,
     added: new Date()
   }, {
+    disabled: false,
     updated: new Date()
   }, {
     service,
