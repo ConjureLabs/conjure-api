@@ -9,16 +9,16 @@ const route = new Route({
  */
 route.push(async (req, res) => {
   const { DatabaseTable } = require('@conjurelabs/db')
-  const { access, org } = req.query
+  const { access, org, name } = req.query
 
   const where = {
     account: req.user.id
   }
-  if (access) {
-    where.accessRights = access
-  }
   if (org) {
     where.org = org
+  }
+  if (name) {
+    where.name = name
   }
   const repos = await DatabaseTable.select('accountRepo', where)
 
