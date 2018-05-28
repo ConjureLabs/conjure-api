@@ -73,6 +73,33 @@ if (config.app.api.protocol === 'https') {
   server.use(forcedHttpsRouter)
 }
 
+const forcedRedirectRouter = express.Router()
+forcedRedirectRouter.get('*', (req, res, next) => {
+  // aws healthcheck allow through, regardless
+  if (req.url === '/aws/ping' && req.headers['user-agent'] === 'ELB-HealthChecker/2.0') {
+    return next()
+  }
+
+  let acceptedProtocol = false
+  let acceptedHost = false
+
+  if (req.headers) {
+    if (req.headers['x-forwarded-proto'] === config.app.api.protocol) {
+      acceptedProtocol = true
+    }
+    if (req.headers.host === config.app.api.host) {
+      acceptedHost = true
+    }
+  }
+
+  if (acceptedProtocol && acceptedHost) {
+    return next()
+  }
+
+  res.redirect(`${config.app.api.url}${req.url}`)
+})
+server.use(forcedRedirectRouter)
+
 passport.use(
   new GitHubStrategy(
     {
