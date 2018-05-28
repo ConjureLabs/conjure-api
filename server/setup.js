@@ -21,8 +21,8 @@ const Route = require('@conjurelabs/route')
 Route.defaultOptions = {
   cors: {
     credentials: true,
-    methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE', 'HEAD', 'OPTIONS'],
-    optionsSuccessStatus: 200,
+    methods: 'GET,PATCH,PUT,POST,DELETE',
+    optionsSuccessStatus: 204,
     origin: [
       config.app.api.url,
       config.app.web.url
