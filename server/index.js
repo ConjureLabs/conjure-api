@@ -13,6 +13,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const GitHubStrategy = require('passport-github').Strategy
 const log = require('conjure-core/modules/log')()
+const cors = require('cors')
 const { ConjureError, ContentError, NotFoundError } = require('@conjurelabs/err')
 
 const port = config.app.api.port
@@ -48,6 +49,17 @@ server.use(bodyParser.urlencoded({
 }))
 server.use(bodyParser.json())
 server.use(cookieParser())
+
+server.use(cors({
+  credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  optionsSuccessStatus: 204,
+  origin: [
+    config.app.api.url,
+    config.app.web.url
+  ],
+  preflightContinue: true
+}))
 
 passport.serializeUser((user, done) => {
   const { DatabaseRow } = require('@conjurelabs/db')
@@ -327,14 +339,6 @@ function slackNotifySignup(account) {
     }
   })
 }
-
-server.use((req, res, next) => {
-  res.header('Access-Control-Allow-Credentials', true)
-  res.header('Access-Control-Allow-Origin', req.headers.origin)
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,PATCH,DELETE')
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept')
-  next()
-})
 
 server.use((req, res, next) => {
   req.state = {} // used to track anything useful, along the lifetime of a request

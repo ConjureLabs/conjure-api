@@ -16,21 +16,6 @@ require('@conjurelabs/db').init(config.database.pg, {
   log.dev.info(sql, process.env.NODE_ENV === 'production' && args ? '---REDACTED---' : args)
 })
 
-const Route = require('@conjurelabs/route')
-
-Route.defaultOptions = {
-  cors: {
-    credentials: true,
-    methods: 'GET,PATCH,PUT,POST,DELETE',
-    optionsSuccessStatus: 204,
-    origin: [
-      config.app.api.url,
-      config.app.web.url
-    ],
-    preflightContinue: true
-  }
-}
-
 const crawlRoutes = require('@conjurelabs/route/sync-crawl')
 
 module.exports = {
