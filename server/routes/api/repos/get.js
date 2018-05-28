@@ -9,7 +9,7 @@ const route = new Route({
  */
 route.push(async (req, res) => {
   const { DatabaseTable } = require('@conjurelabs/db')
-  const { access, org, name } = req.query
+  const { org, name } = req.query
 
   const where = {
     account: req.user.id

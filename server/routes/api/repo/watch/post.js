@@ -1,5 +1,5 @@
 const Route = require('@conjurelabs/route')
-const config = require('conjure-core/modules/config')
+const { ConjureError } = require('@conjurelabs/err')
 const log = require('conjure-core/modules/log')('github watch repo')
 
 const route = new Route({
