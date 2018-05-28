@@ -12,7 +12,17 @@ route.push(async (req, res, next) => {
 
   // console.log('PAYLOAD')
   // console.log(req.body)
+  
+  if (req.body.action === 'created' && req.body.installation) {
+    await handleInstallation(req.body)
+    return res.send({
+      success: true,
+      type: 'installation',
+      action: 'created'
+    })
+  }
 
+  // todo: try catch this? payload may be different than we exepect
   const payload = new GitHubWebhookPayload(req.body)
   const { type, action, repoId, branch } = payload
 
@@ -47,6 +57,187 @@ route.push(async (req, res, next) => {
   }
   handleInactiveContainer(req, action)
 })
+
+/*
+  {
+  "action": "created",
+  "installation": {
+    "id": 194499,
+    "account": {
+      "login": "ConjureLabs",
+      "id": 1783213,
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1783213?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ConjureLabs",
+      "html_url": "https://github.com/ConjureLabs",
+      "followers_url": "https://api.github.com/users/ConjureLabs/followers",
+      "following_url": "https://api.github.com/users/ConjureLabs/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ConjureLabs/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ConjureLabs/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ConjureLabs/subscriptions",
+      "organizations_url": "https://api.github.com/users/ConjureLabs/orgs",
+      "repos_url": "https://api.github.com/users/ConjureLabs/repos",
+      "events_url": "https://api.github.com/users/ConjureLabs/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ConjureLabs/received_events",
+      "type": "Organization",
+      "site_admin": false
+    },
+    "repository_selection": "all",
+    "access_tokens_url": "https://api.github.com/installations/194499/access_tokens",
+    "repositories_url": "https://api.github.com/installation/repositories",
+    "html_url": "https://github.com/organizations/ConjureLabs/settings/installations/194499",
+    "app_id": 12491,
+    "target_id": 1783213,
+    "target_type": "Organization",
+    "permissions": {
+      "pull_requests": "write",
+      "issues": "write",
+      "contents": "read",
+      "single_file": "read",
+      "metadata": "read"
+    },
+    "events": [
+      "pull_request"
+    ],
+    "created_at": 1527542860,
+    "updated_at": 1527542860,
+    "single_file_name": "/.conjure/config.yml"
+  },
+  "repositories": [
+    {
+      "id": 76816056,
+      "name": "sentry",
+      "full_name": "ConjureLabs/sentry",
+      "private": true
+    },
+    {
+      "id": 83164113,
+      "name": "conjure-web",
+      "full_name": "ConjureLabs/conjure-web",
+      "private": true
+    },
+    {
+      "id": 83168065,
+      "name": "mock-web-repo",
+      "full_name": "ConjureLabs/mock-web-repo",
+      "private": true
+    },
+    {
+      "id": 89115676,
+      "name": "mock-web-repo-two",
+      "full_name": "ConjureLabs/mock-web-repo-two",
+      "private": true
+    },
+    {
+      "id": 89659868,
+      "name": "conjure-core",
+      "full_name": "ConjureLabs/conjure-core",
+      "private": true
+    },
+    {
+      "id": 92512480,
+      "name": "conjure-api",
+      "full_name": "ConjureLabs/conjure-api",
+      "private": true
+    },
+    {
+      "id": 102423520,
+      "name": "conjure-worker",
+      "full_name": "ConjureLabs/conjure-worker",
+      "private": true
+    },
+    {
+      "id": 102976100,
+      "name": "federal",
+      "full_name": "ConjureLabs/federal",
+      "private": false
+    },
+    {
+      "id": 119111842,
+      "name": "peak-property-phuket",
+      "full_name": "ConjureLabs/peak-property-phuket",
+      "private": true
+    },
+    {
+      "id": 119600503,
+      "name": "freshwork",
+      "full_name": "ConjureLabs/freshwork",
+      "private": true
+    },
+    {
+      "id": 119757136,
+      "name": "utils",
+      "full_name": "ConjureLabs/utils",
+      "private": false
+    },
+    {
+      "id": 119762069,
+      "name": "err",
+      "full_name": "ConjureLabs/err",
+      "private": false
+    },
+    {
+      "id": 119771304,
+      "name": "db",
+      "full_name": "ConjureLabs/db",
+      "private": false
+    },
+    {
+      "id": 119895556,
+      "name": "route",
+      "full_name": "ConjureLabs/route",
+      "private": false
+    },
+    {
+      "id": 122107766,
+      "name": "node_redis",
+      "full_name": "ConjureLabs/node_redis",
+      "private": false
+    },
+    {
+      "id": 130532721,
+      "name": "hob",
+      "full_name": "ConjureLabs/hob",
+      "private": false
+    },
+    {
+      "id": 133286750,
+      "name": "passport-github",
+      "full_name": "ConjureLabs/passport-github",
+      "private": false
+    },
+    {
+      "id": 135004753,
+      "name": "conjure-language-support",
+      "full_name": "ConjureLabs/conjure-language-support",
+      "private": false
+    }
+  ],
+  "sender": {
+    "login": "tmarshall",
+    "id": 52420,
+    "avatar_url": "https://avatars0.githubusercontent.com/u/52420?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/tmarshall",
+    "html_url": "https://github.com/tmarshall",
+    "followers_url": "https://api.github.com/users/tmarshall/followers",
+    "following_url": "https://api.github.com/users/tmarshall/following{/other_user}",
+    "gists_url": "https://api.github.com/users/tmarshall/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/tmarshall/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/tmarshall/subscriptions",
+    "organizations_url": "https://api.github.com/users/tmarshall/orgs",
+    "repos_url": "https://api.github.com/users/tmarshall/repos",
+    "events_url": "https://api.github.com/users/tmarshall/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/tmarshall/received_events",
+    "type": "User",
+    "site_admin": false
+  }
+}
+
+ */
+async function handleInstallation(payload) {
+  // todo: handle installation at hook instead of later
+}
 
 async function handleActiveContainer(req, action) {
   let queue
