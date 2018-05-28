@@ -350,8 +350,8 @@ server.use((req, res, next) => {
   const encryptor = signedEncryption(cipherAlgorithm, cipherSecret).withHmac(hmacAlgorithm, hmacSecret)
 
   const originalCookieMethod = res.cookie
-  res.cookie = function cookie(name, data, options = {}) {
-    originalCookieMethod(name, data, {
+  res.cookie = (name, data, options = {}) => {
+    originalCookieMethod.call(res, name, data, {
       domain: process.env.NODE_ENV === 'production' ? '.conjure.sh' : `.${config.app.api.domain}`,
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 30,
@@ -360,7 +360,6 @@ server.use((req, res, next) => {
       ...options
     })
   }
-  res.cookie = res.cookie.bind(this)
 
   res.cookieSecure = (name, data, ...extraArgs) => {
     if (typeof data !== 'string') {
