@@ -360,7 +360,7 @@ server.use((req, res, next) => {
       ...options
     })
   }
-  res.cookie = res.cookie.bind(originalCookieMethod)
+  res.cookie = res.cookie.bind(res)
 
   res.cookieSecure = (name, data, ...extraArgs) => {
     if (typeof data !== 'string') {
