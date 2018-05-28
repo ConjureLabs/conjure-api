@@ -23,7 +23,7 @@
     "@conjurelabs/db": "1.0.3",
     "@conjurelabs/err": "0.1.0",
     "@conjurelabs/hob": "0.0.12",
-    "@conjurelabs/route": "0.2.1",
+    "@conjurelabs/route": "0.3.0",
     "@conjurelabs/utils": "0.1.0",
     "async": "^2.3.0",
     "body-parser": "1.15.2",
