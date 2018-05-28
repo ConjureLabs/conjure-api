@@ -5,7 +5,7 @@ const route = new Route({
 })
 
 route.push((req, res, next) => {
-  const val = conjure.cookies['conjure-debug-cookie']
+  const val = req.cookies['conjure-debug-cookie']
   if (val === undefined) {
     console.log('\n\tCookie missing\n')
   } else {
