@@ -49,3 +49,9 @@ When done, add it to a LB
 10. in proj dir, save `.hob/.env` (make sure `NODE_PATH` is set to the right dir)
 11. in proj dir, `yarn install`
 12. in proj dir, `pm2 start ./bash/pm2/conjure-api.sh --name "conjure-api"`
+
+#### Prod Db
+
+It's not publicly available. You need to ssh into one of the EC2 boxes, then run:
+
+`PGPASSWORD=<PASSWORD> psql -U conjure_admin -d conjure -h <HOST>`
