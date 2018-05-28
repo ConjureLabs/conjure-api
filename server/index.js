@@ -349,6 +349,18 @@ server.use((req, res, next) => {
   const signedEncryption = require('@conjurelabs/utils/crypto/signed-encryption')
   const encryptor = signedEncryption(cipherAlgorithm, cipherSecret).withHmac(hmacAlgorithm, hmacSecret)
 
+  const originalCookieMethod = res.cookie
+  res.cookie = (name, data, options = {}) => {
+    originalCookieMethod(name, data, {
+      domain: process.env.NODE_ENV === 'production' ? '.conjure.sh' : `.${config.app.api.domain}`,
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+      path: '/',
+      sameSite: 'lax',
+      ...options
+    })
+  }
+
   res.cookieSecure = (name, data, ...extraArgs) => {
     if (typeof data !== 'string') {
       throw new ContentError('expected string for res.cookieSecure()')
