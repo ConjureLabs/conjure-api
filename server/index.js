@@ -60,15 +60,16 @@ server.use(cors({
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   optionsSuccessStatus: 204,
   origin: function(origin, callback) {
-    if (corsWhitelist.includes(origin)) {
-      return callback(null, true)
-    }
+    return callback(null, true) // todo: fix this - github webhook calls have origin undefined - need to allow those routes through
+    // if (corsWhitelist.includes(origin)) {
+    //   return callback(null, true)
+    // }
 
-    if (origin && origin.includes(config.app.web.url) && viewRoute.test(origin)) {
-      return callback(null, true)
-    }
+    // if (origin && origin.includes(config.app.web.url) && viewRoute.test(origin)) {
+    //   return callback(null, true)
+    // }
 
-    callback(new ConjureError('Origin not allowed'))
+    // callback(new ConjureError('Origin not allowed'))
   },
   preflightContinue: true
 }))
