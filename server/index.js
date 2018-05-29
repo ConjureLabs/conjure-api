@@ -50,14 +50,26 @@ server.use(bodyParser.urlencoded({
 server.use(bodyParser.json())
 server.use(cookieParser())
 
+const corsWhitelist = [
+  config.app.api.url,
+  config.app.web.url
+]
+const viewRoute = /^\w+-view\./
 server.use(cors({
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   optionsSuccessStatus: 204,
-  origin: [
-    config.app.api.url,
-    config.app.web.url
-  ],
+  origin: function(origin, callback) {
+    if (corsWhitelist.includes(origin)) {
+      return callback(null, true)
+    }
+
+    if (origin && origin.includes(config.app.web.url) && viewRoute.test(origin)) {
+      return callback(null, true)
+    }
+
+    callback(new ConjureError('Origin not allowed'))
+  },
   preflightContinue: true
 }))
 
