@@ -91,8 +91,8 @@ route.push(async (req, res) => {
       orgId: row.orgId,
       repoPrivate: row.repoPrivate,
       branch: row.branch,
-      view: `${webConfig.protocol}://${row.urlUid}.view.${webConfig.host}`,
-      logs: `${webConfig.protocol}://${row.urlUid}.logs.${webConfig.host}`,
+      view: `${webConfig.protocol}://${row.urlUid}-view.${webConfig.host}`,
+      logs: `${webConfig.protocol}://${row.urlUid}-logs.${webConfig.host}`,
       state: row.ecsState,
       start: row.activeStart || row.added,
       stop: row.activeEnd
