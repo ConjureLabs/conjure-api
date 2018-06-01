@@ -123,7 +123,9 @@ forcedRedirectRouter.get('*', (req, res, next) => {
 
   res.redirect(`${config.app.api.url}${req.url}`)
 })
-server.use(forcedRedirectRouter)
+if (process.env.NODE_ENV !== 'development') {
+  server.use(forcedRedirectRouter)
+}
 
 passport.use(
   new GitHubStrategy(
