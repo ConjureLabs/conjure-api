@@ -285,6 +285,7 @@ passport.use(
         account.requiresInstallation = true
       }
 
+      account.firstSignup = true
       callback(null, account)
       try {
         slackNotifySignup(account)

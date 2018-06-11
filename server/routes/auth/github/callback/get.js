@@ -20,6 +20,13 @@ route.push(async (req, res, next) => {
   next()
 })
 
+route.push((req, res, next) => {
+  if (req.firstSignup) {
+    res.cookie('conjure-first-signup', '' + Date.now())
+  }
+  next()
+})
+
 route.push((req, res) => {
   if (req.cookies && typeof req.cookies['conjure-auth-redirection'] === 'string') {
     res.clearCookie('conjure-auth-redirection')

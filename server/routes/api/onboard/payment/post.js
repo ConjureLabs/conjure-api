@@ -32,6 +32,8 @@ route.push(async (req, res) => {
 
   res.clearCookie('onboard-repos')
 
+  res.cookie('conjure-added-payment', '' + Date.now())
+
   res.send(cardResult)
 })
 
