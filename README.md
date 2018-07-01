@@ -12,7 +12,7 @@ Conjure API client
 
 1. ngrok
 2. dnsmasq (`brew install dnsmasq`)
-3. `yarn install`
+3. `npm install`
 
 ###### Dnsmasq
 
@@ -44,12 +44,11 @@ When done, add it to a LB
 5. `sudo apt-get install postgresql postgresql-contrib redis-tools`
 6. `curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -`
 7. `sudo apt-get install -y nodejs`
-8. `sudo -E npm i -g yarn`
-9. `sudo -E npm i -g pm2`
-10. `sudo chown -R $USER:$(id -gn $USER) /home/ubuntu/.config `
-11. in proj dir, save `.hob/.env` (make sure `NODE_PATH` is set to the right dir)
-12. in proj dir, `yarn install`
-13. in proj dir, `pm2 start ./bash/pm2/conjure-api.sh --name "conjure-api"`
+8. `sudo -E npm i -g pm2`
+9. `sudo chown -R $USER:$(id -gn $USER) /home/ubuntu/.config `
+10. in proj dir, save `.hob/.env` (make sure `NODE_PATH` is set to the right dir)
+11. in proj dir, `npm install`
+12. in proj dir, `pm2 start ./bash/pm2/conjure-api.sh --name "conjure-api"`
 
 #### Prod Db
 

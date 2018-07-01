@@ -8,7 +8,7 @@
     "dev": "hob dev",
     "lint": "hob lint",
     "start": "hob start",
-    "install:fresh": "(rm -rf ./node_modules || true) && (rm ./yarn.lock || true) && yarn install"
+    "install:fresh": "(rm -rf ./node_modules || true) && (rm ./package-lock.json || true) && npm install"
   },
   "repository": {
     "type": "git",
