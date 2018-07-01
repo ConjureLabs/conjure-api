@@ -24,12 +24,12 @@ route.push(async (req, res, next) => {
        which will then skip _this_ endpoint, but will
        not fail at the saveVisibleAccountRepos call
        in the oauth handler, since app is installed
-   */
+  */
 
-   /*
+  /*
     Also, if user is logged in, then the save-visible-repos
     will also, in turn, upsert each of user's installs
-    */
+  */
   if (req.isAuthenticated()) {
     const apiGetAccountGitHub = require('../../../api/account/github/get.js').call
     const gitHubAccount = (await apiGetAccountGitHub(req)).account

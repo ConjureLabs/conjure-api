@@ -50,11 +50,11 @@ server.use(bodyParser.urlencoded({
 server.use(bodyParser.json())
 server.use(cookieParser())
 
-const corsWhitelist = [
-  config.app.api.url,
-  config.app.web.url
-]
-const viewRoute = /^\w+-view\./
+// const corsWhitelist = [
+//   config.app.api.url,
+//   config.app.web.url
+// ]
+// const viewRoute = /^\w+-view\./
 server.use(cors({
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

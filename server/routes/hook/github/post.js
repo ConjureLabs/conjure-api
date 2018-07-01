@@ -235,7 +235,7 @@ route.push(async (req, res, next) => {
 }
 
  */
-async function handleInstallation(payload) {
+async function handleInstallation(/* payload */) {
   // todo: handle installation at hook instead of later
 }
 
