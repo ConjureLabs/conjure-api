@@ -1,3 +1,5 @@
+*This project is no longer in development. A newer version of Conjure is in active development.*
+
 <p align="center">
   <kbd>a p i</kbd>
 </p>
